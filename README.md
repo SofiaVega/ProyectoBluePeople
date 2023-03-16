@@ -32,13 +32,17 @@ Tutorial (alrededor de 7 horas):
 https://www.codecademy.com/courses/learn-react-native
 
 Instalar Expo Go en el celular:
-https://expo.dev/tools#client
+
+
+Para iphone:
+https://apps.apple.com/app/apple-store/id982107779
+
+Para Android:
+https://play.google.com/store/apps/details?id=host.exp.exponent
 
 Instalar Expo CLI:
+
+npm install --global expo-cli
+
 https://expo.dev/tools#cli
 
-Instalar Expo SDK:
-https://expo.dev/tools#sdk
-
-Instalar Expo snack:
-https://expo.dev/tools#snack
