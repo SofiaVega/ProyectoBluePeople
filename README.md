@@ -27,3 +27,18 @@ Para Windows:
 https://nodejs.org/en/download/
 
 ## React Native
+
+Tutorial (alrededor de 7 horas):
+https://www.codecademy.com/courses/learn-react-native
+
+Instalar Expo Go en el celular:
+https://expo.dev/tools#client
+
+Instalar Expo CLI:
+https://expo.dev/tools#cli
+
+Instalar Expo SDK:
+https://expo.dev/tools#sdk
+
+Instalar Expo snack:
+https://expo.dev/tools#snack
