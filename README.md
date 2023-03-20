@@ -1,6 +1,6 @@
 # ProyectoBluePeople
 
-##Guia de instalación
+## Guia de instalación
 
 
 ## PostgreSQL
