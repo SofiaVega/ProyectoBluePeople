@@ -1,6 +1,9 @@
 # ProyectoBluePeople
+
+##Guia de instalación
+
+
 ## PostgreSQL
-Versión: 15.2 (la más reciente)
 
 Seguir este tutorial:
 
@@ -10,7 +13,6 @@ Para Windows: https://www.postgresqltutorial.com/postgresql-getting-started/inst
 
 ## Node JS
 
-Version: 18.15 (la más reciente)
 
 Para MAC:
 
