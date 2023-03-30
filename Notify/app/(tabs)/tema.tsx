@@ -1,14 +1,13 @@
 import { StyleSheet } from 'react-native';
+import ComponenteTema from '../../components/ComponenteTema';
 
-import EditScreenInfo from '../../components/EditScreenInfo';
+import EditScreenInfo from '../../components/ComponenteTema';
 import { Text, View } from '../../components/Themed';
 
-export default function TemasScreen() {
+export default function TemaScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tema</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/temas.tsx" />
+      <ComponenteTema titulo= "Titulo" descripcion='Descripcion del tema'/>
     </View>
   );
 }
@@ -16,8 +15,6 @@ export default function TemasScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   title: {
     fontSize: 20,
