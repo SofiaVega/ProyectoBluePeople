@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, SafeAreaView } from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
@@ -12,7 +12,7 @@ export default function ModalScreen() {
       <form>
         <label>
           Name:
-          <input type="text" name="name" />
+          <input type="text" name="Codigo" />
         </label>
         <input type="submit" value="Suscribirme" />
       </form>
@@ -28,10 +28,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#E8F1F2'
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: 'black'
   },
   separator: {
     marginVertical: 30,

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
 
 import ComponenteTemaFila from '../../components/ComponenteTemaFila';
 import { Text, View } from '../../components/Themed';
@@ -8,8 +8,8 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function PaginaPrincipalScreen() {
   return (
-    <View>
-      <View style= {[{margin: 30}]}>
+    <SafeAreaView>
+      <View style= {[{margin: 30}, {backgroundColor: '#E8F1F2'}]}>
 
       <Link href="/modal_nuevo_tema" asChild>
               <Pressable>
@@ -17,7 +17,7 @@ export default function PaginaPrincipalScreen() {
                   <FontAwesome
                     name="plus"
                     size={25}
-                    color="white"
+                    color="black"
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
@@ -30,7 +30,7 @@ export default function PaginaPrincipalScreen() {
         <ComponenteTemaFila titulo = "Tema" ultimaNotif = 'Ultima notif' sinLeer={2} ></ComponenteTemaFila>
         <ComponenteTemaFila titulo = "Tema2" ultimaNotif = 'Ultima notif' sinLeer={4} ></ComponenteTemaFila>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

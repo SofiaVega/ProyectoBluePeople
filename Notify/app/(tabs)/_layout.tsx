@@ -25,7 +25,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
+          title: 'Notify',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Link href="/modal_nuevo_tema" asChild>
@@ -46,7 +46,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="config_tema"
         options={{
-          title: 'Tema',
+          title: 'Notify',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
