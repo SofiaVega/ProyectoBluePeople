@@ -48,3 +48,16 @@ npm install --global expo-cli
 
 https://expo.dev/tools#cli
 
+## Reglas para branches:
+Branches:
+- Main
+- Dev
+- Sofia
+- Paola
+- Andrea
+- Luyer
+- Joel
+
+1. Trabajar en tu rama personal
+2. Hacer pull request a dev
+3. Al menos un code review por otro miembro del equipo antes de hacer merge

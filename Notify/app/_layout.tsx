@@ -35,12 +35,24 @@ export default function RootLayout() {
   );
 }
 
+export const Themere = {
+  dark: true,
+  colors: {
+     primary: '#E8F1F2',
+     background: '#E8F1F2',
+     card: '#E8F1F2',
+     text: 'rgb(28, 28, 30)',
+     border: '#E8F1F2',
+     notification: 'rgb(255, 69, 58)',
+  },
+};
+
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
     <>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <ThemeProvider value={colorScheme === 'dark' ? Themere : Themere}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal_nuevo_tema" options={{ presentation: 'modal' }} />
