@@ -6,6 +6,7 @@ import { Text, View } from '../../components/Themed';
 
 export default function PaginaPrincipalScreen() {
   return (
+    
     <View style={styles.temaContainer}>
       <Text style={styles.title}>Pagina principal</Text>
       <ComponenteTemaFila titulo = "Tema" ultimaNotif = 'Ultima notif' sinLeer={2} ></ComponenteTemaFila>
