@@ -13,6 +13,12 @@ export default function TemaScreen() {
 }
 
 const styles = StyleSheet.create({
+  temaContainer: {
+    backgroundColor:'white',
+    borderRadius: 10,
+    margin: 50,
+    padding: 10
+  },
   container: {
     flex: 1,
   },
