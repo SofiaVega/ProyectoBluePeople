@@ -7,7 +7,7 @@ export default function ConfigTemaScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Configuraciones Tema</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      <View style={styles.separator} lightColor="#E8F1F2" darkColor="#E8F1F2" />
       <EditScreenInfo path="app/(tabs)/config_tema.tsx" />
     </View>
   );

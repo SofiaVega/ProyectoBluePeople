@@ -14,7 +14,7 @@ export default function TemaScreen() {
 
 const styles = StyleSheet.create({
   temaContainer: {
-    backgroundColor:'#E8F1F2',
+    backgroundColor:'white',
     borderRadius: 10,
     margin: 50,
     padding: 10

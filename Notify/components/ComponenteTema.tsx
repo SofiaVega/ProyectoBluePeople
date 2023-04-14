@@ -48,7 +48,7 @@ export default function ComponenteTema(tema: Tema) {
 
 const styles = StyleSheet.create({
   temaContainer: {
-    backgroundColor:'#E8F1F2',
+    backgroundColor:'white',
     borderRadius: 10,
     margin: 10,
     padding: 10
