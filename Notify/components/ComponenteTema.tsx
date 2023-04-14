@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image,SafeAreaView, ScrollView } from 'react-native';
 
 import Colors from '../constants/Colors';
 import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
+import ComponenteTemaFila from './ComponenteTemaFila';
 
 type Tema = {
     titulo: string;
@@ -29,6 +30,17 @@ export default function ComponenteTema(tema: Tema) {
                 </View>
 
             </View>
+            <ScrollView style={[styles.scrollView, {backgroundColor: 'white'}] }>
+              <ComponenteTemaFila titulo= "Titulo" />
+              <ComponenteTemaFila titulo= "Titulo" />
+              <ComponenteTemaFila titulo= "Titulo" />
+              <ComponenteTemaFila titulo= "Titulo" />
+              <ComponenteTemaFila titulo= "Titulo" />
+              <ComponenteTemaFila titulo= "Titulo" />
+              <ComponenteTemaFila titulo= "Titulo" />
+              <ComponenteTemaFila titulo= "Titulo" />
+            </ScrollView>
+          
 
         </View>
   );
@@ -36,10 +48,14 @@ export default function ComponenteTema(tema: Tema) {
 
 const styles = StyleSheet.create({
   temaContainer: {
-    backgroundColor:'white',
+    backgroundColor:'#E8F1F2',
     borderRadius: 10,
-    margin: 50,
+    margin: 10,
     padding: 10
+  },
+  scrollView: {
+    backgroundColor: 'pink',
+    marginHorizontal: 20,
   },
   title: {
     fontSize: 20,

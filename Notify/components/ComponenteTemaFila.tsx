@@ -16,23 +16,21 @@ export default function ComponenteTemaFila(tema: TemaFila) {
   return (
         <View style={styles.temaContainer}>
             <View style= {[styles.temaContainer, {flexDirection: "row", alignItems: 'center',}]}>
-                <Image source={require('./../assets/images/favicon.png')} style={{width: 30, height: 30, borderRadius: 30/ 2}}/>
 
                 <View style= {[styles.temaContainer, {flexDirection: "column",}]}>
-                    <Text
-                    style={styles.title}>
-                    {tema.titulo}
+                    <Text style={styles.title}>
+                      {tema.titulo}
                     </Text>
-                    <Text
-                    style={styles.textoTema}>
-                    {tema.ultimaNotif}
+
+                    <Text style={styles.textoTema}>
+                      Descripcion Mensaje
                     </Text>
+
                 </View>
-                {tema.sinLeer > 0 &&
-                <Text>{tema.sinLeer}</Text>
-                }
+                  { tema.sinLeer > 0 && <Text>{tema.sinLeer}</Text> }
 
             </View>
+            <View style = {styles.lineStyle} />
 
         </View>
   );
@@ -41,10 +39,8 @@ export default function ComponenteTemaFila(tema: TemaFila) {
 const styles = StyleSheet.create({
   temaContainer: {
     backgroundColor:'white',
-    margin: 50,
+    margin: 10,
     padding: 10,
-    height: 200
-    
   },
   title: {
     fontSize: 20,
@@ -55,6 +51,11 @@ const styles = StyleSheet.create({
   getStartedContainer: {
     alignItems: 'center',
     marginHorizontal: 50,
+  },
+  lineStyle:{
+    borderWidth: 0.1,
+    borderColor:'#DB8A74',
+    margin:1,
   },
   homeScreenFilename: {
     marginVertical: 7,

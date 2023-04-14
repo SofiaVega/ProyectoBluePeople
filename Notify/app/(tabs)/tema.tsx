@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import ComponenteTema from '../../components/ComponenteTema';
 
 import EditScreenInfo from '../../components/ComponenteTema';
@@ -6,15 +6,15 @@ import { Text, View } from '../../components/Themed';
 
 export default function TemaScreen() {
   return (
-    <View style={styles.container}>
-      <ComponenteTema titulo= "Titulo" descripcion='Descripcion del tema'/>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <ComponenteTema titulo= "Titulo Notificacion" descripcion='Descripcion del tema'/>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   temaContainer: {
-    backgroundColor:'white',
+    backgroundColor:'#E8F1F2',
     borderRadius: 10,
     margin: 50,
     padding: 10
