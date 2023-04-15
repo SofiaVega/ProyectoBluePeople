@@ -1,8 +1,8 @@
 import { StyleSheet, SafeAreaView } from 'react-native';
 
-import EditScreenInfo from '../../components/EditScreenInfo';
-import { Text, View } from '../../components/Themed';
-import ComponenteTemaConfig from '../../components/ComponenteTemaConfig';
+import EditScreenInfo from '../components/EditScreenInfo';
+import { Text, View } from '../components/Themed';
+import ComponenteTemaConfig from '../components/ComponenteTemaConfig';
 
 type Tema = {
   titulo: string;

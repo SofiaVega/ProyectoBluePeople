@@ -1,7 +1,7 @@
 import { StyleSheet, SafeAreaView } from 'react-native';
 
-import ComponenteTemaFila from '../../components/ComponenteTemaFila';
-import { Text, View } from '../../components/Themed';
+import ComponenteTemaFila from '../components/ComponenteTemaFila';
+import { Text, View } from '../components/Themed';
 import { Link, Tabs } from 'expo-router';
 import { Pressable, useColorScheme } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -18,7 +18,7 @@ export default function PaginaPrincipalScreen() {
                     name="plus"
                     size={25}
                     color="black"
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                    style={[{ marginRight: 15, opacity: pressed ? 0.5 : 1 }, styles.white_background]}
                   />
                 )}
               </Pressable>
@@ -57,4 +57,8 @@ const styles = StyleSheet.create({
     height: 1,
     width: '80%',
   },
+  white_background:{
+    backgroundColor:'white',
+
+  }
 });

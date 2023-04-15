@@ -14,7 +14,7 @@ type Tema = {
 
 export default function ComponenteTema(tema: Tema) {
   return (
-        <View style={styles.temaContainer}>
+        <SafeAreaView style={styles.temaContainer}>
             <View style= {[styles.temaContainer, {flexDirection: "row", alignItems: 'center',}]}>
                 <Image source={require('./../assets/images/favicon.png')} style={{width: 30, height: 30, borderRadius: 30/ 2}}/>
 
@@ -42,7 +42,7 @@ export default function ComponenteTema(tema: Tema) {
             </ScrollView>
           
 
-        </View>
+        </SafeAreaView>
   );
 }
 
@@ -50,8 +50,6 @@ const styles = StyleSheet.create({
   temaContainer: {
     backgroundColor:'white',
     borderRadius: 10,
-    margin: 10,
-    padding: 10
   },
   scrollView: {
     backgroundColor: 'pink',
