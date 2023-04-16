@@ -5,7 +5,7 @@ import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import ComponenteTemaFila from './ComponenteTemaFila';
-import { Topic, Mensajes } from '../interface';
+import { Topic, MensajesScreen } from '../interface';
 import axios, { AxiosResponse } from 'axios';
 import ComponenteMensaje from './ComponenteMensaje'
 type Tema = {
@@ -15,22 +15,23 @@ type Tema = {
 
 const getData = async (endpoint: string) => {
   const response = await fetch(endpoint)
-  const data: Mensajes = await response.json()
+  const data: MensajesScreen = await response.json()
   return data
 }
 
-const parseUserData = (user: Mensajes) => {
-  const { mensajes, id } = user
+const parseUserData = (user: MensajesScreen) => {
+  const { mensajes, id, titulo, descripcion } = user
   return { 
     mensajes: mensajes,
-    id: id 
+    id: id,
+    titulo: titulo,
+    descripcion: descripcion
   }
 }
 
 export default function ComponenteTema(tema: Tema) {
-  const [state, setState] = useState({
-    topics: []
-  });
+  const [isLoading, setLoading] = useState(true);
+  const [state, setState] = useState<MensajesScreen[]>([]);
   // useEffect(effect: () => {
   //   axios.get<Topic[]>('http://localhost:3000/api/topic').then((response: AxiosResponse) => {
   //     console.log('Response', response.data);
@@ -82,21 +83,26 @@ export default function ComponenteTema(tema: Tema) {
           console.error(`API responded with status ${data.status}: ${data.statusText}`)
         }
 
-        const jsonData = await data.json();
-        const topics = jsonData.map(parseUserData)
-        console.log("TOPICSO", jsonData)
+        const jsonData:MensajesScreen[] = await data.json();
+        // console.log("DATAAAAAA ", jsonData)
+        // const topics = jsonData.map(parseUserData)
+        // console.log("TOPICSO", jsonData)
 
-        return setState({...state, topics: [...jsonData]})
+        setState([...state, ...jsonData])
+        setLoading(false);
         // return setState(jsonData.results);
       }catch(e) {
           console.error("ERROR", e)
       }
     };
     api();
+    // api();
   }, []);
 
-  console.log("ESTADPPP", state)
-
+  // console.log("ESTADPPP", state[0])
+  if (isLoading) {
+    return <div>Loading ...</div>;
+  }
 
   return (
     <SafeAreaView style={styles.temaContainer}>
@@ -106,7 +112,7 @@ export default function ComponenteTema(tema: Tema) {
         <View style={[styles.temaContainer, { flexDirection: "column", }]}>
           <Text
             style={styles.title}>
-            {tema.titulo}
+            {state[0].titulo}
           </Text>
           <Text
             style={styles.textoTema}>
@@ -116,7 +122,7 @@ export default function ComponenteTema(tema: Tema) {
 
       </View>
       <ScrollView style={[styles.scrollView, { backgroundColor: 'white' }]}>
-        <ComponenteMensaje comps = {state.topics} />
+        <ComponenteMensaje comps = {state} />
       </ScrollView>
 
 

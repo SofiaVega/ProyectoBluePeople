@@ -19,9 +19,7 @@ const parseUserData = (user: Topic) => {
 }
 
 export default function PaginaPrincipalScreen() {
-  const [state, setState] = useState({
-    topics: []
-  });
+  const [state, setState] = useState<Topic[]>([]);
 
   useEffect(() => {
     const api = async() => {
@@ -40,7 +38,7 @@ export default function PaginaPrincipalScreen() {
 
         const jsonData = await data.json();
         const topics = jsonData.map(parseUserData)
-        return setState({...state, topics: [...topics]})
+        return setState([...state, ...topics])
         // return setState(jsonData.results);
       }catch(e) {
           console.error(e)
@@ -73,7 +71,7 @@ export default function PaginaPrincipalScreen() {
       </View>
       <View style={styles.temaContainer}>
         <Text style={styles.title}>Temas</Text>
-        <ComponenteTemaFila comps = {state.topics} ></ComponenteTemaFila>
+        <ComponenteTemaFila comps = {state} ></ComponenteTemaFila>
         {/* <ComponenteTemaFila titulo = "Tema2" ultimaNotif = 'Ultima notif' sinLeer={4} ></ComponenteTemaFila> */}
       </View>
     </SafeAreaView>

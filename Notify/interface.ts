@@ -8,7 +8,9 @@ export interface Topic {
   fechacreacion: Date | null | undefined
 }
 
-export interface Mensajes {
+export interface MensajesScreen {
   id: number,
-  mensajes: string
+  mensajes: string,
+  titulo: string,
+  descripcion: string
 }

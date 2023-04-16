@@ -16,7 +16,7 @@ export default function ComponenteTemaFila({comps}) {
   console.log("TOPICSSS ", comps)
   return (
         <View style={styles.temaContainer}>
-          {comps.map((topic, idx) => (
+          {comps.map((topic) => (
             <View style= {[styles.temaContainer, styles.lineStyle, {flexDirection: "row", alignItems: 'center',}]}>
 
                 <View style= {[styles.temaContainer, {flexDirection: "column",}]}>

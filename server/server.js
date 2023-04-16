@@ -202,7 +202,7 @@ app.get("/api/topic/:id/messages", attachId, async (req, res) => {
     //Check user messages
     const client = await pool.connect();
     const message_list = await client.query(
-      "SELECT mensaje, id FROM tema_sus JOIN mensajes ON tema_sus.temas_id = mensajes.tema_id WHERE temas_id = $1 and suscriptor_id = $2",
+      "SELECT mensaje, mensajes.id, titulo, descripcion FROM tema_sus JOIN mensajes ON tema_sus.temas_id = mensajes.tema_id JOIN temas ON tema_sus.temas_id = temas.id WHERE temas_id = $1 and suscriptor_id = $2",
       [topic_id, user_id]
     );
     if (message_list.rows.length === 0) {
