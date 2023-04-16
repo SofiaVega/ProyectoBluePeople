@@ -9,5 +9,3 @@ En la terminal ejecutar:
 para crear las tablas, después ejectuar:
 
 `psql -U postgres -d notifydb -f ./db/inserts.sql` para popular las tablas.
-
-Asegurarse de que se encuentra en el directorio `/db`.

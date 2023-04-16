@@ -1,9 +1,11 @@
 const express = require("express");
+const cors = require("cors");
 const attachId = require("./middleware/attachId");
 const pool = require("./db.js");
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 // Test the database connection
 pool.query("SELECT NOW()", (err, res) => {
@@ -176,7 +178,7 @@ app.get("/api/subscriptions", attachId, async (req, res) => {
     const user_id = req.user_id;
     //Get user topics, query for title and description
     const result = await pool.query(
-      "SELECT temas.titulo, temas.descripcion FROM tema_sus JOIN temas ON tema_sus.suscriptor_id = temas.id WHERE suscriptor_id = $1",
+      "SELECT temas.titulo, temas.descripcion FROM temas JOIN tema_sus ON tema_sus.temas_id = temas.id WHERE suscriptor_id = $1",
       [user_id]
     );
     if (result.rows.length === 0) {
@@ -189,6 +191,31 @@ app.get("/api/subscriptions", attachId, async (req, res) => {
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ message: "Error subscribing" });
+  }
+});
+
+//Route for getting messages from a topic
+app.get("/api/topic/:id/messages", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const topic_id = req.params.id;
+    //Check user messages
+    const client = await pool.connect();
+    const message_list = await client.query(
+      "SELECT mensaje FROM tema_sus JOIN mensajes ON tema_sus.temas_id = mensajes.tema_id WHERE temas_id = $1 and suscriptor_id = $2",
+      [topic_id, user_id]
+    );
+    if (message_list.rows.length === 0) {
+      // If empty, user is not subscribed
+      return res
+        .status(401)
+        .json({ error: "User is not subscribed to this topic" });
+    }
+    client.release();
+    res.status(201).send(message_list.rows);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Error getting messages" });
   }
 });
 
