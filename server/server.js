@@ -4,8 +4,14 @@ const attachId = require("./middleware/attachId");
 const pool = require("./db.js");
 
 const app = express();
+
 app.use(express.json());
-app.use(cors());
+const corsOptions ={
+  origin:'*', 
+  credentials:true, //access-control-allow-credentials:true
+   optionSuccessStatus:200,
+}
+app.use(cors(corsOptions));
 
 // Test the database connection
 pool.query("SELECT NOW()", (err, res) => {

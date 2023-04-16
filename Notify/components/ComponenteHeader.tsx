@@ -16,7 +16,7 @@ export default function ComponenteHeader() {
   return (
     <SafeAreaView style={styles.temaContainer}>
       <View style={[styles.header, {flexDirection: "row", alignItems: 'center',}]}>
-        <Image source={require('./../assets/images/favicon.png')} style={{width: 30, height: 30, borderRadius: 30/ 2}}/>
+        <Image source={require('./../assets/images/Union.png')} style={{width: 30, height: 30, borderRadius: 30/ 2}}/>
         <Text style={[styles.header.header_text, {flexDirection: "column",}]}>Notify</Text>  
       </View>  
       
