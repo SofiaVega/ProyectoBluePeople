@@ -13,31 +13,88 @@ type Tema = {
   descripcion: string;
 };
 
+const getData = async (endpoint: string) => {
+  const response = await fetch(endpoint)
+  const data: Topic = await response.json()
+  return data
+}
+
+const parseUserData = (user: Topic) => {
+  const { titulo, descripcion, id } = user
+  return { 
+    titulo: titulo, 
+    descripcion: descripcion,
+    id: id
+  }
+}
 
 export default function ComponenteTema(tema: Tema) {
-  const [result, setResult] = useState<Topic[]>([]);
+  const [state, setState] = useState({
+    topics: []
+  });
+  // useEffect(effect: () => {
+  //   axios.get<Topic[]>('http://localhost:3000/api/topic').then((response: AxiosResponse) => {
+  //     console.log('Response', response.data);
+  //   });
+
+  // }, deps: []);
+  // useEffect(() => {
+  //   const api = async() => {
+  //     try{
+  //       const data = await fetch("http://localhost:3000/api/topic", {
+  //         method: "GET",
+  //         headers: {
+  //           'x-user-id': '5',
+  //           'Content-Type': 'application/json',
+  //         }
+
+  //       });
+  //       if(!data.ok) {
+  //         console.error(`API responded with status ${data.status}: ${data.statusText}`)
+  //       }
+
+  //       const jsonData = await data.json();
+  //       const topics = jsonData.map(parseUserData)
+  //       return setState({...state, topic: [...topics]})
+  //     }catch(e) {
+  //       console.error(e)
+  //     }
+  //   };
+  //   api();
+  // }, []);
+
+  // console.log(state)
+
+
+
   useEffect(() => {
     const api = async() => {
       try{
-      const data = await fetch("http://localhost:3000/api/topic", {
-        method: "GET",
-        headers: {
-          'x-user-id': '5',
-          'Content-Type': 'application/json',
+        const data = await fetch("http://localhost:3000/api/topic", {
+          method: "GET",
+          headers: {
+            'x-user-id': '5',
+            'Content-Type': 'application/json',
+          }
+
+        });
+        if(!data.ok) {
+          console.error(`API responded with status ${data.status}: ${data.statusText}`)
         }
 
-      });
-      if(!data.ok) {
-        console.error(`API responded with status ${data.status}: ${data.statusText}`)
-      }
-
-      const jsonData = await data.json();
-      setResult(jsonData.results);}catch(e) {
-        console.error(e)
+        const jsonData = await data.json();
+        const topics = jsonData.map(parseUserData)
+        return setState({...state, topics: [...topics]})
+        // return setState(jsonData.results);
+      }catch(e) {
+          console.error(e)
       }
     };
     api();
   }, []);
+
+  console.log("ESTADPPP", state)
+
 
   return (
     <SafeAreaView style={styles.temaContainer}>
@@ -57,12 +114,12 @@ export default function ComponenteTema(tema: Tema) {
 
       </View>
       <ScrollView style={[styles.scrollView, { backgroundColor: 'white' }]}>
+        <ComponenteTemaFila topics = {state.topics} />
+        {/* <ComponenteTemaFila />
         <ComponenteTemaFila />
         <ComponenteTemaFila />
         <ComponenteTemaFila />
-        <ComponenteTemaFila />
-        <ComponenteTemaFila />
-        <ComponenteTemaFila />
+        <ComponenteTemaFila /> */}
 
       </ScrollView>
 

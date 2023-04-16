@@ -12,12 +12,19 @@ type TemaFila = {
     sinLeer: number;
 };
 
-export default function ComponenteTemaFila() {
+export default function ComponenteTemaFila({ topics}) {
+  console.log("TOPICSSS ", topics)
   return (
         <View style={styles.temaContainer}>
             <View style= {[styles.temaContainer, {flexDirection: "row", alignItems: 'center',}]}>
 
                 <View style= {[styles.temaContainer, {flexDirection: "column",}]}>
+                  {topics.map((topic) => (
+                    <Text style={styles.title} key= {topic}>
+                      {topic.title}
+                    </Text>
+                  
+                  ))}
                     <Text style={styles.title}>
                       Tema
                     </Text>
