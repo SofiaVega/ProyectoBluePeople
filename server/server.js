@@ -6,11 +6,11 @@ const pool = require("./db.js");
 const app = express();
 
 app.use(express.json());
-const corsOptions ={
-  origin:'*', 
-  credentials:true, //access-control-allow-credentials:true
-   optionSuccessStatus:200,
-}
+const corsOptions = {
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
 app.use(cors(corsOptions));
 
 // Test the database connection
@@ -171,7 +171,7 @@ app.post("/api/subscribe/:id", attachId, async (req, res) => {
       "INSERT INTO tema_sus (temas_id, suscriptor_id) VALUES ($1, $2)",
       [topic_id, user_id]
     );
-    res.status(201).send("Success!");
+    res.status(201).send({ message: "Success!" });
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ message: "Error subscribing" });
