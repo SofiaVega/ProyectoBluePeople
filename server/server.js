@@ -4,8 +4,14 @@ const attachId = require("./middleware/attachId");
 const pool = require("./db.js");
 
 const app = express();
+
 app.use(express.json());
-app.use(cors());
+const corsOptions = {
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
 // Test the database connection
 pool.query("SELECT NOW()", (err, res) => {
@@ -165,7 +171,7 @@ app.post("/api/subscribe/:id", attachId, async (req, res) => {
       "INSERT INTO tema_sus (temas_id, suscriptor_id) VALUES ($1, $2)",
       [topic_id, user_id]
     );
-    res.status(201).send("Success!");
+    res.status(201).send({ message: "Success!" });
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ message: "Error subscribing" });
@@ -178,7 +184,7 @@ app.get("/api/subscriptions", attachId, async (req, res) => {
     const user_id = req.user_id;
     //Get user topics, query for title and description
     const result = await pool.query(
-      "SELECT temas.titulo, temas.descripcion FROM temas JOIN tema_sus ON tema_sus.temas_id = temas.id WHERE suscriptor_id = $1",
+      "SELECT temas.titulo, temas.descripcion, temas.id FROM temas JOIN tema_sus ON tema_sus.temas_id = temas.id WHERE suscriptor_id = $1",
       [user_id]
     );
     if (result.rows.length === 0) {
@@ -202,7 +208,7 @@ app.get("/api/topic/:id/messages", attachId, async (req, res) => {
     //Check user messages
     const client = await pool.connect();
     const message_list = await client.query(
-      "SELECT mensaje FROM tema_sus JOIN mensajes ON tema_sus.temas_id = mensajes.tema_id WHERE temas_id = $1 and suscriptor_id = $2",
+      "SELECT mensaje, mensajes.id, titulo, descripcion FROM tema_sus JOIN mensajes ON tema_sus.temas_id = mensajes.tema_id JOIN temas ON tema_sus.temas_id = temas.id WHERE temas_id = $1 and suscriptor_id = $2",
       [topic_id, user_id]
     );
     if (message_list.rows.length === 0) {

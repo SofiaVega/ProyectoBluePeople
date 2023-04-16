@@ -2,6 +2,7 @@ const pool = require("../db.js");
 
 const attachId = async (req, res, next) => {
   const user_id = req.headers["x-user-id"];
+  console.log("USUARIIII ", user_id);
   if (!user_id) {
     return res.status(400).json({ error: "User not logged." });
   }

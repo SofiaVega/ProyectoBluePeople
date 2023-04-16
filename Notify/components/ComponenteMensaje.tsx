@@ -12,7 +12,7 @@ type TemaFila = {
     sinLeer: number;
 };
 
-export default function ComponenteTemaFila({comps}) {
+export default function ComponenteMensaje({comps}) {
   console.log("TOPICSSS ", comps)
   return (
         <View style={styles.temaContainer}>
@@ -21,14 +21,9 @@ export default function ComponenteTemaFila({comps}) {
 
                 <View style= {[styles.temaContainer, {flexDirection: "column",}]}>
                   
-                    <Text style={styles.title} key= {topic.id}>
-                      {topic.titulo}
-                    </Text>
-
                     <Text style={styles.textoTema} key= {topic.id}>
-                     {topic.titulo}
-                    </Text>
-                    
+                      {topic.mensaje}
+                    </Text>                   
 
                 </View>
                   {/* { tema.sinLeer > 0 && <Text>{tema.sinLeer}</Text> } */}
