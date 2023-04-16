@@ -1,6 +1,7 @@
 import { StyleSheet, SafeAreaView } from 'react-native';
 
 import ComponenteTemaFila from '../components/ComponenteTemaFila';
+import ComponenteHeader from '../components/ComponenteHeader';
 import { Text, View } from '../components/Themed';
 import { Link, Tabs } from 'expo-router';
 import { Pressable, useColorScheme } from 'react-native';
@@ -9,7 +10,9 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 export default function PaginaPrincipalScreen() {
   return (
     <SafeAreaView>
-      <View style= {[{margin: 30}, {backgroundColor: '#E8F1F2'}]}>
+      {/* Header bar */}
+      <ComponenteHeader></ComponenteHeader>
+      <View style= {[{marginLeft: 30, marginTop: 30, marginBottom: 20}, {backgroundColor: '#E8F1F2'}]}>
 
       <Link href="/modal_nuevo_tema" asChild>
               <Pressable>
@@ -38,7 +41,6 @@ const styles = StyleSheet.create({
   temaContainer: {
     backgroundColor:'white',
     borderRadius: 10,
-    margin: 40,
   },
   container: {
     flex: 1,
@@ -49,7 +51,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: 'bold',
     color: 'black',
-    padding: 50
+    paddingLeft: 30
 
   },
   separator: {

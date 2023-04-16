@@ -12,14 +12,14 @@ type TemaFila = {
     sinLeer: number;
 };
 
-export default function ComponenteTemaFila(tema: TemaFila) {
+export default function ComponenteTemaFila() {
   return (
         <View style={styles.temaContainer}>
             <View style= {[styles.temaContainer, {flexDirection: "row", alignItems: 'center',}]}>
 
                 <View style= {[styles.temaContainer, {flexDirection: "column",}]}>
                     <Text style={styles.title}>
-                      {tema.titulo}
+                      Tema
                     </Text>
 
                     <Text style={styles.textoTema}>
@@ -27,7 +27,7 @@ export default function ComponenteTemaFila(tema: TemaFila) {
                     </Text>
 
                 </View>
-                  { tema.sinLeer > 0 && <Text>{tema.sinLeer}</Text> }
+                  {/* { tema.sinLeer > 0 && <Text>{tema.sinLeer}</Text> } */}
 
             </View>
             <View style = {styles.lineStyle} />
