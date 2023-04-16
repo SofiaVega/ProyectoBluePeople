@@ -6,8 +6,51 @@ import { Text, View } from '../components/Themed';
 import { Link, Tabs } from 'expo-router';
 import { Pressable, useColorScheme } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Topic } from '../interface';
+import React, {useEffect, useState} from 'react';
+
+const parseUserData = (user: Topic) => {
+  const { titulo, descripcion, id } = user
+  return { 
+    titulo: titulo, 
+    descripcion: descripcion,
+    id: id
+  }
+}
 
 export default function PaginaPrincipalScreen() {
+  const [state, setState] = useState({
+    topics: []
+  });
+
+  useEffect(() => {
+    const api = async() => {
+      try{
+        const data = await fetch("http://localhost:3000/api/subscriptions", {
+          method: "GET",
+          headers: {
+            'x-user-id': '5',
+            'Content-Type': 'application/json',
+          }
+
+        });
+        if(!data.ok) {
+          console.error(`API responded with status ${data.status}: ${data.statusText}`)
+        }
+
+        const jsonData = await data.json();
+        const topics = jsonData.map(parseUserData)
+        return setState({...state, topics: [...topics]})
+        // return setState(jsonData.results);
+      }catch(e) {
+          console.error(e)
+      }
+    };
+    api();
+  }, []);
+
+  console.log("ESTADPPP", state)
+  
   return (
     <SafeAreaView>
       {/* Header bar */}
@@ -30,8 +73,8 @@ export default function PaginaPrincipalScreen() {
       </View>
       <View style={styles.temaContainer}>
         <Text style={styles.title}>Temas</Text>
-        <ComponenteTemaFila titulo = "Tema" ultimaNotif = 'Ultima notif' sinLeer={2} ></ComponenteTemaFila>
-        <ComponenteTemaFila titulo = "Tema2" ultimaNotif = 'Ultima notif' sinLeer={4} ></ComponenteTemaFila>
+        <ComponenteTemaFila comps = {state.topics} ></ComponenteTemaFila>
+        {/* <ComponenteTemaFila titulo = "Tema2" ultimaNotif = 'Ultima notif' sinLeer={4} ></ComponenteTemaFila> */}
       </View>
     </SafeAreaView>
   );

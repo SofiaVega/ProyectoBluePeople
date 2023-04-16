@@ -8,6 +8,7 @@ export interface Topic {
   fechacreacion: Date | null | undefined
 }
 
-export interface TopicParam {
-  
+export interface Mensajes {
+  id: number,
+  mensajes: string
 }

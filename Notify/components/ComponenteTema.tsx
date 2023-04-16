@@ -5,9 +5,9 @@ import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import ComponenteTemaFila from './ComponenteTemaFila';
-import { Topic } from '../interface';
+import { Topic, Mensajes } from '../interface';
 import axios, { AxiosResponse } from 'axios';
-
+import ComponenteMensaje from './ComponenteMensaje'
 type Tema = {
   titulo: string;
   descripcion: string;
@@ -15,16 +15,15 @@ type Tema = {
 
 const getData = async (endpoint: string) => {
   const response = await fetch(endpoint)
-  const data: Topic = await response.json()
+  const data: Mensajes = await response.json()
   return data
 }
 
-const parseUserData = (user: Topic) => {
-  const { titulo, descripcion, id } = user
+const parseUserData = (user: Mensajes) => {
+  const { mensajes, id } = user
   return { 
-    titulo: titulo, 
-    descripcion: descripcion,
-    id: id
+    mensajes: mensajes,
+    id: id 
   }
 }
 
@@ -69,12 +68,13 @@ export default function ComponenteTema(tema: Tema) {
 
   useEffect(() => {
     const api = async() => {
+      const id = 302
       try{
-        const data = await fetch("http://localhost:3000/api/topic", {
+        const data = await fetch(`http://localhost:3000/api/topic/${id}/messages`, {
           method: "GET",
           headers: {
             'x-user-id': '5',
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           }
 
         });
@@ -84,10 +84,12 @@ export default function ComponenteTema(tema: Tema) {
 
         const jsonData = await data.json();
         const topics = jsonData.map(parseUserData)
-        return setState({...state, topics: [...topics]})
+        console.log("TOPICSO", jsonData)
+
+        return setState({...state, topics: [...jsonData]})
         // return setState(jsonData.results);
       }catch(e) {
-          console.error(e)
+          console.error("ERROR", e)
       }
     };
     api();
@@ -114,13 +116,7 @@ export default function ComponenteTema(tema: Tema) {
 
       </View>
       <ScrollView style={[styles.scrollView, { backgroundColor: 'white' }]}>
-        <ComponenteTemaFila topics = {state.topics} />
-        {/* <ComponenteTemaFila />
-        <ComponenteTemaFila />
-        <ComponenteTemaFila />
-        <ComponenteTemaFila />
-        <ComponenteTemaFila /> */}
-
+        <ComponenteMensaje comps = {state.topics} />
       </ScrollView>
 
 
@@ -133,7 +129,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     marginTop: 10,
-    marginLeft: 10
+    marginLeft: 30
   },
   scrollView: {
     backgroundColor: 'pink',
