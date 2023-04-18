@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { StyleSheet, Button, Switch, Image,SafeAreaView, ScrollView } from 'react-native';
 
 import Colors from '../constants/Colors';
@@ -6,6 +6,7 @@ import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import ComponenteTemaFila from './ComponenteTemaFila';
+import ModalDesuscribir from './ModalDesuscribir';
 
 type Tema = {
     titulo: string;
@@ -13,6 +14,9 @@ type Tema = {
 };
 
 export default function ComponenteTema(tema: Tema) {
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
         <View style={styles.temaContainer}>
             <View style= {[styles.temaContainer, {flexDirection: "row", alignItems: 'center',}]}>
@@ -37,7 +41,9 @@ export default function ComponenteTema(tema: Tema) {
               </Text>
               <Switch style= {[{margin: 20}]}></Switch>
             </View>
-            <Button title="Dejar de seguir"></Button>
+            <Button title="Dejar de seguir" onPress={() => setIsModalOpen(!isModalOpen)}></Button>
+
+            <ModalDesuscribir isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
           
 
         </View>
