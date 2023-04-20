@@ -16,8 +16,8 @@ export default function ComponenteHeader() {
   return (
     <SafeAreaView style={styles.temaContainer}>
       <View style={[styles.header, {flexDirection: "row", alignItems: 'center',}]}>
-        <Image source={require('./../assets/images/Union.png')} style={{width: 30, height: 30, borderRadius: 30/ 2}}/>
-        <Text style={[styles.header.header_text, {flexDirection: "column",}]}>Notify</Text>  
+        <Image source={require('./../assets/images/Union.png')} style={{width: 50, height: 50, borderRadius: 30/ 2}}/>
+        <Text style={[styles.headerText, {flexDirection: "column", paddingLeft: 10}]}>Notify</Text>  
       </View>  
       
 
@@ -36,12 +36,13 @@ const styles = StyleSheet.create({
     flex: 1, 
     alignItems: 'center', 
     justifyContent: 'center',
-    paddingVertical: 10,
-    header_text: {
-      fontFamily: 'Poppins',
-      fontSize: '2rem',
-      fontWeight: '600'
-    }
+    paddingVertical: 40,
+    
+  },
+  headerText: {
+    fontSize: 30,
+    fontWeight: '600',
+    // fontFamily: 'poppins',
   },
   scrollView: {
     backgroundColor: 'pink',

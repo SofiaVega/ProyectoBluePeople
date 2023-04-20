@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, ScrollView } from 'react-native';
 
 import Colors from '../constants/Colors';
 import { ExternalLink } from './ExternalLink';
@@ -15,7 +15,7 @@ type TemaFila = {
 export default function ComponenteTemaFila({comps}) {
   console.log("TOPICSSS ", comps)
   return (
-        <View style={styles.temaContainer}>
+        <ScrollView style={styles.temaContainer}>
           {comps.map((topic) => (
             <View style= {[styles.temaContainer, styles.lineStyle, {flexDirection: "row", alignItems: 'center',}]}>
 
@@ -31,19 +31,16 @@ export default function ComponenteTemaFila({comps}) {
                     
 
                 </View>
-                  {/* { tema.sinLeer > 0 && <Text>{tema.sinLeer}</Text> } */}
-
             </View>
             ))}
 
-        </View>
+        </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   temaContainer: {
-    backgroundColor:'white',
-    margin: 10,
+    backgroundColor:'#fdfdfd',
     padding: 10,
   },
   title: {
@@ -56,8 +53,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 50,
   },
   lineStyle:{
-    borderBottomWidth: 2,
-    borderBottomColor:'#DB8A74',
+    borderBottomWidth: 1,
+    borderBottomColor:'rgba(219, 138, 116, 0.66)',
     marginBottom: 1,
   },
   homeScreenFilename: {

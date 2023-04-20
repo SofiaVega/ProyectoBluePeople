@@ -193,6 +193,7 @@ app.get("/api/subscriptions", attachId, async (req, res) => {
         .status(401)
         .json({ error: "User is not subscribed to any topics" });
     }
+    console.log("SUSCRIPCIOPNES ", res)
     res.status(201).send(result.rows);
   } catch (err) {
     console.log(err.message);
