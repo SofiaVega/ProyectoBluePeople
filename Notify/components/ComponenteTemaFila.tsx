@@ -1,46 +1,42 @@
 import React from 'react';
 import { StyleSheet, Image, ScrollView } from 'react-native';
-
+import { Link, Tabs } from "expo-router";
 import Colors from '../constants/Colors';
 import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 
 type TemaFila = {
-    titulo: string;
-    ultimaNotif: string;
-    sinLeer: number;
+  titulo: string;
+  ultimaNotif: string;
+  sinLeer: number;
 };
 
-export default function ComponenteTemaFila({comps}) {
+export default function ComponenteTemaFila({ comps }) {
   console.log("TOPICSSS ", comps)
   return (
-        <ScrollView style={styles.temaContainer}>
-          {comps.map((topic) => (
-            <View style= {[styles.temaContainer, styles.lineStyle, {flexDirection: "row", alignItems: 'center',}]}>
-
-                <View style= {[styles.temaContainer, {flexDirection: "column",}]}>
-                  
-                    <Text style={styles.title} key= {topic.id}>
-                      {topic.titulo}
-                    </Text>
-
-                    <Text style={styles.textoTema} key= {topic.id}>
-                     {topic.titulo}
-                    </Text>
-                    
-
-                </View>
-            </View>
-            ))}
-
-        </ScrollView>
+    <ScrollView style={styles.temaContainer}>
+      {comps.map((topic) => (
+        <View style={[styles.temaContainer, styles.lineStyle, { flexDirection: "row", alignItems: 'center', }]}>
+          <View style={[styles.temaContainer, { flexDirection: "column", }]}>
+            <Link href="/config_tema" asChild >
+              <Text style={styles.title} key={topic.id}>
+                {topic.titulo}
+              </Text>
+            </Link>
+            <Text style={styles.textoTema} key={topic.id}>
+              {topic.titulo}
+            </Text>
+          </View>
+        </View>
+      ))}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   temaContainer: {
-    backgroundColor:'#fdfdfd',
+    backgroundColor: '#fdfdfd',
     padding: 10,
   },
   title: {
@@ -52,9 +48,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 50,
   },
-  lineStyle:{
+  lineStyle: {
     borderBottomWidth: 1,
-    borderBottomColor:'rgba(219, 138, 116, 0.66)',
+    borderBottomColor: 'rgba(219, 138, 116, 0.66)',
     marginBottom: 1,
   },
   homeScreenFilename: {

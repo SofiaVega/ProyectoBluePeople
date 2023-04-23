@@ -9,7 +9,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Topic } from "../interface";
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Feather } from "@expo/vector-icons";
 
 
@@ -28,7 +28,7 @@ export default function PaginaPrincipalScreen() {
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch("https://localhost:3000/api/subscriptions", {
+        const data = await fetch("https://9eba-201-172-172-4.ngrok.io/api/subscriptions", {
           method: "GET",
           headers: {
             "x-user-id": "5",
@@ -52,49 +52,30 @@ export default function PaginaPrincipalScreen() {
     api();
   }, []);
 
-  console.log("ESTADPPP", state);
+  // console.log("ESTADPPP", state);
 
   return (
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
-      {/* Header bar */}
       <ComponenteHeader></ComponenteHeader>
-      <View style={[{ flexDirection: "column",justifyContent: 'space-between', backgroundColor: '#E8F1F2' }]}>
+      <View style={[{ flexDirection: "column", justifyContent: 'space-between', backgroundColor: '#E8F1F2' }]}>
         <View style={[{ flexDirection: "row", backgroundColor: '#E8F1F2' }]}>
           <View style={[{ flexDirection: "row", backgroundColor: '#fdfdfd' }, styles.input]}>
-                <Feather name="search" size={20} color="black" style={{marginLeft: 1, marginRight: 4 }}/>
-                <TextInput placeholder="Buscar" />
-                
+            <Feather name="search" size={20} color="black" style={{ marginLeft: 1, marginRight: 4 }} />
+            <TextInput placeholder="Buscar"/>
           </View>
           <Link href="/modal_nuevo_tema" asChild >
-                <Pressable style={styles.plusContainer}>
-                  {({ pressed }) => (
-                    <FontAwesome
-                      name="plus"
-                      size={15}
-                      color="#fdfdfd"
-                      style={[
-                        {opacity: pressed ? 0.5 : 1},
-                      ]}
-                    />
-                  )}
-                </Pressable>
-              </Link>
-          </View>
+            <Pressable style={styles.plusContainer}>
+              {({ pressed }) => (<FontAwesome name="plus" size={15} color="#fdfdfd" style={[{ opacity: pressed ? 0.5 : 1 },]} />)}
+            </Pressable>
+          </Link>
+        </View>
       </View>
       <View style={[styles.temaContainer]}>
-        <View
-          style={[ { marginLeft: 20, marginTop: 20, marginRight: 20, backgroundColor: '#fdfdfd'}]}>
-
-          
-          
+        <View style={[{ marginLeft: 20, marginTop: 20, marginRight: 20, backgroundColor: '#fdfdfd'}]}>
           <Text style={styles.title}>Temas</Text>
-          <ComponenteTemaFila comps={state}></ComponenteTemaFila>
-        </View>
-        <View style={styles.temaContainer}>
-          
+          <ComponenteTemaFila comps={state}/>
         </View>
       </View>
-
     </SafeAreaView>
   );
 }
@@ -104,7 +85,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fdfdfd",
     borderRadius: 20,
     marginRight: 20,
-    marginLeft: 20, 
+    marginLeft: 20,
     marginTop: 30,
     marginBottom: 30,
     // height: screen.width * 0.9,
@@ -115,26 +96,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  input:{
-    backgroundColor: 'rgba(69,119,187,0.15)' ,
+  input: {
+    backgroundColor: 'rgba(69,119,187,0.15)',
     padding: 10,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'rgba(69,119,187,0.15)',
     fontSize: 15,
-    color: 'black', 
+    color: 'black',
     marginRight: 10,
-    marginLeft: 20, 
+    marginLeft: 20,
     marginTop: 30
   },
-  plusContainer:{
-    backgroundColor: '#4577BB' ,
+  plusContainer: {
+    backgroundColor: '#4577BB',
     padding: 15,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#fdfdfd',
     fontSize: 10,
-    color: '#fdfdfd', 
+    color: '#fdfdfd',
     marginTop: 30
   },
   title: {

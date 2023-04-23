@@ -72,9 +72,7 @@ export default function ModalScreen() {
       <form>
         <label>
           ID del tema:
-          <input
-            type="text"
-            value={temasID}
+          <input type="text"value={temasID}
             placeholder="ID del tema"
             onChange={(e) => settemasID(e.target.value)}
           />
