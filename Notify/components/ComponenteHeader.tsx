@@ -38,8 +38,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 10,
     header_text: {
-      fontFamily: 'Poppins',
-      fontSize: '2rem',
+      fontSize: 2,
       fontWeight: '600'
     }
   },

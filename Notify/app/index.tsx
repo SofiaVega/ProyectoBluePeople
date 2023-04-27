@@ -8,6 +8,7 @@ import { Pressable, useColorScheme } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Topic } from "../interface";
 import React, { useEffect, useState } from "react";
+import registerForPushNot from './registerForPushNot';
 
 const parseUserData = (user: Topic) => {
   const { titulo, descripcion, id } = user;
@@ -24,10 +25,10 @@ export default function PaginaPrincipalScreen() {
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch("http://localhost:3000/api/subscriptions", {
+        const data = await fetch("https://3294-2806-230-4026-bd3f-75cf-7218-2534-bbe2.ngrok-free.app/api/subscriptions", {
           method: "GET",
           headers: {
-            "x-user-id": "3",
+            "x-user-id": "1",
             "Content-Type": "application/json",
           },
         });
@@ -49,6 +50,10 @@ export default function PaginaPrincipalScreen() {
   }, []);
 
   console.log("ESTADPPP", state);
+
+  useEffect(() => {
+    registerForPushNot()
+  }, []);
 
   return (
     <SafeAreaView>
