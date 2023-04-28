@@ -3,7 +3,7 @@ const { Pool } = require("pg");
 // Create a new database connection pool
 const pool = new Pool({
   user: "postgres",
-  database: "notifydb",
+  database: "NotifyDB",
   password: "postgres",
 });
 

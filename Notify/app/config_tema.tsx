@@ -11,7 +11,7 @@ type Tema = {
 
 export default function ConfigTemaScreen() {
   return (
-    <SafeAreaView >
+    <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
       <ComponenteTemaConfig titulo = "Titulo" descripcion = "Descripcion"></ComponenteTemaConfig>
     </SafeAreaView>
     

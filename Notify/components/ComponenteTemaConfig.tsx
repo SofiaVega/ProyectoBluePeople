@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, Button, Switch, Image,SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, Button, Switch, Image,SafeAreaView, ScrollView, Pressable } from 'react-native';
 
 import Colors from '../constants/Colors';
 import { ExternalLink } from './ExternalLink';
@@ -18,11 +18,12 @@ export default function ComponenteTema(tema: Tema) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-        <View style={styles.temaContainer}>
+        <View style={{ backgroundColor: "#E8F1F2" }}>
+          <View style = {styles.temaContainer}> 
             <View style= {[styles.temaContainer, {flexDirection: "row", alignItems: 'center',}]}>
                 <Image source={require('./../assets/images/favicon.png')} style={{width: 30, height: 30, borderRadius: 30/ 2}}/>
 
-                <View style= {[styles.temaContainer, {flexDirection: "column",}]}>
+                <View style= {[styles.bgColor, {flexDirection: "column",}]}>
                     <Text
                     style={styles.title}>
                     {tema.titulo}
@@ -47,15 +48,27 @@ export default function ComponenteTema(tema: Tema) {
           
 
         </View>
+        </View>
   );
 }
 
 const styles = StyleSheet.create({
+  bgColor:{
+    backgroundColor: '#fdfdfd'
+  },
   temaContainer: {
-    backgroundColor:'white',
+    backgroundColor:'#fdfdfd',
     borderRadius: 10,
-    margin: 10,
     padding: 10
+  },
+  buttonContainer: {
+    backgroundColor: '#EF3E36',
+    padding: 15,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#fdfdfd',
+    fontSize: 10,
+    color: '#fdfdfd',
   },
   scrollView: {
     backgroundColor: 'pink',
@@ -64,7 +77,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-
+    paddingLeft: 10,
     color: 'black'
   },
   getStartedContainer: {
@@ -79,10 +92,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   textoTema: {
-    fontSize: 17,
+    fontSize: 15,
     lineHeight: 24,
     textAlign: 'center',
-    color: 'black'
+    color: '#272727',
+    paddingLeft: 10,
+  },
+  textoButton: {
+    fontSize: 15,
+    lineHeight: 24,
+    textAlign: 'center',
+    color: '#fdfdfd',
+    fontWeight: 'bold'
   },
   helpContainer: {
     marginTop: 15,
