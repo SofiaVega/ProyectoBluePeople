@@ -289,7 +289,7 @@ app.put("/api/topic/:id", attachId, async (req, res) => {
 });
 
 //delete topic
-app.delete("/api/topic/:id", async (req, res) => {
+app.delete("/api/topic/:id", attachId, async (req, res) => {
   try {
     const user_id = req.user_id;
     //Check if user is admin
@@ -318,40 +318,54 @@ app.delete("/api/topic/:id", async (req, res) => {
     res.json({ message: "Topic deleted successfully" });
   } catch (err) {
     // Handle any errors that may occur
-    console.error(err).message;
+    console.error(err.message);
     res.status(500).json({ error: "Error deleting topic" });
   }
 });
 
 //Delete a subscription
 // Example route for deleting a subscription
-app.delete("/subscriptions/:user_id/:topic_id", async (req, res) => {
-  try {
-    //TODO -- Make sure normal users can't unsubscribe other users, normal users can unsubscribe from their own subscriptions and admins can remove any subscription
-    const userId = req.params.user_id;
-    const topicId = req.params.topic_id;
+app.delete(
+  "/api/subscriptions/:user_id/:topic_id",
+  attachId,
+  async (req, res) => {
+    try {
+      //TODO -- Make sure normal users can't unsubscribe other users, normal users can unsubscribe from their own subscriptions and admins can remove any subscription
+      const userId = req.params.user_id;
+      const topicId = req.params.topic_id;
+      //check if user is admin, if so they can delete any sub
+      const curr_user_id = req.user_id;
+      const user_status = await pool.query(
+        "SELECT is_admin FROM usuario where id = $1",
+        [curr_user_id]
+      );
+      const user_admin = user_status.rows[0].is_admin;
+      //If user is not admin and the request has another user_id than its own, then they are unauthorized to delete another user's subscription
+      if (!user_admin && userId != curr_user_id) {
+        res.status(401).send("Unauthorized");
+      }
+      // Check existing subscription
+      const existingSubscription = await pool.query(
+        "SELECT * FROM tema_sus WHERE suscriptor_id = $1 AND temas_id = $2",
+        [userId, topicId]
+      );
 
-    // Check existing subscription
-    const existingSubscription = await pool.query(
-      "SELECT * FROM tema_sus WHERE suscriptor_id = $1 AND temas_id = $2",
-      [userId, topicId]
-    );
+      if (existingSubscription.rowCount === 0) {
+        return res.status(404).json({ error: "Subscription not found" });
+      }
 
-    if (existingSubscription.rowCount === 0) {
-      return res.status(404).json({ error: "Subscription not found" });
+      // Delete the subscription
+      await pool.query(
+        "DELETE FROM tema_sus WHERE suscriptor_id = $1 AND temas_id = $2",
+        [userId, topicId]
+      );
+      res.json({ message: "Subscription deleted successfully" });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ error: "Error deleting subscription" });
     }
-
-    // Delete the subscription
-    await pool.query(
-      "DELETE FROM tema_sus WHERE suscriptor_id = $1 AND temas_id = $2",
-      [userId, topicId]
-    );
-    res.json({ message: "Subscription deleted successfully" });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ error: "Error deleting subscription" });
   }
-});
+);
 
 // Start the Express server
 app.listen(3000, () => {
