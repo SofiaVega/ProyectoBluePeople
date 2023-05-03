@@ -5,6 +5,13 @@ import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 import { useState } from "react";
 
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Scanner from "../components/Scanner";
+import ScannerContainer from "../components/ScannerContainer";
+
+const Stack = createNativeStackNavigator();
+
 export default function ModalScreen() {
   const [temasID, settemasID] = useState("");
   const [subscriptorID, setsubscriptorID] = useState("");
@@ -85,6 +92,10 @@ export default function ModalScreen() {
         />
         <input type="submit" value="Suscribirme" onClick={handleSubmit} />
       </form>
+      <Stack.Navigator>
+        <Stack.Screen name = "Home" component = {ScannerContainer} />
+        <Stack.Screen name = "Scanner" component = {Scanner} />
+      </Stack.Navigator>
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
