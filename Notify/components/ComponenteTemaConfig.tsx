@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { StyleSheet, Button, Switch, Image,SafeAreaView, ScrollView, Pressable } from 'react-native';
 
 import Colors from '../constants/Colors';
@@ -6,6 +6,7 @@ import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import ComponenteTemaFila from './ComponenteTemaFila';
+import ModalDesuscribir from './ModalDesuscribir';
 
 type Tema = {
     titulo: string;
@@ -13,6 +14,9 @@ type Tema = {
 };
 
 export default function ComponenteTema(tema: Tema) {
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
         <View style={{ marginLeft: 20, marginTop: 20, marginRight: 20, borderRadius: 20, backgroundColor: "#fdfdfd" }}>
           <View style = {[styles.temaContainer, { flexDirection: "column"}]}> 
@@ -39,9 +43,13 @@ export default function ComponenteTema(tema: Tema) {
               <Switch trackColor= {{true: "#DB8A74", false: "grey" }} style= {[{margin: 20}]}></Switch>
             </View>
             <View style = {[{backgroundColor:'#fdfdfd', flexDirection: "column",alignItems: 'center'}]}>
-              <Pressable style={styles.buttonContainer}><Text style={styles.textoButton}>Dejar de seguir</Text></Pressable>
+              <Pressable style={styles.buttonContainer} onPress={() => setIsModalOpen(!isModalOpen)}><Text style={styles.textoButton}>Dejar de seguir</Text></Pressable>
+              <ModalDesuscribir isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
             </View>
-            </View>
+            {/* <Button title="Dejar de seguir" onPress={() => setIsModalOpen(!isModalOpen)}></Button> */}
+          
+
+        </View>
         </View>
   );
 }
