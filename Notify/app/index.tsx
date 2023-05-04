@@ -63,7 +63,7 @@ console.log("ESTADPPP", state);
             <Feather name="search" size={20} color="black" style={{ marginLeft: 1, marginRight: 4 }} />
             <TextInput placeholder="Buscar"/>
           </View>
-          <Link href="/modal_nuevo_tema" asChild >
+          <Link href="/config_tema" asChild >
             <Pressable style={styles.plusContainer}>
               {({ pressed }) => (<FontAwesome name="plus" size={15} color="#fdfdfd" style={[{ opacity: pressed ? 0.5 : 1 },]} />)}
             </Pressable>

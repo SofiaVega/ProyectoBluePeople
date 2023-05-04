@@ -18,8 +18,8 @@ export default function ComponenteTema(tema: Tema) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-        <View style={{ backgroundColor: "#E8F1F2" }}>
-          <View style = {styles.temaContainer}> 
+        <View style={{ marginLeft: 20, marginTop: 20, marginRight: 20, borderRadius: 20, backgroundColor: "#fdfdfd" }}>
+          <View style = {[styles.temaContainer, { flexDirection: "column"}]}> 
             <View style= {[styles.temaContainer, {flexDirection: "row", alignItems: 'center',}]}>
                 <Image source={require('./../assets/images/favicon.png')} style={{width: 30, height: 30, borderRadius: 30/ 2}}/>
 
@@ -40,11 +40,13 @@ export default function ComponenteTema(tema: Tema) {
                     style={styles.title}>
                 Push notifications
               </Text>
-              <Switch style= {[{margin: 20}]}></Switch>
+              <Switch trackColor= {{true: "#DB8A74", false: "grey" }} style= {[{margin: 20}]}></Switch>
             </View>
-            <Button title="Dejar de seguir" onPress={() => setIsModalOpen(!isModalOpen)}></Button>
-
-            <ModalDesuscribir isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+            <View style = {[{backgroundColor:'#fdfdfd', flexDirection: "column",alignItems: 'center'}]}>
+              <Pressable style={styles.buttonContainer} onPress={() => setIsModalOpen(!isModalOpen)}><Text style={styles.textoButton}>Dejar de seguir</Text></Pressable>
+              <ModalDesuscribir isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+            </View>
+            {/* <Button title="Dejar de seguir" onPress={() => setIsModalOpen(!isModalOpen)}></Button> */}
           
 
         </View>
@@ -61,6 +63,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10
   },
+  button: {
+    borderRadius: 8,
+    padding: 6,
+    height: 50,
+    width: '70%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+  },
   buttonContainer: {
     backgroundColor: '#EF3E36',
     padding: 15,
@@ -68,6 +79,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fdfdfd',
     fontSize: 10,
+    width: '70%',
+    alignItems: 'center',
+    justifyContent: 'center',
     color: '#fdfdfd',
   },
   scrollView: {
