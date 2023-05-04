@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image,SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, Image, SafeAreaView, ScrollView } from 'react-native';
 
 import Colors from '../constants/Colors';
 import { ExternalLink } from './ExternalLink';
@@ -8,40 +8,41 @@ import { Text, View } from './Themed';
 import ComponenteTemaFila from './ComponenteTemaFila';
 
 type Tema = {
-    titulo: string;
-    descripcion: string;
+  titulo: string;
+  descripcion: string;
 };
 
 export default function ComponenteHeader() {
   return (
     <SafeAreaView style={styles.temaContainer}>
-      <View style={[styles.header, {flexDirection: "row", alignItems: 'center',}]}>
-        <Image source={require('./../assets/images/Union.png')} style={{width: 30, height: 30, borderRadius: 30/ 2}}/>
-        <Text style={[styles.header.header_text, {flexDirection: "column",}]}>Notify</Text>  
-      </View>  
-      
+      <View style={[styles.header, { flexDirection: "row", alignItems: 'center', }]}>
+        <Image source={require('./../assets/images/Union.png')} style={{ width: 50, height: 50, borderRadius: 30 / 2 }} />
+        <Text style={[styles.headerText, { flexDirection: "column", paddingLeft: 10 }]}>Notify</Text>
+      </View>
+
 
     </SafeAreaView>
-);
+  );
 }
 
 const styles = StyleSheet.create({
   temaContainer: {
-    backgroundColor:'white',
+    backgroundColor: 'white',
     borderRadius: 10,
   },
-  header:{
+  header: {
     backgroundColor: '#4577BB',
     color: '#E8F1F2',
-    flex: 1, 
-    alignItems: 'center', 
+    flex: 1,
+    alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 10,
-    header_text: {
-      fontFamily: 'Poppins',
-      fontSize: '2rem',
-      fontWeight: '600'
-    }
+    paddingVertical: 40,
+
+  },
+  headerText: {
+    fontSize: 30,
+    fontWeight: '600',
+    // fontFamily: 'poppins',
   },
   scrollView: {
     backgroundColor: 'pink',

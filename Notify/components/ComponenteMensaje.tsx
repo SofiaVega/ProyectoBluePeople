@@ -1,45 +1,36 @@
 import React from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, Text } from 'react-native';
 
 import Colors from '../constants/Colors';
 import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
-import { Text, View } from './Themed';
+import { View } from './Themed';
 
 type TemaFila = {
-    titulo: string;
-    ultimaNotif: string;
-    sinLeer: number;
+  titulo: string;
+  ultimaNotif: string;
+  sinLeer: number;
 };
 
-export default function ComponenteMensaje({comps}) {
-  console.log("TOPICSSS ", comps)
+export default function ComponenteMensaje({ comps }) {
   return (
-        <View style={styles.temaContainer}>
-          {comps.map((topic) => (
-            <View style= {[styles.temaContainer, styles.lineStyle, {flexDirection: "row", alignItems: 'center',}]}>
-
-                <View style= {[styles.temaContainer, {flexDirection: "column",}]}>
-                  
-                    <Text style={styles.textoTema} key= {topic.id}>
-                      {topic.mensaje}
-                    </Text>                   
-
-                </View>
-                  {/* { tema.sinLeer > 0 && <Text>{tema.sinLeer}</Text> } */}
-
-            </View>
-            ))}
-
+    <View style={styles.temaContainer}>
+      {comps.map((topic) => (
+        <View style={[styles.temaContainer, styles.lineStyle, { flexDirection: "row", alignItems: 'center', }]}>
+          <View style={[styles.temaContainer, { flexDirection: "column" }]}>
+            <Text style={styles.textoTema} key={topic.id}>{topic.mensaje}</Text>
+          </View>
         </View>
+      ))}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   temaContainer: {
-    backgroundColor:'white',
-    margin: 10,
-    padding: 10,
+    backgroundColor: '#fdfdfd',
+    paddingVertical: 12,
+    marginRight: 10
   },
   title: {
     fontSize: 20,
@@ -50,10 +41,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 50,
   },
-  lineStyle:{
-    borderBottomWidth: 2,
-    borderBottomColor:'#DB8A74',
-    marginBottom: 1,
+  lineStyle: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(219, 138, 116, 0.66)',
   },
   homeScreenFilename: {
     marginVertical: 7,
@@ -65,8 +55,12 @@ const styles = StyleSheet.create({
   textoTema: {
     fontSize: 17,
     lineHeight: 24,
-    textAlign: 'center',
     color: 'black'
+  },
+  tituloNotificacion: {
+    fontSize: 17,
+    color: 'black',
+    fontWeight: '600'
   },
   helpContainer: {
     marginTop: 15,
