@@ -28,7 +28,7 @@ export default function PaginaPrincipalScreen() {
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch("https://9eba-201-172-172-4.ngrok.io/api/subscriptions", {
+        const data = await fetch("http://localhost:3000/api/subscriptions", {
           method: "GET",
           headers: {
             "x-user-id": "5",
@@ -52,7 +52,7 @@ export default function PaginaPrincipalScreen() {
     api();
   }, []);
 
-  // console.log("ESTADPPP", state);
+console.log("ESTADPPP", state);
 
   return (
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
