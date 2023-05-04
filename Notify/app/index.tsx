@@ -28,7 +28,7 @@ export default function PaginaPrincipalScreen() {
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch("https://9eba-201-172-172-4.ngrok.io/api/subscriptions", {
+        const data = await fetch("https://cb6b-201-172-172-4.ngrok.io/api/subscriptions", {
           method: "GET",
           headers: {
             "x-user-id": "5",
@@ -63,7 +63,7 @@ export default function PaginaPrincipalScreen() {
             <Feather name="search" size={20} color="black" style={{ marginLeft: 1, marginRight: 4 }} />
             <TextInput placeholder="Buscar"/>
           </View>
-          <Link href="/modal_nuevo_tema" asChild >
+          <Link href="/config_tema" asChild >
             <Pressable style={styles.plusContainer}>
               {({ pressed }) => (<FontAwesome name="plus" size={15} color="#fdfdfd" style={[{ opacity: pressed ? 0.5 : 1 },]} />)}
             </Pressable>
