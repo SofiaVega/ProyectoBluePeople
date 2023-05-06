@@ -46,7 +46,7 @@ CREATE TABLE mensajes (
 	tema_id int NOT NULL,
 	mensaje text NOT NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-	CONSTRAINT fk_tema FOREIGN KEY(tema_id) REFERENCES temas(id)
+	CONSTRAINT fk_tema FOREIGN KEY(tema_id) REFERENCES temas(id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS tema_sus CASCADE;
@@ -58,6 +58,6 @@ CREATE TABLE tema_sus (
 	recibirpushnot BOOLEAN NOT NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	PRIMARY KEY (temas_id, suscriptor_id),
-  	CONSTRAINT fk_temas FOREIGN KEY(temas_id) REFERENCES temas(id),
-  	CONSTRAINT fk_suscriptor FOREIGN KEY(suscriptor_id) REFERENCES usuario(id)
+  	CONSTRAINT fk_temas FOREIGN KEY(temas_id) REFERENCES temas(id) ON DELETE CASCADE,
+  	CONSTRAINT fk_suscriptor FOREIGN KEY(suscriptor_id) REFERENCES usuario(id) ON DELETE CASCADE
 );
