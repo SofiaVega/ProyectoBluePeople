@@ -55,6 +55,7 @@ DROP SEQUENCE IF EXISTS tema_sus;
 CREATE TABLE tema_sus (
 	temas_id int,
 	suscriptor_id int,
+	recibirpushnot BOOLEAN NOT NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	PRIMARY KEY (temas_id, suscriptor_id),
   	CONSTRAINT fk_temas FOREIGN KEY(temas_id) REFERENCES temas(id),
