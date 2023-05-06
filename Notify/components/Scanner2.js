@@ -15,9 +15,22 @@ export default function Scanner2() {
     getBarCodeScannerPermissions();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    const datos = { temas_id: data, suscriptor_id: 1 };
+    console.log(datos)
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-user-id": "5" },
+      body: JSON.stringify(datos),
+    };
+    await fetch(
+      `https://9ff3-2806-108e-13-636-d5d4-9d66-2340-3ac.ngrok-free.app/api/subscribe/${data}`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((res) => console.log(res));
   };
 
   if (hasPermission === null) {

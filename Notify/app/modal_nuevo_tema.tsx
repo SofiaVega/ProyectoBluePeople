@@ -63,7 +63,7 @@ export default function ModalScreen() {
       body: JSON.stringify(data),
     };
     await fetch(
-      `http://localhost:3000/api/subscribe/${temasID}`,
+      `https://9ff3-2806-108e-13-636-d5d4-9d66-2340-3ac.ngrok-free.app/api/subscribe/${temasID}`,
       requestOptions
     )
       .then((response) => response.json())
