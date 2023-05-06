@@ -18,7 +18,7 @@ export default function Scanner2() {
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    const datos = { temas_id: data, suscriptor_id: 1 };
+    const datos = { temas_id: data, suscriptor_id: 5 };
     console.log(datos)
     const requestOptions = {
       method: "POST",
@@ -26,7 +26,7 @@ export default function Scanner2() {
       body: JSON.stringify(datos),
     };
     await fetch(
-      `https://9ff3-2806-108e-13-636-d5d4-9d66-2340-3ac.ngrok-free.app/api/subscribe/${data}`,
+      `https://b4c9-2806-108e-13-636-d5d4-9d66-2340-3ac.ngrok-free.app/api/subscribe/${data}`,
       requestOptions
     )
       .then((response) => response.json())

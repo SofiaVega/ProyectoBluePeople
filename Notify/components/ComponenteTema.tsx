@@ -71,7 +71,7 @@ export default function ComponenteTema(tema: Tema) {
     const api = async () => {
       const id = 302
       try {
-        const data = await fetch(`https://9eba-201-172-172-4.ngrok.io/api/topic/${id}/messages`, {
+        const data = await fetch(`https://b4c9-2806-108e-13-636-d5d4-9d66-2340-3ac.ngrok-free.app/api/topic/${id}/messages`, {
           method: "GET",
           headers: {
             'x-user-id': '5',
