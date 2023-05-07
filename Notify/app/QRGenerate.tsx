@@ -44,7 +44,7 @@ export default function QRGenerate() {
           </View>
       <QRCode
       size={200}
-      value="hola"
+      value="cod1"
     />
     </View>
   </SafeAreaView>

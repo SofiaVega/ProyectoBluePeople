@@ -19,7 +19,7 @@ export default function ComponenteTemaFila({ comps }) {
       {comps.map((topic) => (
         <View style={[styles.temaContainer, styles.lineStyle, { flexDirection: "row", alignItems: 'center', }]}>
           <View style={[styles.temaContainer, { flexDirection: "column", }]}>
-            <Link href="/config_tema" asChild >
+            <Link href="/config_tema_admin" asChild >
               <Text style={styles.title} key={topic.id}>
                 {topic.titulo}
               </Text>

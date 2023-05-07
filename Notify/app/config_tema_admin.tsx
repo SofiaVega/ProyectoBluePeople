@@ -1,4 +1,4 @@
-import { StyleSheet, Button, Switch, Image, SafeAreaView, ScrollView, Pressable, TextInput } from 'react-native';
+import { StyleSheet, Button, Switch, Image, SafeAreaView, ScrollView, Pressable, TextInput, Linking } from 'react-native';
 import { Feather } from "@expo/vector-icons";
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
@@ -6,6 +6,7 @@ import ComponenteTemaConfig from '../components/ComponenteTemaConfig';
 import { color } from '@rneui/themed/dist/config';
 import ComponenteHeader from "../components/ComponenteHeader";
 import { Link, Tabs } from "expo-router";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 type Tema = {
   titulo: string;
@@ -17,43 +18,49 @@ export default function ConfigTemaAdminScreen() {
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
       <ComponenteHeader></ComponenteHeader>
       <View style={{ marginLeft: 20, marginTop: 20, marginRight: 20, borderRadius: 20, backgroundColor: "#fdfdfd" }}>
-          <View style = {[styles.temaContainer, { flexDirection: "column"}]}> 
-            <View style = {[{backgroundColor:'#fdfdfd', flexDirection: "column",alignItems: 'center'}]}>
-              <Image source={require('./../assets/images/favicon.png')} style={{width: 50, height: 50, borderRadius: 30/ 2, marginBottom: 30, marginTop: 40}}/>
-            </View>
-            <View style = {[styles.temaContainerInputs]}>
-              <Text style ={[styles.titleInput]}>Titulo</Text>
-              <TextInput style={[styles.input]} placeholder="Titulo" placeholderTextColor={'rgba(0,0,0,0.10)'} />
-            </View>
-            <View style = {[styles.temaContainerInputs]}>
-              <Text style ={[styles.titleInput]}>Descripcion</Text>
-              <TextInput style={[styles.input]} placeholder="Descripcion" placeholderTextColor={'rgba(0,0,0,0.10)'} />
-            </View>
-            <View style = {[{backgroundColor:'#fdfdfd', flexDirection: "column",alignItems: 'center'}]}>
-              
-              <Link href="/QRModal" asChild >
-                <Pressable style={[styles.buttonContainer, {backgroundColor: "#DB8A74", marginBottom: 30}]}><Text style={styles.textoButton}>Genrar QR</Text></Pressable>
-              </Link>
-              <Pressable style={styles.buttonContainer}><Text style={styles.textoButton}>Guardar</Text></Pressable>
-            </View>
-            </View>
+        <View style={[styles.temaContainer, { flexDirection: "column" }]}>
+          <View style={[{ backgroundColor: '#fdfdfd', flexDirection: "column", alignItems: 'center' }]}>
+            <Image source={require('./../assets/images/favicon.png')} style={{ width: 50, height: 50, borderRadius: 30 / 2, marginBottom: 30, marginTop: 40 }} />
+          </View>
+          <View style={[styles.temaContainerInputs]}>
+            <Text style={[styles.titleInput]}>Titulo</Text>
+            <TextInput style={[styles.input]} placeholder="Titulo" placeholderTextColor={'rgba(0,0,0,0.10)'} />
+          </View>
+          <View style={[styles.temaContainerInputs]}>
+            <Text style={[styles.titleInput]}>Descripcion</Text>
+            <TextInput style={[styles.input]} placeholder="Descripcion" placeholderTextColor={'rgba(0,0,0,0.10)'} />
+          </View>
+          <View style={[{ backgroundColor: '#fdfdfd', flexDirection: "column", alignItems: 'center' }]}>
+
+            <Link href="/QRGenerate" asChild >
+              <Pressable style={[styles.buttonContainer, { backgroundColor: "#DB8A74", marginBottom: 30 }]}><Text style={styles.textoButton}>Genrar QR</Text></Pressable>
+            </Link>
+            {/* <Link href="/QRGenerate" asChild>
+                <Pressable style={[styles.button, {backgroundColor: "#DB8A74", marginBottom: 30}]}>
+                  {({ pressed }) => (<Text style={styles.textoButton}>Genrar QR</Text>)}
+                </Pressable>
+              </Link> */}
+            <Pressable style={[styles.buttonContainer, { backgroundColor: "#DB8A74", marginBottom: 30 }]}><Text style={styles.textoButton}>Generar QR</Text></Pressable>
+            <Pressable style={styles.buttonContainer}><Text style={styles.textoButton}>Guardar</Text></Pressable>
+          </View>
         </View>
+      </View>
     </SafeAreaView>
-    
+
   );
 }
 
 const styles = StyleSheet.create({
-  bgColor:{
+  bgColor: {
     backgroundColor: '#fdfdfd'
   },
   temaContainer: {
-    backgroundColor:'#fdfdfd',
+    backgroundColor: '#fdfdfd',
     borderRadius: 10,
     marginLeft: 10
   },
   temaContainerInputs: {
-    backgroundColor:'#fdfdfd',
+    backgroundColor: '#fdfdfd',
     borderRadius: 10,
     padding: 10
   },
@@ -77,13 +84,16 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   button: {
-    borderRadius: 8,
-    padding: 6,
-    height: 50,
+    backgroundColor: '#EF3E36',
+    padding: 15,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#fdfdfd',
+    fontSize: 10,
     width: '70%',
-    justifyContent: 'center',
     alignItems: 'center',
-    elevation: 5,
+    justifyContent: 'center',
+    color: '#fdfdfd',
   },
   buttonContainer: {
     backgroundColor: '#EF3E36',
