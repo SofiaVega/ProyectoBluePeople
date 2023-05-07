@@ -5,6 +5,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 export default function Scanner2() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(false);
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -26,11 +27,18 @@ export default function Scanner2() {
       body: JSON.stringify(datos),
     };
     await fetch(
-      `https://b4c9-2806-108e-13-636-d5d4-9d66-2340-3ac.ngrok-free.app/api/subscribe/${data}`,
+      `https://714d-2806-108e-13-636-d5d4-9d66-2340-3ac.ngrok-free.app/api/subscribe/${data}`,
       requestOptions
     )
       .then((response) => response.json())
-      .then((res) => console.log(res));
+      .then((res) => {
+        console.log("RESSSS");
+        console.log(res);
+        if (res.hasOwnProperty("error")){
+            setErrorMessage(true);
+        }
+        // error message if res is not success
+    });
   };
 
   if (hasPermission === null) {
@@ -42,17 +50,26 @@ export default function Scanner2() {
 
   return (
     <View style={styles.container}>
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
-      />
-      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+        <View style={styles.qrScanner}>
+            <BarCodeScanner
+                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                style={StyleSheet.absoluteFillObject}
+            />
+        </View>
+        {scanned ? <Text>Codigo invalido</Text> : null }
+      
+      <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
     </View>
   );
 }
 const styles = StyleSheet.create ({
     container: {
         flex:1,
+        flexDirection:'column',
+        justifyContent:'center'
+    },
+    qrScanner: {
+        flex: 1,
         flexDirection:'column',
         justifyContent:'center'
     }
