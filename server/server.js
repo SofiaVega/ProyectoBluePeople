@@ -246,6 +246,55 @@ app.get("/api/topic/:id", attachId, async (req, res) => {
     res.status(500).json({ message: "Error getting topic" });
   }
 });
+
+//get push notification flag
+app.get("/api/pushnot/:id", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const topic_id = req.params.id;
+    console.log(topic_id)
+    const result = await pool.query("SELECT recibirpushnot FROM tema_sus where suscriptor_id = $1 AND temas_id = $2", 
+    [user_id, topic_id]);
+    //Check if data was found
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    // Extract the topic data and return
+    const flag = result.rows[0].recibirpushnot;
+    res.json(flag);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Error getting flag" });
+  }
+});
+
+//Edit flag push not
+app.put("/api/editPushNot/:id", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const topic_id = req.params.id;
+    
+    //Get body and validate
+    const { recibirpushnot } = req.body;
+    if (!recibirpushnot ) {
+      return res
+        .status(400)
+        .json({ error: "Flag <recibirpushnot> is required" });
+    }
+    //update flag
+    const updatedFlag = await pool.query(
+      "UPDATE tema_sus SET recibirpushnot = $1 WHERE suscriptor_id = $2 AND temas_id = $3 RETURNING *",
+      [recibirpushnot, user_id,topic_id]
+    );
+
+    // Return the updated topic as the response
+    res.json(updatedFlag.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Error editing topic" });
+  }
+});
+
 //Route for subscribing to a topic
 app.post("/api/subscribe/:id", attachId, async (req, res) => {
   try {

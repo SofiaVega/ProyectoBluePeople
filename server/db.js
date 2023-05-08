@@ -4,7 +4,7 @@ const { Pool } = require("pg");
 const pool = new Pool({
   user: "postgres",
   database: "notifydb",
-  password: "grow",
+  password: "jacs",
 });
 
 // Export the pool object so that it can be imported and used in other files
