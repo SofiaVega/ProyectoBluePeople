@@ -1,9 +1,18 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet, SafeAreaView } from "react-native";
+import { Platform, StyleSheet } from "react-native";
+import {SafeAreaView} from "react-native";
 
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 import { useState } from "react";
+
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Scanner from "../components/Scanner";
+import Scanner2 from "../components/Scanner2";
+import ScannerContainer from "../components/ScannerContainer";
+
+const Stack = createNativeStackNavigator();
 
 export default function ModalScreen() {
   const [temasID, settemasID] = useState("");
@@ -54,7 +63,7 @@ export default function ModalScreen() {
       body: JSON.stringify(data),
     };
     await fetch(
-      `http://localhost:3000/api/subscribe/${temasID}`,
+      `https://714d-2806-108e-13-636-d5d4-9d66-2340-3ac.ngrok-free.app/api/subscribe/${temasID}`,
       requestOptions
     )
       .then((response) => response.json())
@@ -62,33 +71,18 @@ export default function ModalScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Codigo de suscripción de nuevo tema</Text>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Presiona el botón para escanear el código QR</Text>
+      <Scanner2></Scanner2>
       <View
         style={styles.separator}
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <form>
-        <label>
-          ID del tema:
-          <input type="text"value={temasID}
-            placeholder="ID del tema"
-            onChange={(e) => settemasID(e.target.value)}
-          />
-        </label>
-        <input
-          type="hidden"
-          value={5}
-          placeholder="ID del tema"
-          onChange={(e) => setsubscriptorID(e.target.value)}
-        />
-        <input type="submit" value="Suscribirme" onClick={handleSubmit} />
-      </form>
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
-    </View>
+    </SafeAreaView>
   );
 }
 
