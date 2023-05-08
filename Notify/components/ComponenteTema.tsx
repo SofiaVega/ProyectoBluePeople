@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Image, SafeAreaView, ScrollView } from 'react-native';
 import Colors from '../constants/Colors';
 import { ExternalLink } from './ExternalLink';
@@ -21,7 +21,7 @@ const getData = async (endpoint: string) => {
 
 const parseUserData = (user: MensajesScreen) => {
   const { mensajes, id, titulo, descripcion } = user
-  return { 
+  return {
     mensajes: mensajes,
     id: id,
     titulo: titulo,
@@ -68,10 +68,10 @@ export default function ComponenteTema(tema: Tema) {
 
 
   useEffect(() => {
-    const api = async() => {
+    const api = async () => {
       const id = 302
-      try{
-        const data = await fetch(`http://localhost:3000/api/topic/${id}/messages`, {
+      try {
+        const data = await fetch(`https://714d-2806-108e-13-636-d5d4-9d66-2340-3ac.ngrok-free.app/api/topic/${id}/messages`, {
           method: "GET",
           headers: {
             'x-user-id': '5',
@@ -79,11 +79,11 @@ export default function ComponenteTema(tema: Tema) {
           }
 
         });
-        if(!data.ok) {
+        if (!data.ok) {
           console.error(`API responded with status ${data.status}: ${data.statusText}`)
         }
 
-        const jsonData:MensajesScreen[] = await data.json();
+        const jsonData: MensajesScreen[] = await data.json()
         // console.log("DATAAAAAA ", jsonData)
         // const topics = jsonData.map(parseUserData)
         // console.log("TOPICSO", jsonData)
@@ -91,8 +91,8 @@ export default function ComponenteTema(tema: Tema) {
         setState([...state, ...jsonData])
         setLoading(false);
         // return setState(jsonData.results);
-      }catch(e) {
-          console.error("ERROR", e)
+      } catch (e) {
+        console.error("ERROR", e)
       }
     };
     api();
@@ -101,45 +101,42 @@ export default function ComponenteTema(tema: Tema) {
 
   // console.log("ESTADPPP", state[0])
   if (isLoading) {
-    return <div>Loading ...</div>;
+    return <Text>Loading ...</Text>
   }
 
   return (
     <SafeAreaView style={styles.temaContainer}>
-      <View style={[styles.temaContainer, { flexDirection: "row", alignItems: 'center', }]}>
+      <View style={[styles.boxContainer, { flexDirection: "row", alignItems: 'center', }]}>
         <Image source={require('./../assets/images/favicon.png')} style={{ width: 30, height: 30, borderRadius: 30 / 2 }} />
-
         <View style={[styles.temaContainer, { flexDirection: "column", }]}>
-          <Text
-            style={styles.title}>
-            {state[0].titulo}
-          </Text>
-          <Text
-            style={styles.textoTema}>
-            {tema.descripcion}
-          </Text>
+          <Text style={styles.title}>{state[0].titulo}</Text>
+          <Text style={styles.textoTema}>{tema.descripcion}</Text>
         </View>
-
       </View>
       <ScrollView style={[styles.scrollView, { backgroundColor: 'white' }]}>
-        <ComponenteMensaje comps = {state} />
+        <ComponenteMensaje comps={state}/>
       </ScrollView>
-
-
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   temaContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#fdfdfd',
     borderRadius: 10,
     marginTop: 10,
     marginLeft: 30
   },
+  boxContainer: {
+    backgroundColor: '#fdfdfd',
+    borderRadius: 10,
+    marginTop: 10,
+    marginLeft: 10,
+    marginBottom: 5
+  },
   scrollView: {
     backgroundColor: 'pink',
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   title: {
     fontSize: 20,

@@ -2,8 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const attachId = require("./middleware/attachId");
 const pool = require("./db.js");
+const { Expo } = require("expo-server-sdk");
 
 const app = express();
+const expo = new Expo();
 
 app.use(express.json());
 const corsOptions = {
@@ -21,6 +23,51 @@ pool.query("SELECT NOW()", (err, res) => {
     console.log("Successfully connected to the database:", res.rows[0]);
   }
 });
+
+let savedTokens = [];
+
+const handlePushTokens = ({ title, body }) => {
+  let notifications = [];
+  // Create the messages
+  for (let pushToken of savedTokens) {
+    if (!Expo.isExpoPushToken(pushToken)) {
+      console.error(`Push token ${pushToken} is not a valid Expo push token`);
+      continue;
+    }
+
+    // Construct a message
+    notifications.push({  
+      to: pushToken,
+      sound: "default",
+      title: title,
+      body: body,
+      data: { body }
+    });
+  }
+
+  let chunks = expo.chunkPushNotifications(notifications);
+
+  (async () => {
+    // Send the chunks to the Expo push notification service.
+    for (let chunk of chunks) {
+      try {
+        let receipts = await expo.sendPushNotificationsAsync(chunk);
+        console.log(receipts);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  })();
+};
+
+const saveToken = token => {
+  console.log(token, savedTokens);
+  const exists = savedTokens.find(t => t === token);
+  if (!exists) {
+    savedTokens.push(token);
+  }
+};
+
 
 // test hello route
 app.get("/hello", (req, res) => {
@@ -50,6 +97,33 @@ app.get("/api/users", attachId, async (req, res) => {
     console.error(err.message);
     res.status(500).json({ message: "Error getting users" });
   }
+});
+
+//get token from the device
+app.post("/token", (req, res) => {
+  saveToken(req.body.token.value);
+  console.log(`Received push token, ${req.body.token.value}`);
+  res.send(`Received push token, ${req.body.token.value}`);
+});
+
+//send push notification
+app.post("/sendNot/:user_id/:topic_id", attachId, async (req, res) => {
+  const userId = req.params.user_id;
+  const topicId = req.params.topic_id;
+  const not_status = await pool.query(
+    "SELECT recibirpushnot FROM tema_sus where suscriptor_id = $1 AND temas_id = $2",
+    [userId, topicId]
+  );
+  const flag = not_status.rows[0].recibirpushnot;
+  if(flag){
+    handlePushTokens(req.body);
+    console.log(`Received message, with title: ${req.body.title}`);
+    res.send(`Received message, with title: ${req.body.title}`);
+  }
+  else {
+    res.status(200).json(flag);
+  }
+  
 });
 
 // register route - to do verify email
@@ -153,26 +227,115 @@ app.get("/api/topic", attachId, async (req, res) => {
   }
 });
 
-//Route for subscribing to a topic
-app.post("/api/subscribe/:id", attachId, async (req, res) => {
+//Get specific topic data
+app.get("/api/topic/:id", attachId, async (req, res) => {
+  try {
+    const topic_id = req.topic_id;
+    const result = await pool.query("SELECT * FROM temas where id = $1", [
+      topic_id,
+    ]);
+    //Check if data was found
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Topic not found" });
+    }
+    // Extract the topic data and return
+    const topic = result.rows[0];
+    res.json({ topic });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Error getting topic" });
+  }
+});
+
+//get push notification flag
+app.get("/api/pushnot/:id", attachId, async (req, res) => {
   try {
     const user_id = req.user_id;
     const topic_id = req.params.id;
+    console.log(topic_id)
+    const result = await pool.query("SELECT recibirpushnot FROM tema_sus where suscriptor_id = $1 AND temas_id = $2", 
+    [user_id, topic_id]);
+    //Check if data was found
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    // Extract the topic data and return
+    const flag = result.rows[0].recibirpushnot;
+    res.json(flag);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Error getting flag" });
+  }
+});
+
+//Edit flag push not
+app.put("/api/editPushNot/:id", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const topic_id = req.params.id;
+    
+    //Get body and validate
+    const { recibirpushnot } = req.body;
+    if (!recibirpushnot ) {
+      return res
+        .status(400)
+        .json({ error: "Flag <recibirpushnot> is required" });
+    }
+    //update flag
+    const updatedFlag = await pool.query(
+      "UPDATE tema_sus SET recibirpushnot = $1 WHERE suscriptor_id = $2 AND temas_id = $3 RETURNING *",
+      [recibirpushnot, user_id,topic_id]
+    );
+
+    // Return the updated topic as the response
+    res.json(updatedFlag.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Error editing topic" });
+  }
+});
+
+//Route for subscribing to a topic
+app.post("/api/subscribe/:id", attachId, async (req, res) => {
+  try {
+    console.log(0)
+    console.log(req)
+    const user_id = 5;
+    const topic_id = req.params.id;
+    console.log(1)
     //Check if topic exists
-    const result = await pool.query("SELECT * FROM temas WHERE id = $1", [
+    const result = await pool.query("SELECT * FROM temas WHERE cod = $1", [
       topic_id,
     ]);
+    console.log(2)
     if (result.rows.length === 0) {
       // If ID does not exist in the database, send an error response
       return res.status(401).json({ error: "Topic not found" });
     }
+    const result_id = await pool.query("SELECT id FROM temas WHERE cod = $1", [
+      topic_id,
+    ])
+    console.log(result_id)
+    const tema_id = result_id.rows[0].id
+    console.log(3)
     //If topic exists, create new entry in tema_sus
-    await pool.query(
-      "INSERT INTO tema_sus (temas_id, suscriptor_id) VALUES ($1, $2)",
-      [topic_id, user_id]
-    );
+    const check_if_subscribed = await pool.query(
+      "select * from tema_sus where suscriptor_id = $1 and temas_id = $2",
+      [user_id, tema_id]
+    )
+    if (check_if_subscribed.rows.length === 0) {
+      await pool.query(
+        "INSERT INTO tema_sus (temas_id, suscriptor_id) VALUES ($1, $2)",
+        [tema_id, user_id]
+      );
+    }else {
+      console.log("Duplicate entry")
+      return res.status(401).json({ error: "User is already suscribed" });
+    }
+    console.log(4)
     res.status(201).send({ message: "Success!" });
   } catch (err) {
+    console.log("hola")
     console.log(err.message);
     res.status(500).json({ message: "Error subscribing" });
   }
@@ -193,6 +356,7 @@ app.get("/api/subscriptions", attachId, async (req, res) => {
         .status(401)
         .json({ error: "User is not subscribed to any topics" });
     }
+    console.log("SUSCRIPCIOPNES ", res)
     res.status(201).send(result.rows);
   } catch (err) {
     console.log(err.message);
@@ -224,6 +388,129 @@ app.get("/api/topic/:id/messages", attachId, async (req, res) => {
     res.status(500).json({ message: "Error getting messages" });
   }
 });
+
+//Edit a topic
+app.put("/api/topic/:id", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    //Check if user is admin
+    const user_status = await pool.query(
+      "SELECT is_admin FROM usuario where id = $1",
+      [user_id]
+    );
+    const user_admin = user_status.rows[0].is_admin;
+    //If flag is false, user is not admin
+    if (!user_admin) {
+      res.status(401).send("Unauthorized");
+    }
+    //Get body and validate
+    const { title, description } = req.body;
+    const topic_id = req.params.id;
+    if (!title || !description) {
+      return res
+        .status(400)
+        .json({ error: "Title and description are required" });
+    }
+    //check if topic exists
+    const existingTopic = await pool.query(
+      "SELECT * FROM temas WHERE id = $1",
+      [topic_id]
+    );
+    if (existingTopic.rowCount === 0) {
+      return res.status(404).json({ error: "Topic not found" });
+    }
+    //update topic
+    const updatedTopic = await pool.query(
+      "UPDATE temas SET titulo = $1, descripcion = $2 WHERE id = $3 RETURNING *",
+      [title, description, topic_id]
+    );
+
+    // Return the updated topic as the response
+    res.json(updatedTopic.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Error editing topic" });
+  }
+});
+
+//delete topic
+app.delete("/api/topic/:id", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    //Check if user is admin
+    const user_status = await pool.query(
+      "SELECT is_admin FROM usuario where id = $1",
+      [user_id]
+    );
+    const user_admin = user_status.rows[0].is_admin;
+    //If flag is false, user is not admin
+    if (!user_admin) {
+      res.status(401).send("Unauthorized");
+    }
+    //Check if topic exists
+    const topicId = req.params.id;
+    const existingTopic = await pool.query(
+      "SELECT * FROM temas WHERE id = $1",
+      [topicId]
+    );
+
+    if (existingTopic.rowCount === 0) {
+      return res.status(404).json({ error: "Topic not found" });
+    }
+
+    //Delete from db
+    await pool.query("DELETE FROM temas WHERE id = $1", [topicId]);
+    res.json({ message: "Topic deleted successfully" });
+  } catch (err) {
+    // Handle any errors that may occur
+    console.error(err.message);
+    res.status(500).json({ error: "Error deleting topic" });
+  }
+});
+
+//Delete a subscription
+// Example route for deleting a subscription
+app.delete(
+  "/api/subscriptions/:user_id/:topic_id",
+  attachId,
+  async (req, res) => {
+    try {
+      //TODO -- Make sure normal users can't unsubscribe other users, normal users can unsubscribe from their own subscriptions and admins can remove any subscription
+      const userId = req.params.user_id;
+      const topicId = req.params.topic_id;
+      //check if user is admin, if so they can delete any sub
+      const curr_user_id = req.user_id;
+      const user_status = await pool.query(
+        "SELECT is_admin FROM usuario where id = $1",
+        [curr_user_id]
+      );
+      const user_admin = user_status.rows[0].is_admin;
+      //If user is not admin and the request has another user_id than its own, then they are unauthorized to delete another user's subscription
+      if (!user_admin && userId != curr_user_id) {
+        res.status(401).send("Unauthorized");
+      }
+      // Check existing subscription
+      const existingSubscription = await pool.query(
+        "SELECT * FROM tema_sus WHERE suscriptor_id = $1 AND temas_id = $2",
+        [userId, topicId]
+      );
+
+      if (existingSubscription.rowCount === 0) {
+        return res.status(404).json({ error: "Subscription not found" });
+      }
+
+      // Delete the subscription
+      await pool.query(
+        "DELETE FROM tema_sus WHERE suscriptor_id = $1 AND temas_id = $2",
+        [userId, topicId]
+      );
+      res.json({ message: "Subscription deleted successfully" });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ error: "Error deleting subscription" });
+    }
+  }
+);
 
 // Start the Express server
 app.listen(3000, () => {
