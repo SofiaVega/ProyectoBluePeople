@@ -2,8 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const attachId = require("./middleware/attachId");
 const pool = require("./db.js");
+const { Expo } = require("expo-server-sdk");
 
 const app = express();
+const expo = new Expo();
 
 app.use(express.json());
 const corsOptions = {
@@ -21,6 +23,51 @@ pool.query("SELECT NOW()", (err, res) => {
     console.log("Successfully connected to the database:", res.rows[0]);
   }
 });
+
+let savedTokens = [];
+
+const handlePushTokens = ({ title, body }) => {
+  let notifications = [];
+  // Create the messages
+  for (let pushToken of savedTokens) {
+    if (!Expo.isExpoPushToken(pushToken)) {
+      console.error(`Push token ${pushToken} is not a valid Expo push token`);
+      continue;
+    }
+
+    // Construct a message
+    notifications.push({  
+      to: pushToken,
+      sound: "default",
+      title: title,
+      body: body,
+      data: { body }
+    });
+  }
+
+  let chunks = expo.chunkPushNotifications(notifications);
+
+  (async () => {
+    // Send the chunks to the Expo push notification service.
+    for (let chunk of chunks) {
+      try {
+        let receipts = await expo.sendPushNotificationsAsync(chunk);
+        console.log(receipts);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  })();
+};
+
+const saveToken = token => {
+  console.log(token, savedTokens);
+  const exists = savedTokens.find(t => t === token);
+  if (!exists) {
+    savedTokens.push(token);
+  }
+};
+
 
 // test hello route
 app.get("/hello", (req, res) => {
@@ -50,6 +97,33 @@ app.get("/api/users", attachId, async (req, res) => {
     console.error(err.message);
     res.status(500).json({ message: "Error getting users" });
   }
+});
+
+//get token from the device
+app.post("/token", (req, res) => {
+  saveToken(req.body.token.value);
+  console.log(`Received push token, ${req.body.token.value}`);
+  res.send(`Received push token, ${req.body.token.value}`);
+});
+
+//send push notification
+app.post("/sendNot/:user_id/:topic_id", attachId, async (req, res) => {
+  const userId = req.params.user_id;
+  const topicId = req.params.topic_id;
+  const not_status = await pool.query(
+    "SELECT recibirpushnot FROM tema_sus where suscriptor_id = $1 AND temas_id = $2",
+    [userId, topicId]
+  );
+  const flag = not_status.rows[0].recibirpushnot;
+  if(flag){
+    handlePushTokens(req.body);
+    console.log(`Received message, with title: ${req.body.title}`);
+    res.send(`Received message, with title: ${req.body.title}`);
+  }
+  else {
+    res.status(200).json(flag);
+  }
+  
 });
 
 // register route - to do verify email
@@ -172,6 +246,55 @@ app.get("/api/topic/:id", attachId, async (req, res) => {
     res.status(500).json({ message: "Error getting topic" });
   }
 });
+
+//get push notification flag
+app.get("/api/pushnot/:id", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const topic_id = req.params.id;
+    console.log(topic_id)
+    const result = await pool.query("SELECT recibirpushnot FROM tema_sus where suscriptor_id = $1 AND temas_id = $2", 
+    [user_id, topic_id]);
+    //Check if data was found
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    // Extract the topic data and return
+    const flag = result.rows[0].recibirpushnot;
+    res.json(flag);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Error getting flag" });
+  }
+});
+
+//Edit flag push not
+app.put("/api/editPushNot/:id", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const topic_id = req.params.id;
+    
+    //Get body and validate
+    const { recibirpushnot } = req.body;
+    if (!recibirpushnot ) {
+      return res
+        .status(400)
+        .json({ error: "Flag <recibirpushnot> is required" });
+    }
+    //update flag
+    const updatedFlag = await pool.query(
+      "UPDATE tema_sus SET recibirpushnot = $1 WHERE suscriptor_id = $2 AND temas_id = $3 RETURNING *",
+      [recibirpushnot, user_id,topic_id]
+    );
+
+    // Return the updated topic as the response
+    res.json(updatedFlag.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Error editing topic" });
+  }
+});
+
 //Route for subscribing to a topic
 app.post("/api/subscribe/:id", attachId, async (req, res) => {
   try {
