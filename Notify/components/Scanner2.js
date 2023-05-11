@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import ngrok_url from "../constants/serverlink";
 
 export default function Scanner2() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -18,7 +19,6 @@ export default function Scanner2() {
 
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     const datos = { temas_id: data, suscriptor_id: 5 };
     console.log(datos)
     const requestOptions = {
@@ -27,15 +27,24 @@ export default function Scanner2() {
       body: JSON.stringify(datos),
     };
     await fetch(
-      `https://714d-2806-108e-13-636-d5d4-9d66-2340-3ac.ngrok-free.app/api/subscribe/${data}`,
+      ngrok_url + `/api/subscribe/${data}`,
       requestOptions
     )
       .then((response) => response.json())
       .then((res) => {
         console.log("RESSSS");
         console.log(res);
+        console.log(res.error)
         if (res.hasOwnProperty("error")){
-            setErrorMessage(true);
+          if (res["error"] === "User is already suscribed"){
+            alert(`Ya estabas suscrito al canal ${data}`);
+          }else {
+            alert(`Error suscribiendote al canal ${data}`);
+          }
+          setErrorMessage(true);
+        }else{
+          setErrorMessage(False);
+          alert(`Te suscribiste al canal ${data}`);
         }
         // error message if res is not success
     });

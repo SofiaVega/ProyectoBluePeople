@@ -13,6 +13,7 @@ import registerForPushNot from './registerForPushNot';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Feather } from "@expo/vector-icons";
+import ngrok_url from "../constants/serverlink";
 
 
 const parseUserData = (user: Topic) => {
@@ -30,7 +31,7 @@ export default function PaginaPrincipalScreen() {
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch("https://7ccc-2806-230-4026-bd3f-89c-6e89-62ee-7f6d.ngrok-free.app/api/subscriptions", {
+        const data = await fetch(ngrok_url + "/api/subscriptions", {
           method: "GET",
           headers: {
             "x-user-id": "2",

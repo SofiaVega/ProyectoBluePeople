@@ -1,5 +1,6 @@
 import React, {useState } from 'react';
 import {Text, Modal, View, Button } from 'react-native';
+import ngrok_url from "../constants/serverlink";
 
 export default function ModalDesuscribir({isModalOpen, setIsModalOpen}) {
     const [temasID, settemasID] = useState("");
@@ -52,7 +53,7 @@ export default function ModalDesuscribir({isModalOpen, setIsModalOpen}) {
             body: JSON.stringify(data),
         };
         await fetch(
-            `http://localhost:3000/api/subscriptions/${subscriptorID}/${temasID}`,
+            ngrok_url+`/api/subscriptions/${subscriptorID}/${temasID}`,
             requestOptions
         )
         .then((response) => response.json())
