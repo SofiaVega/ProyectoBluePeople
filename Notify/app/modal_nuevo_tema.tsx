@@ -1,12 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import { Platform, StyleSheet } from "react-native";
-import {SafeAreaView} from "react-native";
+import { SafeAreaView } from "react-native";
 
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 import { useState } from "react";
 
-import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Scanner from "../components/Scanner";
 import Scanner2 from "../components/Scanner2";
@@ -72,7 +71,9 @@ export default function ModalScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Presiona el botón para escanear el código QR</Text>
+      <Text style={styles.title}>
+        Presiona el botón para escanear el código QR
+      </Text>
       <Scanner2></Scanner2>
       <View
         style={styles.separator}
