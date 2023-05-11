@@ -8,6 +8,7 @@ import ComponenteTemaFila from './ComponenteTemaFila';
 import { Topic, MensajesScreen } from '../interface';
 import axios, { AxiosResponse } from 'axios';
 import ComponenteMensaje from './ComponenteMensaje'
+import ngrok_url from "../constants/serverlink";
 type Tema = {
   titulo: string;
   descripcion: string;
@@ -71,7 +72,7 @@ export default function ComponenteTema(tema: Tema) {
     const api = async () => {
       const id = 302
       try {
-        const data = await fetch(`https://714d-2806-108e-13-636-d5d4-9d66-2340-3ac.ngrok-free.app/api/topic/${id}/messages`, {
+        const data = await fetch(ngrok_url + `/api/topic/${id}/messages`, {
           method: "GET",
           headers: {
             'x-user-id': '5',

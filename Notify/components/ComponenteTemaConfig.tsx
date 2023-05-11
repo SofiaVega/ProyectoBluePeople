@@ -7,6 +7,7 @@ import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import ComponenteTemaFila from './ComponenteTemaFila';
 import ModalDesuscribir from './ModalDesuscribir';
+import ngrok_url from "../constants/serverlink";
 
 type Tema = {
     titulo: string;
@@ -19,7 +20,7 @@ export default function ComponenteTema(tema: Tema) {
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch("https://7ccc-2806-230-4026-bd3f-89c-6e89-62ee-7f6d.ngrok-free.app/api/pushnot/2", {
+        const data = await fetch(ngrok_url + "/api/pushnot/2", {
           method: "GET",
           headers: {
             "x-user-id": "2",
@@ -52,7 +53,7 @@ export default function ComponenteTema(tema: Tema) {
         'Content-Type': 'application/json' },
       body: JSON.stringify({ recibirpushnot : (!isEnabled).toString() })
     };
-    fetch('https://7ccc-2806-230-4026-bd3f-89c-6e89-62ee-7f6d.ngrok-free.app/api/editPushNot/2  ', requestOptions)
+    fetch(ngrok_url + '/api/editPushNot/2  ', requestOptions)
       .then(response => response.json())
   }
   return (
