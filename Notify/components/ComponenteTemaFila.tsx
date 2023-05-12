@@ -1,10 +1,13 @@
 import React from "react";
-import { StyleSheet, Image, ScrollView } from "react-native";
-import { Link, Tabs } from "expo-router";
-import Colors from "../constants/Colors";
-import { ExternalLink } from "./ExternalLink";
-import { MonoText } from "./StyledText";
-import { Text, View } from "./Themed";
+import {
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  View,
+  Text,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 type TemaFila = {
   titulo: string;
@@ -13,7 +16,14 @@ type TemaFila = {
 };
 
 export default function ComponenteTemaFila({ comps }) {
-  console.log("TOPICSSS ", comps);
+  const navigation = useNavigation();
+  console.log("COMPS: ", comps);
+
+  const handleThemePress = (tema) => {
+    console.log("THEME: ", tema);
+    navigation.navigate("themeInfo", { tema });
+  };
+
   return (
     <ScrollView style={styles.temaContainer}>
       {comps.map((topic) => (
@@ -25,12 +35,15 @@ export default function ComponenteTemaFila({ comps }) {
           ]}
           key={topic.id}
         >
-          <View style={[styles.temaContainer, { flexDirection: "column" }]}>
-            {/* <Link href="/config_tema_admin" asChild > */}
-            <Text style={styles.title}>{topic.titulo}</Text>
-            {/* </Link> */}
-            {/* <Text style={styles.textoTema}>{topic.titulo}</Text> */}
-          </View>
+          <TouchableOpacity
+            onPress={() => {
+              handleThemePress(topic);
+            }}
+          >
+            <View style={[styles.temaContainer, { flexDirection: "column" }]}>
+              <Text style={styles.title}>{topic.titulo}</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       ))}
     </ScrollView>

@@ -1,10 +1,8 @@
 import "react-native-gesture-handler";
 import { StyleSheet, SafeAreaView, TextInput, Dimensions } from "react-native";
-
 import ComponenteTemaFila from "./ComponenteTemaFila";
 import ComponenteHeader from "./ComponenteHeader";
 import { Text, View } from "./Themed";
-import { Link, Tabs } from "expo-router";
 import { Pressable, useColorScheme } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Topic } from "../interface";
@@ -59,7 +57,10 @@ export default function PaginaPrincipalScreen() {
 
   return (
     <SafeAreaView
-      style={{ backgroundColor: "#E8F1F2", borderColor: "red", borderWidth: 2 }}
+      style={{
+        backgroundColor: "#E8F1F2",
+        flex: 1,
+      }}
     >
       <ComponenteHeader></ComponenteHeader>
       <View

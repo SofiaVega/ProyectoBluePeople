@@ -14,6 +14,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import PaginaPrincipalScreen from "../components/PaginaPrincipalScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "./LoginScreen";
+import TemaScreen from "./tema";
 
 const Stack = createStackNavigator();
 
@@ -37,6 +38,7 @@ export default function Home() {
         ) : (
           <Stack.Screen name="login" component={LoginScreen} />
         )}
+        <Stack.Screen name="themeInfo" component={TemaScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
