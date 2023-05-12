@@ -7,6 +7,7 @@ import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import ComponenteTemaFila from './ComponenteTemaFila';
 import ModalDesuscribir from './ModalDesuscribir';
+import {Picker} from '@react-native-picker/picker';
 
 type Tema = {
     titulo: string;
@@ -19,7 +20,7 @@ export default function ComponenteTema(tema: Tema) {
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch("https://7ccc-2806-230-4026-bd3f-89c-6e89-62ee-7f6d.ngrok-free.app/api/pushnot/2", {
+        const data = await fetch("https://11f1-2806-230-4026-bd3f-b1a4-b622-5385-5600.ngrok-free.app/api/pushnot/2", {
           method: "GET",
           headers: {
             "x-user-id": "2",
@@ -40,7 +41,8 @@ export default function ComponenteTema(tema: Tema) {
     };
     api();
   }, []);
-  
+
+  const [selects, setSelects]= useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleSwitch = () => {
     setState(previousState => !previousState);
@@ -52,7 +54,7 @@ export default function ComponenteTema(tema: Tema) {
         'Content-Type': 'application/json' },
       body: JSON.stringify({ recibirpushnot : (!isEnabled).toString() })
     };
-    fetch('https://7ccc-2806-230-4026-bd3f-89c-6e89-62ee-7f6d.ngrok-free.app/api/editPushNot/2  ', requestOptions)
+    fetch('https://11f1-2806-230-4026-bd3f-b1a4-b622-5385-5600.ngrok-free.app/api/editPushNot/2', requestOptions)
       .then(response => response.json())
   }
   return (
@@ -86,6 +88,23 @@ export default function ComponenteTema(tema: Tema) {
                 style= {[{margin: 20}]}
                 ios_backgroundColor="black">
               </Switch>
+            </View>
+            <View style= {[styles.temaContainer,{flexDirection: "column", alignItems: 'center',}]}>
+              <Text
+                style={styles.title}>
+                Frecuencia de mensajes, cada:
+              </Text>
+              <Picker
+                selectedValue={selects}
+                style={{height: 200, width: 120}}
+                onValueChange={(itemValue, itemIndex) =>
+                  setSelects(itemValue)
+                }>
+                <Picker.Item label="1min" value="1min" />
+                <Picker.Item label="5min" value="5min" />
+                <Picker.Item label="10min" value="10min" />
+                <Picker.Item label="30min" value="30min" />
+              </Picker>
             </View>
             <View style = {[{backgroundColor:'#fdfdfd', flexDirection: "column",alignItems: 'center'}]}>
               <Pressable style={styles.buttonContainer} onPress={() => setIsModalOpen(!isModalOpen)}><Text style={styles.textoButton}>Dejar de seguir</Text></Pressable>

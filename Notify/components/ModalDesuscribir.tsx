@@ -13,7 +13,7 @@ export default function ModalDesuscribir({isModalOpen, setIsModalOpen}) {
     const titleStyle = {
         color: 'black',
         fontSize: 15,
-        textAlign: 'ceter',
+        textAlign: 'center',
         fontWeight: 'bold',
     }
 

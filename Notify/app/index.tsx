@@ -29,7 +29,7 @@ export default function PaginaPrincipalScreen() {
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch("https://7ccc-2806-230-4026-bd3f-89c-6e89-62ee-7f6d.ngrok-free.app/api/subscriptions", {
+        const data = await fetch("https://11f1-2806-230-4026-bd3f-b1a4-b622-5385-5600.ngrok-free.app/api/subscriptions", {
           method: "GET",
           headers: {
             "x-user-id": "2",

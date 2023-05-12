@@ -11,7 +11,7 @@ Notifications.setNotificationHandler({
     }),
   });
 
-const PUSH_ENDPOINT = 'https://7ccc-2806-230-4026-bd3f-89c-6e89-62ee-7f6d.ngrok-free.app/token';
+const PUSH_ENDPOINT = 'https://11f1-2806-230-4026-bd3f-b1a4-b622-5385-5600.ngrok-free.app/token';
 
 const registerForPushNot = async () => {
     let token;
