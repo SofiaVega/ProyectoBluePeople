@@ -9,6 +9,8 @@ import { Topic } from "../interface";
 import React, { useEffect, useState } from "react";
 import registerForPushNot from "../app/registerForPushNot";
 import { Feather } from "@expo/vector-icons";
+import ngrok_url from "../constants/serverlink";
+import { Link, Tabs } from "expo-router";
 
 const parseUserData = (user: Topic) => {
   const { titulo, descripcion, id } = user;
@@ -25,7 +27,7 @@ export default function PaginaPrincipalScreen() {
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch("http:/localhost:3000/api/subscriptions", {
+        const data = await fetch(ngrok_url + "/api/subscriptions", {
           method: "GET",
           headers: {
             "x-user-id": "2",
@@ -87,7 +89,7 @@ export default function PaginaPrincipalScreen() {
             />
             <TextInput placeholder="Buscar" />
           </View>
-          {/* <Link href="/modal_nuevo_tema" asChild> */}
+          <Link href="/modal_nuevo_tema" asChild> 
           <Pressable style={styles.plusContainer}>
             {({ pressed }) => (
               <FontAwesome
@@ -98,7 +100,7 @@ export default function PaginaPrincipalScreen() {
               />
             )}
           </Pressable>
-          {/* </Link> */}
+           </Link> 
         </View>
       </View>
       <View style={[styles.temaContainer]}>
