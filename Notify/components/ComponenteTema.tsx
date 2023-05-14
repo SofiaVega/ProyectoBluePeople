@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Image, SafeAreaView, ScrollView } from "react-native";
-import Colors from "../constants/Colors";
-import { ExternalLink } from "./ExternalLink";
-import { MonoText } from "./StyledText";
 import { Text, View } from "./Themed";
-import ComponenteTemaFila from "./ComponenteTemaFila";
-import { Topic, MensajesScreen } from "../interface";
-import axios, { AxiosResponse } from "axios";
+import { Pressable } from "react-native";
+import { MensajesScreen } from "../interface";
 import ComponenteMensaje from "./ComponenteMensaje";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ComponenteTema({ tema }) {
   const [isLoading, setLoading] = useState(true);
@@ -42,6 +40,13 @@ export default function ComponenteTema({ tema }) {
     api();
   }, []);
 
+  const navigation = useNavigation();
+
+  const handleConfig = (tema) => {
+    console.log("THEME CONFIG: ", tema);
+    navigation.navigate("themeConfig", { tema });
+  };
+
   return isLoading ? (
     <Text>Loading ...</Text>
   ) : (
@@ -57,9 +62,22 @@ export default function ComponenteTema({ tema }) {
           style={{ width: 30, height: 30, borderRadius: 30 / 2 }}
         />
         <View style={[styles.temaContainer, { flexDirection: "column" }]}>
-          <Text style={styles.title}>{mensajes[0].titulo}</Text>
+          <Text style={styles.title}>{tema.titulo}</Text>
           <Text style={styles.textoTema}>{tema.descripcion}</Text>
         </View>
+        <Pressable
+          style={styles.plusContainer}
+          onPress={() => handleConfig(tema)}
+        >
+          {({ pressed }) => (
+            <FontAwesome
+              name="gear"
+              size={15}
+              color="#fdfdfd"
+              style={[{ opacity: pressed ? 0.5 : 1 }]}
+            />
+          )}
+        </Pressable>
       </View>
       <ScrollView style={[styles.scrollView, { backgroundColor: "white" }]}>
         <ComponenteMensaje comps={mensajes} />
@@ -119,5 +137,14 @@ const styles = StyleSheet.create({
   },
   helpLinkText: {
     textAlign: "center",
+  },
+  plusContainer: {
+    backgroundColor: "#4577BB",
+    padding: 15,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#fdfdfd",
+
+    color: "#fdfdfd",
   },
 });
