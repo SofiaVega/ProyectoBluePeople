@@ -14,7 +14,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Feather } from "@expo/vector-icons";
 import ngrok_url from "../constants/serverlink";
-
+import { useFonts } from 'expo-font';
 
 const parseUserData = (user: Topic) => {
   const { titulo, descripcion, id } = user;
@@ -26,6 +26,29 @@ const parseUserData = (user: Topic) => {
 };
 
 export default function PaginaPrincipalScreen() {
+  const [fontsLoaded] = useFonts({
+    PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
+    PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
+    PoppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
+    PoppinsBoldItalic: require("../assets/fonts/Poppins-BoldItalic.ttf"),
+    PoppinsExtraBold: require("../assets/fonts/Poppins-ExtraBold.ttf"),
+    PoppinsExtraBoldItalic: require("../assets/fonts/Poppins-ExtraBoldItalic.ttf"),
+    PoppinsExtraLight: require("../assets/fonts/Poppins-ExtraLight.ttf"),
+    PoppinsExtraLightItalic: require("../assets/fonts/Poppins-ExtraLightItalic.ttf"),
+    PoppinsItalic: require("../assets/fonts/Poppins-Italic.ttf"),
+    PoppinsLight: require("../assets/fonts/Poppins-Light.ttf"),
+    PoppinsLightItalic: require("../assets/fonts/Poppins-LightItalic.ttf"),
+    PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
+    PoppinsMediumItalic: require("../assets/fonts/Poppins-MediumItalic.ttf"),
+    PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
+    PoppinsSemiBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
+    PoppinsSemiBoldItalic: require("../assets/fonts/Poppins-SemiBoldItalic.ttf"),
+    PoppinsThin: require("../assets/fonts/Poppins-Thin.ttf"),
+    PoppinsThinItalic: require("../assets/fonts/Poppins-ThinItalic.ttf"),
+    DroidSans: require("../assets/fonts/DroidSans.ttf"),
+    DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
+
+  })
   const [state, setState] = useState<Topic[]>([]);
 
   useEffect(() => {
@@ -34,7 +57,7 @@ export default function PaginaPrincipalScreen() {
         const data = await fetch(ngrok_url + "/api/subscriptions", {
           method: "GET",
           headers: {
-            "x-user-id": "2",
+            "x-user-id": "5",
             "Content-Type": "application/json",
           },
         });
@@ -56,7 +79,6 @@ export default function PaginaPrincipalScreen() {
   }, []);
 
 console.log("ESTADPPP", state);
-
   useEffect(() => {
     registerForPushNot()
   }, []);
@@ -70,7 +92,7 @@ console.log("ESTADPPP", state);
             <Feather name="search" size={20} color="black" style={{ marginLeft: 1, marginRight: 4 }} />
             <TextInput placeholder="Buscar"/>
           </View>
-          <Link href="/modal_nuevo_tema" asChild >
+          <Link href="/config_tema" asChild >
             <Pressable style={styles.plusContainer}>
               {({ pressed }) => (<FontAwesome name="plus" size={15} color="#fdfdfd" style={[{ opacity: pressed ? 0.5 : 1 },]} />)}
             </Pressable>
@@ -130,6 +152,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "black",
     paddingLeft: 10,
+    fontFamily: "PoppinsMedium"
   },
   separator: {
     marginVertical: 30,
