@@ -14,14 +14,11 @@ export default function ComponenteTema({ tema }) {
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch(
-          `http://localhost:3000/api/topic/${tema.id}/messages`,
-          {
-            method: "GET",
-            headers: {
-              "x-user-id": "2",
-              "Content-Type": "application/json",
-            },
+        const data = await fetch(ngrok_url + `/api/topic/${id}/messages`, {
+          method: "GET",
+          headers: {
+            'x-user-id': '5',
+            'Content-Type': 'application/json'
           }
         );
         if (!data.ok) {

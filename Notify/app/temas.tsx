@@ -9,6 +9,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Topic } from "../interface";
 import React, { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
+import ngrok_url from "../constants/serverlink";
 
 
 
@@ -27,7 +28,7 @@ export default function temas() {
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch("http://localhost:3000/api/subscriptions", {
+        const data = await fetch(ngrok_url + "/api/subscriptions", {
           method: "GET",
           headers: {
             "x-user-id": "5",
