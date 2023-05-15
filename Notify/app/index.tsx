@@ -17,6 +17,7 @@ import LoginScreen from "./LoginScreen";
 import TemaScreen from "./tema";
 import nuevoTema from "./modal_nuevo_tema";
 import ngrok_url from "../constants/serverlink";
+import ConfigTemaScreen from "./config_tema";
 
 const Stack = createStackNavigator();
 
@@ -42,6 +43,7 @@ export default function Home() {
         )}
         <Stack.Screen name="themeInfo" component={TemaScreen} />
         <Stack.Screen name="nuevoTema" component={nuevoTema} />
+        <Stack.Screen name="themeConfig" component={ConfigTemaScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
