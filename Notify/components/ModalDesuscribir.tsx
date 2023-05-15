@@ -1,5 +1,5 @@
 import React, {useState } from 'react';
-import {Text, Modal, View, Button } from 'react-native';
+import {Text, Modal, View, Button, Alert } from 'react-native';
 import ngrok_url from "../constants/serverlink";
 
 export default function ModalDesuscribir({isModalOpen, setIsModalOpen}) {
@@ -58,7 +58,9 @@ export default function ModalDesuscribir({isModalOpen, setIsModalOpen}) {
         )
         .then((response) => response.json())
         .then((res) => console.log(res));
-        alert("Dejaste de seguir al tema")
+        Alert.alert('Alerta', 'Dejaste de seguir el tema', [
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ]);
         setIsModalOpen(!setIsModalOpen)
     }
 
