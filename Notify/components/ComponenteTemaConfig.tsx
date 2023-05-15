@@ -15,7 +15,7 @@ type Tema = {
     descripcion: string;
 };
 
-export default function ComponenteTema(tema: Tema) {
+export default function ComponenteTemaConfig({tema}) {
   const [fontsLoaded] = useFonts({
     PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
     PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
@@ -99,7 +99,7 @@ export default function ComponenteTema(tema: Tema) {
             <View style= {[styles.temaContainer,{flexDirection: "row", alignItems: 'center',}]}>
               <Text
                     style={styles.title}>
-                Push notifications
+                Notificaciones
               </Text>
               
               <Switch
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     paddingLeft: 10,
     color: 'black',
@@ -177,9 +177,10 @@ const styles = StyleSheet.create({
   textoTema: {
     fontSize: 15,
     lineHeight: 24,
-    textAlign: 'center',
+    textAlign: 'left',
     color: '#272727',
     paddingLeft: 10,
+    fontFamily: "DroidSans"
   },
   textoButton: {
     fontSize: 15,

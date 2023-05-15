@@ -10,10 +10,11 @@ type Tema = {
   descripcion: string;
 };
 
-export default function ConfigTemaScreen() {
+export default function ConfigTemaScreen({ route }) {
+  const { tema } = route.params;
   return (
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
-      <ComponenteTemaConfig titulo = "Titulo" descripcion = "Descripcion"></ComponenteTemaConfig>
+      <ComponenteTemaConfig tema = {tema}></ComponenteTemaConfig>
     </SafeAreaView>
     
   );

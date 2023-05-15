@@ -6,20 +6,46 @@ import { MensajesScreen } from "../interface";
 import ComponenteMensaje from "./ComponenteMensaje";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
+import ngrok_url from "../constants/serverlink";
+import { useFonts } from "expo-font";
 
 export default function ComponenteTema({ tema }) {
   const [isLoading, setLoading] = useState(true);
   const [mensajes, setMensajes] = useState<MensajesScreen[]>([]);
+  const [fontsLoaded] = useFonts({
+    PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
+    PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
+    PoppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
+    PoppinsBoldItalic: require("../assets/fonts/Poppins-BoldItalic.ttf"),
+    PoppinsExtraBold: require("../assets/fonts/Poppins-ExtraBold.ttf"),
+    PoppinsExtraBoldItalic: require("../assets/fonts/Poppins-ExtraBoldItalic.ttf"),
+    PoppinsExtraLight: require("../assets/fonts/Poppins-ExtraLight.ttf"),
+    PoppinsExtraLightItalic: require("../assets/fonts/Poppins-ExtraLightItalic.ttf"),
+    PoppinsItalic: require("../assets/fonts/Poppins-Italic.ttf"),
+    PoppinsLight: require("../assets/fonts/Poppins-Light.ttf"),
+    PoppinsLightItalic: require("../assets/fonts/Poppins-LightItalic.ttf"),
+    PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
+    PoppinsMediumItalic: require("../assets/fonts/Poppins-MediumItalic.ttf"),
+    PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
+    PoppinsSemiBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
+    PoppinsSemiBoldItalic: require("../assets/fonts/Poppins-SemiBoldItalic.ttf"),
+    PoppinsThin: require("../assets/fonts/Poppins-Thin.ttf"),
+    PoppinsThinItalic: require("../assets/fonts/Poppins-ThinItalic.ttf"),
+    DroidSans: require("../assets/fonts/DroidSans.ttf"),
+    DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
+  });
+
   console.log("TEMA:", tema);
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch(ngrok_url + `/api/topic/${id}/messages`, {
+        const data = await fetch(ngrok_url + `/api/topic/${tema.id}/messages`, {
           method: "GET",
           headers: {
-            'x-user-id': '5',
+            'x-user-id': '2',
             'Content-Type': 'application/json'
           }
+        }
         );
         if (!data.ok) {
           console.error(
@@ -40,7 +66,7 @@ export default function ComponenteTema({ tema }) {
   const navigation = useNavigation();
 
   const handleConfig = (tema) => {
-    console.log("THEME CONFIG: ", tema);
+    console.log("TMEAA INFo: ", tema);
     navigation.navigate("themeConfig", { tema });
   };
 
@@ -59,22 +85,15 @@ export default function ComponenteTema({ tema }) {
           style={{ width: 30, height: 30, borderRadius: 30 / 2 }}
         />
         <View style={[styles.temaContainer, { flexDirection: "column" }]}>
-          <Text style={styles.title}>{tema.titulo}</Text>
+          
+          <Pressable onPress={() => handleConfig(tema)}>
+          {({ pressed }) => (
+            <Text style={styles.title}>{tema.titulo}</Text>
+          )}
+          
+          </Pressable>
           <Text style={styles.textoTema}>{tema.descripcion}</Text>
         </View>
-        <Pressable
-          style={styles.plusContainer}
-          onPress={() => handleConfig(tema)}
-        >
-          {({ pressed }) => (
-            <FontAwesome
-              name="gear"
-              size={15}
-              color="#fdfdfd"
-              style={[{ opacity: pressed ? 0.5 : 1 }]}
-            />
-          )}
-        </Pressable>
       </View>
       <ScrollView style={[styles.scrollView, { backgroundColor: "white" }]}>
         <ComponenteMensaje comps={mensajes} />
@@ -102,9 +121,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "bold",
-
+    fontSize: 18,
+    fontFamily: "PoppinsBold",
     color: "black",
   },
   getStartedContainer: {
@@ -119,10 +137,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   textoTema: {
-    fontSize: 17,
+    fontSize: 15,
     lineHeight: 24,
-    textAlign: "center",
+    textAlign: "left",
     color: "black",
+    fontFamily: "DroidSans"
   },
   helpContainer: {
     marginTop: 15,
