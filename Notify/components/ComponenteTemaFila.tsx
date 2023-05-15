@@ -85,9 +85,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+    // fontWeight: "bold",
     color: "black",
-    fontFamily: "PoppinsBold",
+    fontFamily: "PoppinsMedium",
   },
   getStartedContainer: {
     alignItems: "center",
