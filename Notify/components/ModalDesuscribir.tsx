@@ -1,10 +1,12 @@
 import React, {useState } from 'react';
-import {Text, Modal, View, Button } from 'react-native';
+import {Text, Modal, View, Button, Alert } from 'react-native';
 import ngrok_url from "../constants/serverlink";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ModalDesuscribir({isModalOpen, setIsModalOpen}) {
     const [temasID, settemasID] = useState("");
     const [subscriptorID, setsubscriptorID] = useState("");
+    const navigation = useNavigation();
 
     const modalContainerStyle = {
         flex: 1,
@@ -42,8 +44,8 @@ export default function ModalDesuscribir({isModalOpen, setIsModalOpen}) {
         marginVertical: 20,
     }
 
-    const deleteSuscripcion = async (e) => {
-        e.preventDefault();
+    const deleteSuscripcion = async () => {
+        
 
         const data = { temas_id: temasID, suscriptor_id: subscriptorID };
 
@@ -53,13 +55,21 @@ export default function ModalDesuscribir({isModalOpen, setIsModalOpen}) {
             body: JSON.stringify(data),
         };
         await fetch(
-            ngrok_url+`/api/subscriptions/${subscriptorID}/${temasID}`,
+            ngrok_url+`/api/subscriptions/4/3`,
             requestOptions
         )
         .then((response) => response.json())
         .then((res) => console.log(res));
-        alert("Dejaste de seguir al tema")
+
+        Alert.alert('Alerta', 'Dejaste de seguir al tema', [
+            {text: 'OK', onPress: () => 
+                console.log('OK Pressed')
+            },
+          ]);
+        navigation.navigate('home')
+
         setIsModalOpen(!setIsModalOpen)
+
     }
 
         return (
@@ -67,7 +77,7 @@ export default function ModalDesuscribir({isModalOpen, setIsModalOpen}) {
                 <Modal visible={isModalOpen} transparent={true} animationType='fade'>
                     <View style={modalContainerStyle}>
                         <View style={modalStyle}>
-                            <Text style={titleStyle}>¿Estás seguro que quieres desuscribirte?</Text>
+                            <Text style={titleStyle}>¿Estás seguro que quieres dejar de seguir el tema?</Text>
                             <View style={containerButtonsStyle}>
                                 <Button title='Sí' onPress={deleteSuscripcion}></Button>
                                 <Button title='No' onPress={() => setIsModalOpen(!setIsModalOpen)}></Button>

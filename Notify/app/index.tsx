@@ -16,6 +16,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "./LoginScreen";
 import TemaScreen from "./tema";
 import ConfigTemaScreen from "./config_tema";
+import ModalDesuscribir from "../components/ModalDesuscribir";
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,7 @@ export default function Home() {
         )}
         <Stack.Screen name="themeInfo" component={TemaScreen} />
         <Stack.Screen name="themeConfig" component={ConfigTemaScreen} />
+        <Stack.Screen name="PopupDejarSeguir" component={ModalDesuscribir} />
       </Stack.Navigator>
     </NavigationContainer>
   );
