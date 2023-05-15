@@ -5,7 +5,7 @@ import ModalDesuscribir from "./ModalDesuscribir";
 import ngrok_url from "../constants/serverlink";
 import { useFonts } from "expo-font";
 
-export default function ComponenteTemaConfig({ tema }) {
+export default function ComponenteTemaConfig({ tema, userId }) {
   const [fontsLoaded] = useFonts({
     PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
     PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
