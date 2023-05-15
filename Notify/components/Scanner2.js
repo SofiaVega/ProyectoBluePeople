@@ -3,12 +3,14 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import ngrok_url from "../constants/serverlink";
 import { useNavigation } from "@react-navigation/native";
+import AuthContext from './context';
 
 export default function Scanner2() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
   const navigation = useNavigation();
+  const authContext = useContext(AuthContext);
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
