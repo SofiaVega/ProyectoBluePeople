@@ -7,6 +7,8 @@ import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import ComponenteTemaFila from './ComponenteTemaFila';
 import ModalDesuscribir from './ModalDesuscribir';
+import ngrok_url from "../constants/serverlink";
+import { useFonts } from 'expo-font';
 
 type Tema = {
     titulo: string;
@@ -14,12 +16,33 @@ type Tema = {
 };
 
 export default function ComponenteTema(tema: Tema) {
-
+  const [fontsLoaded] = useFonts({
+    PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
+    PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
+    PoppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
+    PoppinsBoldItalic: require("../assets/fonts/Poppins-BoldItalic.ttf"),
+    PoppinsExtraBold: require("../assets/fonts/Poppins-ExtraBold.ttf"),
+    PoppinsExtraBoldItalic: require("../assets/fonts/Poppins-ExtraBoldItalic.ttf"),
+    PoppinsExtraLight: require("../assets/fonts/Poppins-ExtraLight.ttf"),
+    PoppinsExtraLightItalic: require("../assets/fonts/Poppins-ExtraLightItalic.ttf"),
+    PoppinsItalic: require("../assets/fonts/Poppins-Italic.ttf"),
+    PoppinsLight: require("../assets/fonts/Poppins-Light.ttf"),
+    PoppinsLightItalic: require("../assets/fonts/Poppins-LightItalic.ttf"),
+    PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
+    PoppinsMediumItalic: require("../assets/fonts/Poppins-MediumItalic.ttf"),
+    PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
+    PoppinsSemiBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
+    PoppinsSemiBoldItalic: require("../assets/fonts/Poppins-SemiBoldItalic.ttf"),
+    PoppinsThin: require("../assets/fonts/Poppins-Thin.ttf"),
+    PoppinsThinItalic: require("../assets/fonts/Poppins-ThinItalic.ttf"),
+    DroidSans: require("../assets/fonts/DroidSans.ttf"),
+    DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
+  })
   const [isEnabled, setState] = useState(true);
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch("https://7ccc-2806-230-4026-bd3f-89c-6e89-62ee-7f6d.ngrok-free.app/api/pushnot/2", {
+        const data = await fetch(ngrok_url + "/api/pushnot/2", {
           method: "GET",
           headers: {
             "x-user-id": "2",
@@ -52,7 +75,7 @@ export default function ComponenteTema(tema: Tema) {
         'Content-Type': 'application/json' },
       body: JSON.stringify({ recibirpushnot : (!isEnabled).toString() })
     };
-    fetch('https://7ccc-2806-230-4026-bd3f-89c-6e89-62ee-7f6d.ngrok-free.app/api/editPushNot/2  ', requestOptions)
+    fetch(ngrok_url + '/api/editPushNot/2  ', requestOptions)
       .then(response => response.json())
   }
   return (
@@ -137,7 +160,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     paddingLeft: 10,
-    color: 'black'
+    color: 'black',
+    fontFamily: "PoppinsBold"
   },
   getStartedContainer: {
     alignItems: 'center',
@@ -162,7 +186,8 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     textAlign: 'center',
     color: '#fdfdfd',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontFamily: "PoppinsSemiBold"
   },
   helpContainer: {
     marginTop: 15,

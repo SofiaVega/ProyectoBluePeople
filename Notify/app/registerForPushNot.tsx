@@ -2,6 +2,7 @@
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import { Platform } from 'react-native';
+import ngrok_url from "../constants/serverlink";
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -11,7 +12,7 @@ Notifications.setNotificationHandler({
     }),
   });
 
-const PUSH_ENDPOINT = 'https://7ccc-2806-230-4026-bd3f-89c-6e89-62ee-7f6d.ngrok-free.app/token';
+const PUSH_ENDPOINT = ngrok_url+'/token';
 
 const registerForPushNot = async () => {
     let token;

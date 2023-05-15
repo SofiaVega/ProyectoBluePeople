@@ -1,120 +1,83 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Image, SafeAreaView, ScrollView } from 'react-native';
-import Colors from '../constants/Colors';
-import { ExternalLink } from './ExternalLink';
-import { MonoText } from './StyledText';
-import { Text, View } from './Themed';
-import ComponenteTemaFila from './ComponenteTemaFila';
-import { Topic, MensajesScreen } from '../interface';
-import axios, { AxiosResponse } from 'axios';
-import ComponenteMensaje from './ComponenteMensaje'
-type Tema = {
-  titulo: string;
-  descripcion: string;
-};
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Image, SafeAreaView, ScrollView } from "react-native";
+import { Text, View } from "./Themed";
+import { Pressable } from "react-native";
+import { MensajesScreen } from "../interface";
+import ComponenteMensaje from "./ComponenteMensaje";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useNavigation } from "@react-navigation/native";
 
-const getData = async (endpoint: string) => {
-  const response = await fetch(endpoint)
-  const data: MensajesScreen = await response.json()
-  return data
-}
-
-const parseUserData = (user: MensajesScreen) => {
-  const { mensajes, id, titulo, descripcion } = user
-  return {
-    mensajes: mensajes,
-    id: id,
-    titulo: titulo,
-    descripcion: descripcion
-  }
-}
-
-export default function ComponenteTema(tema: Tema) {
+export default function ComponenteTema({ tema }) {
   const [isLoading, setLoading] = useState(true);
-  const [state, setState] = useState<MensajesScreen[]>([]);
-  // useEffect(effect: () => {
-  //   axios.get<Topic[]>('http://localhost:3000/api/topic').then((response: AxiosResponse) => {
-  //     console.log('Response', response.data);
-  //   });
-
-  // }, deps: []);
-  // useEffect(() => {
-  //   const api = async() => {
-  //     try{
-  //       const data = await fetch("http://localhost:3000/api/topic", {
-  //         method: "GET",
-  //         headers: {
-  //           'x-user-id': '5',
-  //           'Content-Type': 'application/json',
-  //         }
-
-  //       });
-  //       if(!data.ok) {
-  //         console.error(`API responded with status ${data.status}: ${data.statusText}`)
-  //       }
-
-  //       const jsonData = await data.json();
-  //       const topics = jsonData.map(parseUserData)
-  //       return setState({...state, topic: [...topics]})
-  //     }catch(e) {
-  //       console.error(e)
-  //     }
-  //   };
-  //   api();
-  // }, []);
-
-  // console.log(state)
-
-
-
+  const [mensajes, setMensajes] = useState<MensajesScreen[]>([]);
+  console.log("TEMA:", tema);
   useEffect(() => {
     const api = async () => {
-      const id = 302
       try {
-        const data = await fetch(`https://714d-2806-108e-13-636-d5d4-9d66-2340-3ac.ngrok-free.app/api/topic/${id}/messages`, {
+        const data = await fetch(ngrok_url + `/api/topic/${id}/messages`, {
           method: "GET",
           headers: {
             'x-user-id': '5',
             'Content-Type': 'application/json'
           }
-
-        });
+        );
         if (!data.ok) {
-          console.error(`API responded with status ${data.status}: ${data.statusText}`)
+          console.error(
+            `API responded with status ${data.status}: ${data.json} in ComponenteTema`
+          );
         }
-
-        const jsonData: MensajesScreen[] = await data.json()
-        // console.log("DATAAAAAA ", jsonData)
-        // const topics = jsonData.map(parseUserData)
-        // console.log("TOPICSO", jsonData)
-
-        setState([...state, ...jsonData])
+        const jsonData: MensajesScreen[] = await data.json();
+        console.log("Messages: ", jsonData);
+        setMensajes(jsonData);
         setLoading(false);
-        // return setState(jsonData.results);
       } catch (e) {
-        console.error("ERROR", e)
+        console.error("ERROR", e);
       }
     };
     api();
-    // api();
   }, []);
 
-  // console.log("ESTADPPP", state[0])
-  if (isLoading) {
-    return <Text>Loading ...</Text>
-  }
+  const navigation = useNavigation();
 
-  return (
+  const handleConfig = (tema) => {
+    console.log("THEME CONFIG: ", tema);
+    navigation.navigate("themeConfig", { tema });
+  };
+
+  return isLoading ? (
+    <Text>Loading ...</Text>
+  ) : (
     <SafeAreaView style={styles.temaContainer}>
-      <View style={[styles.boxContainer, { flexDirection: "row", alignItems: 'center', }]}>
-        <Image source={require('./../assets/images/favicon.png')} style={{ width: 30, height: 30, borderRadius: 30 / 2 }} />
-        <View style={[styles.temaContainer, { flexDirection: "column", }]}>
-          <Text style={styles.title}>{state[0].titulo}</Text>
+      <View
+        style={[
+          styles.boxContainer,
+          { flexDirection: "row", alignItems: "center" },
+        ]}
+      >
+        <Image
+          source={require("./../assets/images/favicon.png")}
+          style={{ width: 30, height: 30, borderRadius: 30 / 2 }}
+        />
+        <View style={[styles.temaContainer, { flexDirection: "column" }]}>
+          <Text style={styles.title}>{tema.titulo}</Text>
           <Text style={styles.textoTema}>{tema.descripcion}</Text>
         </View>
+        <Pressable
+          style={styles.plusContainer}
+          onPress={() => handleConfig(tema)}
+        >
+          {({ pressed }) => (
+            <FontAwesome
+              name="gear"
+              size={15}
+              color="#fdfdfd"
+              style={[{ opacity: pressed ? 0.5 : 1 }]}
+            />
+          )}
+        </Pressable>
       </View>
-      <ScrollView style={[styles.scrollView, { backgroundColor: 'white' }]}>
-        <ComponenteMensaje comps={state}/>
+      <ScrollView style={[styles.scrollView, { backgroundColor: "white" }]}>
+        <ComponenteMensaje comps={mensajes} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -122,30 +85,30 @@ export default function ComponenteTema(tema: Tema) {
 
 const styles = StyleSheet.create({
   temaContainer: {
-    backgroundColor: '#fdfdfd',
+    backgroundColor: "#fdfdfd",
     borderRadius: 10,
     marginTop: 10,
-    marginLeft: 30
+    marginLeft: 30,
   },
   boxContainer: {
-    backgroundColor: '#fdfdfd',
+    backgroundColor: "#fdfdfd",
     borderRadius: 10,
     marginTop: 10,
     marginLeft: 10,
-    marginBottom: 5
+    marginBottom: 5,
   },
   scrollView: {
-    backgroundColor: 'pink',
+    backgroundColor: "pink",
     marginHorizontal: 10,
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
 
-    color: 'black'
+    color: "black",
   },
   getStartedContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginHorizontal: 50,
   },
   homeScreenFilename: {
@@ -158,18 +121,27 @@ const styles = StyleSheet.create({
   textoTema: {
     fontSize: 17,
     lineHeight: 24,
-    textAlign: 'center',
-    color: 'black'
+    textAlign: "center",
+    color: "black",
   },
   helpContainer: {
     marginTop: 15,
     marginHorizontal: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   helpLink: {
     paddingVertical: 15,
   },
   helpLinkText: {
-    textAlign: 'center',
+    textAlign: "center",
+  },
+  plusContainer: {
+    backgroundColor: "#4577BB",
+    padding: 15,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#fdfdfd",
+
+    color: "#fdfdfd",
   },
 });

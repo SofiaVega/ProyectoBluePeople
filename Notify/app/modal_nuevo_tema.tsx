@@ -1,16 +1,16 @@
 import { StatusBar } from "expo-status-bar";
 import { Platform, StyleSheet } from "react-native";
-import {SafeAreaView} from "react-native";
+import { SafeAreaView } from "react-native";
 
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 import { useState } from "react";
 
-import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Scanner from "../components/Scanner";
 import Scanner2 from "../components/Scanner2";
 import ScannerContainer from "../components/ScannerContainer";
+import ngrok_url from "../constants/serverlink";
 
 const Stack = createNativeStackNavigator();
 
@@ -63,7 +63,7 @@ export default function ModalScreen() {
       body: JSON.stringify(data),
     };
     await fetch(
-      `https://714d-2806-108e-13-636-d5d4-9d66-2340-3ac.ngrok-free.app/api/subscribe/${temasID}`,
+      ngrok_url + `/api/subscribe/${temasID}`,
       requestOptions
     )
       .then((response) => response.json())
@@ -72,7 +72,9 @@ export default function ModalScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Presiona el botón para escanear el código QR</Text>
+      <Text style={styles.title}>
+        Presiona el botón para escanear el código QR
+      </Text>
       <Scanner2></Scanner2>
       <View
         style={styles.separator}
