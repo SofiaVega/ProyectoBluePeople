@@ -6,9 +6,11 @@ import { Text, View } from "./Themed";
 import { Pressable, useColorScheme } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Topic } from "../interface";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import registerForPushNot from "../app/registerForPushNot";
 import { Feather } from "@expo/vector-icons";
+import AuthContext from "./context";
+import { useIsFocused } from "@react-navigation/native";
 
 const parseUserData = (user: Topic) => {
   const { titulo, descripcion, id } = user;
@@ -21,14 +23,19 @@ const parseUserData = (user: Topic) => {
 
 export default function PaginaPrincipalScreen() {
   const [state, setState] = useState<Topic[]>([]);
+  const authContext = useContext(AuthContext);
+  const user_id = authContext.userId;
+  const isFocused = useIsFocused();
+  console.log("USEISFOCUSED", isFocused);
 
+  console.log("USER LOGGED IN: ", user_id);
   useEffect(() => {
     const api = async () => {
       try {
         const data = await fetch("http:/localhost:3000/api/subscriptions", {
           method: "GET",
           headers: {
-            "x-user-id": "2",
+            "x-user-id": user_id,
             "Content-Type": "application/json",
           },
         });
@@ -46,8 +53,11 @@ export default function PaginaPrincipalScreen() {
         console.error(e);
       }
     };
-    api();
-  }, []);
+    if (isFocused) {
+      console.log("rendering homescreen...");
+      api();
+    }
+  }, [isFocused]);
 
   console.log("ESTADPPP", state);
 
@@ -113,7 +123,7 @@ export default function PaginaPrincipalScreen() {
           ]}
         >
           <Text style={styles.title}>Temas</Text>
-          <ComponenteTemaFila comps={state} />
+          <ComponenteTemaFila comps={state} userId={user_id} />
         </View>
       </View>
     </SafeAreaView>

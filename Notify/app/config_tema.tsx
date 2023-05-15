@@ -1,68 +1,11 @@
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView } from "react-native";
+import ComponenteTemaConfig from "../components/ComponenteTemaConfig";
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
-import ComponenteTemaConfig from '../components/ComponenteTemaConfig';
-import { useFonts } from 'expo-font';
-
-type Tema = {
-  titulo: string;
-  descripcion: string;
-};
-
-export default function ConfigTemaScreen() {
+export default function ConfigTemaScreen({ route }) {
+  const { tema, userId } = route.params;
   return (
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
-      <ComponenteTemaConfig titulo = "Titulo" descripcion = "Descripcion"></ComponenteTemaConfig>
+      <ComponenteTemaConfig tema={tema} userId={userId}></ComponenteTemaConfig>
     </SafeAreaView>
-    
   );
 }
-
-const styles = StyleSheet.create({
-  temaContainer: {
-    backgroundColor:'#E8F1F2',
-    borderRadius: 10,
-    margin: 10,
-    padding: 10
-  },
-  scrollView: {
-    backgroundColor: 'pink',
-    marginHorizontal: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-
-    color: 'black'
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightContainer: {
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  textoTema: {
-    fontSize: 17,
-    lineHeight: 24,
-    textAlign: 'center',
-    color: 'black'
-  },
-  helpContainer: {
-    marginTop: 15,
-    marginHorizontal: 20,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    textAlign: 'center',
-  },
-});
-

@@ -6,21 +6,22 @@ import { MensajesScreen } from "../interface";
 import ComponenteMensaje from "./ComponenteMensaje";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
+import ngrok_url from "../constants/serverlink";
 
-export default function ComponenteTema({ tema }) {
+export default function ComponenteTema({ tema, userId }) {
   const [isLoading, setLoading] = useState(true);
   const [mensajes, setMensajes] = useState<MensajesScreen[]>([]);
-  console.log("TEMA:", tema);
+  console.log("TEMA:", tema, " de usuario", userId);
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch(ngrok_url + `/api/topic/${id}/messages`, {
+        const data = await fetch(ngrok_url + `/api/topic/${tema.id}/messages`, {
           method: "GET",
           headers: {
-            'x-user-id': '5',
-            'Content-Type': 'application/json'
-          }
-        );
+            "x-user-id": `${userId}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (!data.ok) {
           console.error(
             `API responded with status ${data.status}: ${data.json} in ComponenteTema`
@@ -39,9 +40,9 @@ export default function ComponenteTema({ tema }) {
 
   const navigation = useNavigation();
 
-  const handleConfig = (tema) => {
+  const handleConfig = (tema, userId) => {
     console.log("THEME CONFIG: ", tema);
-    navigation.navigate("themeConfig", { tema });
+    navigation.navigate("themeConfig", { tema, userId });
   };
 
   return isLoading ? (
@@ -64,7 +65,7 @@ export default function ComponenteTema({ tema }) {
         </View>
         <Pressable
           style={styles.plusContainer}
-          onPress={() => handleConfig(tema)}
+          onPress={() => handleConfig(tema, userId)}
         >
           {({ pressed }) => (
             <FontAwesome
