@@ -298,6 +298,7 @@ app.put("/api/editPushNot/:id", attachId, async (req, res) => {
 //Route for subscribing to a topic
 app.post("/api/subscribe/:id", attachId, async (req, res) => {
   try {
+    console.log("debugging api call");
     console.log(0);
     console.log(req);
     const user_id = 5;
@@ -322,6 +323,8 @@ app.post("/api/subscribe/:id", attachId, async (req, res) => {
       "select * from tema_sus where suscriptor_id = $1 and temas_id = $2",
       [user_id, tema_id]
     );
+    console.log("check if subscribed");
+    console.log(check_if_subscribed);
     if (check_if_subscribed.rows.length === 0) {
       await pool.query(
         "INSERT INTO tema_sus (temas_id, suscriptor_id) VALUES ($1, $2)",

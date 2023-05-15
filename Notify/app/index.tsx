@@ -15,6 +15,8 @@ import PaginaPrincipalScreen from "../components/PaginaPrincipalScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import RegisterScreen from "./RegisterScreen";
 import TemaScreen from "./tema";
+import nuevoTema from "./modal_nuevo_tema";
+import ngrok_url from "../constants/serverlink";
 import ConfigTemaScreen from "./config_tema";
 import AuthContext from "../components/context";
 import LoginScreen from "./LoginScreen";
