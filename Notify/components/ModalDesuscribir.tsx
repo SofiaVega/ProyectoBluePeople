@@ -49,11 +49,11 @@ export default function ModalDesuscribir({isModalOpen, setIsModalOpen}) {
 
         const requestOptions = {
             method: "DELETE",
-            headers: { "Content-Type": "application/json", "x-user-id": "4"},
+            headers: { "Content-Type": "application/json", "x-user-id": "5"},
             body: JSON.stringify(data),
         };
         await fetch(
-            ngrok_url+`/api/subscriptions/${subscriptorID}/${temasID}`,
+            ngrok_url+`/api/subscriptions/5/301`,
             requestOptions
         )
         .then((response) => response.json())

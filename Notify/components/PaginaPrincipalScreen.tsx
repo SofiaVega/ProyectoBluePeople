@@ -52,7 +52,7 @@ export default function PaginaPrincipalScreen() {
         const data = await fetch(ngrok_url + '/api/subscriptions', {
           method: "GET",
           headers: {
-            "x-user-id": "5",
+            "x-user-id": "2",
             "Content-Type": "application/json",
           },
         });

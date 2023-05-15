@@ -42,7 +42,7 @@ export default function ComponenteTema({ tema }) {
         const data = await fetch(ngrok_url + `/api/topic/${tema.id}/messages`, {
           method: "GET",
           headers: {
-            'x-user-id': '5',
+            'x-user-id': '2',
             'Content-Type': 'application/json'
           }
         }
@@ -139,9 +139,9 @@ const styles = StyleSheet.create({
   textoTema: {
     fontSize: 15,
     lineHeight: 24,
-    textAlign: "center",
+    textAlign: "left",
     color: "black",
-    fontFamily: "PoppinsRegular"
+    fontFamily: "DroidSans"
   },
   helpContainer: {
     marginTop: 15,
