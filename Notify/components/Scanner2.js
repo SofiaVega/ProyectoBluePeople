@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import ngrok_url from "../constants/serverlink";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Scanner2() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -46,6 +48,7 @@ export default function Scanner2() {
           setErrorMessage(False);
           alert(`Te suscribiste al canal ${data}`);
         }
+        navigation.goBack()
         // error message if res is not success
     });
   };

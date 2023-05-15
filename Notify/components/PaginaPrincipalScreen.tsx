@@ -10,6 +10,8 @@ import React, { useEffect, useState } from "react";
 import registerForPushNot from "../app/registerForPushNot";
 import { Feather } from "@expo/vector-icons";
 import ngrok_url from "../constants/serverlink";
+import { Link, Tabs } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 
 const parseUserData = (user: Topic) => {
@@ -78,6 +80,11 @@ export default function PaginaPrincipalScreen() {
   useEffect(() => {
     registerForPushNot();
   }, []);
+  const navigation = useNavigation();
+
+  const goToScanner = () => {
+    navigation.navigate('nuevoTema');
+  };
 
   return (
     <SafeAreaView
@@ -111,8 +118,9 @@ export default function PaginaPrincipalScreen() {
             />
             <TextInput placeholder="Buscar" />
           </View>
-          {/* <Link href="/modal_nuevo_tema" asChild> */}
-          <Pressable style={styles.plusContainer}>
+          <Pressable onPress={() => {
+              goToScanner();
+            }} style={styles.plusContainer}>
             {({ pressed }) => (
               <FontAwesome
                 name="plus"
@@ -122,7 +130,6 @@ export default function PaginaPrincipalScreen() {
               />
             )}
           </Pressable>
-          {/* </Link> */}
         </View>
       </View>
       <View style={[styles.temaContainer]}>

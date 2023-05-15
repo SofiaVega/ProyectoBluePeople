@@ -11,6 +11,7 @@ import Scanner from "../components/Scanner";
 import Scanner2 from "../components/Scanner2";
 import ScannerContainer from "../components/ScannerContainer";
 import ngrok_url from "../constants/serverlink";
+import { useNavigation } from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();
 
