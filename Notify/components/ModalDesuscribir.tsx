@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Text, Modal, View, Button } from "react-native";
+import React, {useState } from 'react';
+import {Text, Modal, View, Button, Alert } from 'react-native';
 import ngrok_url from "../constants/serverlink";
 import { useNavigation } from "@react-navigation/native";
 
@@ -54,7 +54,9 @@ export default function ModalDesuscribir({ setModal, tema, userId }) {
     )
       .then((response) => response.json())
       .then((res) => console.log(res));
-    alert("Dejaste de seguir al tema");
+    Alert.alert('Alerta', 'Dejaste de seguir el tema', [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ]);
     navigation.navigate("home");
   };
 
