@@ -1,2 +1,2 @@
-const ngrok_url = `https://9474-131-178-102-132.ngrok.io`;
+const ngrok_url = `http://localhost:3000`;
 export default ngrok_url;

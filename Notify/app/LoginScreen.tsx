@@ -5,6 +5,7 @@ import ngrok_url from "../constants/serverlink";
 import AuthContext from "../components/context";
 import { useFonts } from "expo-font";
 
+
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const authContext = useContext(AuthContext);
@@ -79,10 +80,10 @@ const LoginScreen = () => {
       <Pressable onPress={handleLogin} style={styles.buttonContainer}>
         <Text style={styles.textoButton}>Iniciar Sesión</Text>
       </Pressable>
-
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   buttonContainer: {

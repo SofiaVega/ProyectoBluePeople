@@ -94,6 +94,7 @@ const RegisterScreen = () => {
           navigator.navigate("zlogin");
         }}
       >
+
         <Text style={{flexDirection: 'row', paddingTop: 10,}}>
           <Text style={styles.titleInput}>¿Ya tienes una cuenta? Haz sesión</Text> <Text style={styles.linkSesion}>aquí</Text>
         </Text>
