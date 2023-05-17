@@ -142,7 +142,8 @@ app.post("/api/register", async (req, res) => {
       [name, email, false]
     );
     //Return user ID for further authentication
-    res.status(201).json(id.rows);
+    console.log(id.rows[0]);
+    res.status(201).json(id.rows[0]);
   } catch (err) {
     console.error(err.message);
     res.sendStatus(500);
@@ -297,6 +298,7 @@ app.put("/api/editPushNot/:id", attachId, async (req, res) => {
 //Route for subscribing to a topic
 app.post("/api/subscribe/:id", attachId, async (req, res) => {
   try {
+    console.log("debugging api call");
     console.log(0);
     console.log(req);
     const user_id = 5;
@@ -306,7 +308,6 @@ app.post("/api/subscribe/:id", attachId, async (req, res) => {
     const result = await pool.query("SELECT * FROM temas WHERE cod = $1", [
       topic_id,
     ]);
-    console.log(2);
     if (result.rows.length === 0) {
       // If ID does not exist in the database, send an error response
       return res.status(401).json({ error: "Topic not found" });
@@ -322,6 +323,8 @@ app.post("/api/subscribe/:id", attachId, async (req, res) => {
       "select * from tema_sus where suscriptor_id = $1 and temas_id = $2",
       [user_id, tema_id]
     );
+    console.log("check if subscribed");
+    console.log(check_if_subscribed);
     if (check_if_subscribed.rows.length === 0) {
       await pool.query(
         "INSERT INTO tema_sus (temas_id, suscriptor_id) VALUES ($1, $2)",
@@ -344,6 +347,7 @@ app.post("/api/subscribe/:id", attachId, async (req, res) => {
 app.get("/api/subscriptions", attachId, async (req, res) => {
   try {
     const user_id = req.user_id;
+    console.log("userid", user_id);
     //Get user topics, query for title and description
     const result = await pool.query(
       "SELECT temas.titulo, temas.descripcion, temas.id FROM temas JOIN tema_sus ON tema_sus.temas_id = temas.id WHERE suscriptor_id = $1",

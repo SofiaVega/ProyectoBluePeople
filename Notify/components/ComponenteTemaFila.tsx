@@ -20,13 +20,13 @@ type TemaFila = {
   sinLeer: number;
 };
 
-export default function ComponenteTemaFila({ comps }) {
+export default function ComponenteTemaFila({ comps, userId }) {
   const navigation = useNavigation();
-  console.log("COMPS: ", comps);
+  console.log("COMPS: ", comps, " from user", userId);
 
-  const handleThemePress = (tema) => {
-    console.log("THEME: ", tema);
-    navigation.navigate("themeInfo", { tema });
+  const handleThemePress = (tema, userId) => {
+    console.log("THEME: ", tema, " from user", userId);
+    navigation.navigate("themeInfo", { tema, userId });
   };
 
   const [fontsLoaded] = useFonts({
@@ -65,7 +65,7 @@ export default function ComponenteTemaFila({ comps }) {
         >
           <TouchableOpacity
             onPress={() => {
-              handleThemePress(topic);
+              handleThemePress(topic, userId);
             }}
           >
             <View style={[styles.temaContainer, { flexDirection: "column" }]}>
@@ -85,9 +85,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+    // fontWeight: "bold",
     color: "black",
-    fontFamily: "PoppinsBold",
+    fontFamily: "PoppinsMedium",
   },
   getStartedContainer: {
     alignItems: "center",

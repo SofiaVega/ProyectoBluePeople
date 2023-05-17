@@ -6,21 +6,46 @@ import { MensajesScreen } from "../interface";
 import ComponenteMensaje from "./ComponenteMensaje";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
+import ngrok_url from "../constants/serverlink";
+import { useFonts } from "expo-font";
 
-export default function ComponenteTema({ tema }) {
+export default function ComponenteTema({ tema, userId }) {
   const [isLoading, setLoading] = useState(true);
   const [mensajes, setMensajes] = useState<MensajesScreen[]>([]);
-  console.log("TEMA:", tema);
+  console.log("TEMA:", tema, " de usuario", userId);
+  const [fontsLoaded] = useFonts({
+    PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
+    PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
+    PoppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
+    PoppinsBoldItalic: require("../assets/fonts/Poppins-BoldItalic.ttf"),
+    PoppinsExtraBold: require("../assets/fonts/Poppins-ExtraBold.ttf"),
+    PoppinsExtraBoldItalic: require("../assets/fonts/Poppins-ExtraBoldItalic.ttf"),
+    PoppinsExtraLight: require("../assets/fonts/Poppins-ExtraLight.ttf"),
+    PoppinsExtraLightItalic: require("../assets/fonts/Poppins-ExtraLightItalic.ttf"),
+    PoppinsItalic: require("../assets/fonts/Poppins-Italic.ttf"),
+    PoppinsLight: require("../assets/fonts/Poppins-Light.ttf"),
+    PoppinsLightItalic: require("../assets/fonts/Poppins-LightItalic.ttf"),
+    PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
+    PoppinsMediumItalic: require("../assets/fonts/Poppins-MediumItalic.ttf"),
+    PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
+    PoppinsSemiBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
+    PoppinsSemiBoldItalic: require("../assets/fonts/Poppins-SemiBoldItalic.ttf"),
+    PoppinsThin: require("../assets/fonts/Poppins-Thin.ttf"),
+    PoppinsThinItalic: require("../assets/fonts/Poppins-ThinItalic.ttf"),
+    DroidSans: require("../assets/fonts/DroidSans.ttf"),
+    DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
+  });
+
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch(ngrok_url + `/api/topic/${id}/messages`, {
+        const data = await fetch(ngrok_url + `/api/topic/${tema.id}/messages`, {
           method: "GET",
           headers: {
-            'x-user-id': '5',
-            'Content-Type': 'application/json'
-          }
-        );
+            "x-user-id": `${userId}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (!data.ok) {
           console.error(
             `API responded with status ${data.status}: ${data.json} in ComponenteTema`
@@ -39,9 +64,9 @@ export default function ComponenteTema({ tema }) {
 
   const navigation = useNavigation();
 
-  const handleConfig = (tema) => {
+  const handleConfig = (tema, userId) => {
     console.log("THEME CONFIG: ", tema);
-    navigation.navigate("themeConfig", { tema });
+    navigation.navigate("themeConfig", { tema, userId });
   };
 
   return isLoading ? (
@@ -64,7 +89,7 @@ export default function ComponenteTema({ tema }) {
         </View>
         <Pressable
           style={styles.plusContainer}
-          onPress={() => handleConfig(tema)}
+          onPress={() => handleConfig(tema, userId)}
         >
           {({ pressed }) => (
             <FontAwesome
@@ -102,9 +127,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "bold",
-
+    fontSize: 18,
+    fontFamily: "PoppinsBold",
     color: "black",
   },
   getStartedContainer: {
@@ -119,10 +143,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   textoTema: {
-    fontSize: 17,
+    fontSize: 15,
     lineHeight: 24,
-    textAlign: "center",
+    textAlign: "left",
     color: "black",
+    fontFamily: "DroidSans",
   },
   helpContainer: {
     marginTop: 15,
