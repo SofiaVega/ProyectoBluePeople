@@ -31,7 +31,7 @@ const RegisterScreen = () => {
         throw new Error("Registration failed");
       }
     } catch (error) {
-      Alert.alert("Error", "Registration failed. Please try again.");
+      Alert.alert("Error", "Falló el registro. Por favor intenta de nuevo.");
     }
   };
 
