@@ -7,9 +7,9 @@ import {
   ScrollView,
   Pressable,
   TextInput,
-  Linking,
+  Alert
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Feather } from "@expo/vector-icons";
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
@@ -19,6 +19,10 @@ import ComponenteHeader from "../components/ComponenteHeader";
 import { Link, Tabs } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
+import { useNavigation } from "@react-navigation/native";
+import ngrok_url from "../constants/serverlink";
+import AuthContext from "../components/context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Tema = {
   titulo: string;
@@ -48,8 +52,40 @@ export default function ConfigTemaAdminScreen() {
     DroidSans: require("../assets/fonts/DroidSans.ttf"),
     DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
   });
-  const [isEnabled, setState] = useState(true);
+  const navigator = useNavigation();
+  const [isEnabled, setIsEnabled] = useState(true);
+  const [title, setTitle] = useState("");
+  const [descripcion, setDescripcion] = useState("");
+  const authContext = useContext(AuthContext);
 
+  //Change toggle value
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  //API CALL
+  const handleThemeGeneration = async () => {
+    try {
+      const response = await fetch(ngrok_url + "/api/topic", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, descripcion }),
+      });
+      // const userId = response.data.userId;
+      if (response.ok) {
+        const data = await response.json();
+        const userId = data.id.toString();
+        console.log("REGISTERED USER: ", userId);
+        await AsyncStorage.setItem("userId", userId);
+        authContext.register(userId);
+      } else {
+        throw new Error("Registration failed");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Falló la generación del tema. Por favor intentalo de nuevo.");
+    }
+  };
+  //Frontend
   return (
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
       <ComponenteHeader></ComponenteHeader>
@@ -89,6 +125,7 @@ export default function ConfigTemaAdminScreen() {
               style={[styles.input]}
               placeholder="Titulo"
               placeholderTextColor={"rgba(0,0,0,0.10)"}
+              value={title} onChangeText={setTitle}
             />
           </View>
           <View style={[styles.temaContainerInputs]}>
@@ -97,6 +134,7 @@ export default function ConfigTemaAdminScreen() {
               style={[styles.input]}
               placeholder="Descripcion"
               placeholderTextColor={"rgba(0,0,0,0.10)"}
+              value={descripcion} onChangeText={setDescripcion}
             />
           </View>
           <View
@@ -140,13 +178,14 @@ export default function ConfigTemaAdminScreen() {
               <Text style={styles.textoTema}>Mensajes Previos</Text>
 
               <Switch
+                onValueChange={toggleSwitch}
                 value={isEnabled}
                 trackColor={{ true: "#DB8A74", false: "grey" }}
                 style={[{ margin: 20 }]}
                 ios_backgroundColor="black"
               ></Switch>
             </View>
-            <Pressable style={styles.buttonContainer}>
+            <Pressable style={[styles.buttonContainer, {marginBottom: 20}]} onPress={handleThemeGeneration}>
               <Text style={styles.textoButton}>Generar Tema</Text>
             </Pressable>
           </View>

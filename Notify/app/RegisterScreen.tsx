@@ -11,6 +11,7 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const authContext = useContext(AuthContext);
+  
   const handleRegister = async () => {
     try {
       const response = await fetch(ngrok_url + "/api/register", {
