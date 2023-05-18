@@ -29,7 +29,7 @@ type Tema = {
   descripcion: string;
 };
 
-export default function ConfigTemaAdminScreen() {
+export default function GenerateTopic({userId}) {
   const [fontsLoaded] = useFonts({
     PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
     PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
@@ -63,13 +63,21 @@ export default function ConfigTemaAdminScreen() {
 
   //API CALL
   const handleThemeGeneration = async () => {
+
+    //Generate cod "randomly"
+    const character = title + userId
+    let cod = ' '
+    for(let i = 0; i < character.length; i++){
+      cod += character.charAt(Math.floor(Math.random() * character.length))
+    }
+    
     try {
       const response = await fetch(ngrok_url + "/api/topic", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, descripcion }),
+        body: JSON.stringify({ title, userId, descripcion, isEnabled, cod }),
       });
       // const userId = response.data.userId;
       if (response.ok) {
