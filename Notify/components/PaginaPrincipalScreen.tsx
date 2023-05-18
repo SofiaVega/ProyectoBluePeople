@@ -93,7 +93,7 @@ export default function PaginaPrincipalScreen() {
   const navigation = useNavigation();
 
   const goToScanner = () => {
-    navigation.navigate("nuevoTema");
+    navigation.navigate("themeGenerate");
   };
 
   return (
