@@ -60,6 +60,7 @@ export default function Home() {
               <Stack.Screen name="home" component={PaginaPrincipalScreen} />
               <Stack.Screen name="themeInfo" component={TemaScreen} />
               <Stack.Screen name="themeConfig" component={ConfigTemaScreen} />
+              <Stack.Screen name="nuevoTema" component={nuevoTema} />
             </>
           ) : (
             <>

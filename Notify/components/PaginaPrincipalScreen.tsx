@@ -27,6 +27,7 @@ const parseUserData = (user: Topic) => {
 
 export default function PaginaPrincipalScreen() {
   const [state, setState] = useState<Topic[]>([]);
+  const [isLoading, setLoading] = useState(true);
   const authContext = useContext(AuthContext);
   const user_id = authContext.userId;
   const isFocused = useIsFocused();
@@ -66,6 +67,10 @@ export default function PaginaPrincipalScreen() {
           },
         });
         if (!data.ok) {
+          if (data.status === 401) {
+            console.log("No topics found!");
+            return setState([]);
+          }
           console.error(
             `API responded with status ${data.status}: ${data.statusText}`
           );
@@ -73,6 +78,7 @@ export default function PaginaPrincipalScreen() {
 
         const jsonData = await data.json();
         const topics = jsonData.map(parseUserData);
+        setLoading(false);
         return setState([...topics]);
         // return setState(jsonData.results);
       } catch (e) {
@@ -157,7 +163,12 @@ export default function PaginaPrincipalScreen() {
           ]}
         >
           <Text style={styles.title}>Temas</Text>
-          <ComponenteTemaFila comps={state} userId={user_id} />
+          {state.length ? (
+            <ComponenteTemaFila comps={state} userId={user_id} />
+          ) : (
+            <Text>You are not subscribed to any topics!</Text>
+          )}
+          {isLoading ? <Text>Loading...</Text> : <></>}
         </View>
       </View>
     </SafeAreaView>
