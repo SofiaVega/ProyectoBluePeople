@@ -1,28 +1,30 @@
 import React, { useState, useContext } from "react";
-import { View, TextInput, Button, Alert, Text, StyleSheet, Pressable, Image } from "react-native";
+import { View, TextInput, Button, Alert, Pressable, Text, StyleSheet, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ngrok_url from "../constants/serverlink";
 import AuthContext from "../components/context";
+import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 
-
-const LoginScreen = () => {
+const RegisterScreen = () => {
+  const navigator = useNavigation();
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const authContext = useContext(AuthContext);
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     try {
-      const response = await fetch(ngrok_url + "/api/login", {
+      const response = await fetch(ngrok_url + "/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, name }),
       });
       // const userId = response.data.userId;
       if (response.ok) {
         const data = await response.json();
         const userId = data.id.toString();
-        console.log("LOGGED IN USER: ", userId);
+        console.log("REGISTERED USER: ", userId);
         await AsyncStorage.setItem("userId", userId);
         authContext.register(userId);
       } else {
@@ -56,6 +58,7 @@ const LoginScreen = () => {
     DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
   });
 
+
   return (
     <View
     style={{
@@ -67,23 +70,38 @@ const LoginScreen = () => {
       padding: 20,
     }}
     >
+      <Text style={{flexDirection: 'row'}}>
+        <Text style={styles.title}>Bienvenido a</Text> <Text style={styles.notify}>Notify</Text>
+      </Text>
+
       <Image
             source={require("./../assets/images/logoAzul.png")}
             style={styles.logo}
           />
 
-      <Text style={styles.notify}>Notify</Text>
-
       <Text style={styles.titleInput}>Ingresa tu correo electrónico:</Text>
-      <TextInput placeholder="Email" placeholderTextColor='grey' value={email} style={styles.input} onChangeText={setEmail} />
+      <TextInput placeholder="Correo electrónico" placeholderTextColor='grey' style={styles.input} value={email} onChangeText={setEmail} />
 
-      <Pressable onPress={handleLogin} style={styles.buttonContainer}>
-        <Text style={styles.textoButton}>Iniciar Sesión</Text>
+      <Text style={styles.titleInput}>Nombre:</Text>
+      <TextInput placeholder="Nombre" placeholderTextColor='grey' style={styles.input} value={name} onChangeText={setName} />
+
+      <Pressable onPress={handleRegister} style={styles.buttonContainer}>
+        <Text style={styles.textoButton}>Regístrate</Text>
+      </Pressable>
+      
+      <Pressable
+        onPress={() => {
+          navigator.navigate("zlogin");
+        }}
+      >
+
+        <Text style={{flexDirection: 'row', paddingTop: 10,}}>
+          <Text style={styles.titleInput}>¿Ya tienes una cuenta? Haz sesión</Text> <Text style={styles.linkSesion}>aquí</Text>
+        </Text>
       </Pressable>
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   buttonContainer: {
@@ -124,16 +142,23 @@ const styles = StyleSheet.create({
   notify: {
     color: '#4577BB',
     fontWeight: 'bold',
-    fontSize: 30,
-    fontFamily: 'PoppinsBold',
-    padding: 10,
-    alignSelf: 'center',
+    fontSize: 20,
+    fontFamily: 'PoppinsBold' 
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    fontFamily: 'PoppinsSemiBold' 
   },
   titleInput: {
     fontFamily: "PoppinsRegular",
-    paddingTop: 10,
     padding: 5,
   },
+  linkSesion: {
+    textDecorationLine: 'underline',
+    color: '#4577BB'
+  }
+  
 });
 
-export default LoginScreen;
+export default RegisterScreen;

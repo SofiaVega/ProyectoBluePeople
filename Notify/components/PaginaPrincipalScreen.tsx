@@ -6,9 +6,11 @@ import { Text, View } from "./Themed";
 import { Pressable, useColorScheme } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Topic } from "../interface";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import registerForPushNot from "../app/registerForPushNot";
 import { Feather } from "@expo/vector-icons";
+import AuthContext from "./context";
+import { useIsFocused } from "@react-navigation/native";
 import ngrok_url from "../constants/serverlink";
 import { Link, Tabs } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
@@ -25,6 +27,11 @@ const parseUserData = (user: Topic) => {
 
 export default function PaginaPrincipalScreen() {
   const [state, setState] = useState<Topic[]>([]);
+  const [isLoading, setLoading] = useState(true);
+  const authContext = useContext(AuthContext);
+  const user_id = authContext.userId;
+  const isFocused = useIsFocused();
+  console.log("USEISFOCUSED", isFocused);
   const [fontsLoaded] = useFonts({
     PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
     PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
@@ -48,17 +55,22 @@ export default function PaginaPrincipalScreen() {
     DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
   });
 
+  console.log("USER LOGGED IN: ", user_id);
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch(ngrok_url + '/api/subscriptions', {
+        const data = await fetch(ngrok_url + "/api/subscriptions", {
           method: "GET",
           headers: {
-            "x-user-id": "2",
+            "x-user-id": user_id,
             "Content-Type": "application/json",
           },
         });
         if (!data.ok) {
+          if (data.status === 401) {
+            console.log("No topics found!");
+            return setState([]);
+          }
           console.error(
             `API responded with status ${data.status}: ${data.statusText}`
           );
@@ -66,14 +78,18 @@ export default function PaginaPrincipalScreen() {
 
         const jsonData = await data.json();
         const topics = jsonData.map(parseUserData);
+        setLoading(false);
         return setState([...topics]);
         // return setState(jsonData.results);
       } catch (e) {
         console.error(e);
       }
     };
-    api();
-  }, []);
+    if (isFocused) {
+      console.log("rendering homescreen...");
+      api();
+    }
+  }, [isFocused]);
 
   console.log("ESTADPPP", state);
 
@@ -83,7 +99,7 @@ export default function PaginaPrincipalScreen() {
   const navigation = useNavigation();
 
   const goToScanner = () => {
-    navigation.navigate('nuevoTema');
+    navigation.navigate("nuevoTema");
   };
 
   return (
@@ -118,9 +134,12 @@ export default function PaginaPrincipalScreen() {
             />
             <TextInput placeholder="Buscar" />
           </View>
-          <Pressable onPress={() => {
+          <Pressable
+            onPress={() => {
               goToScanner();
-            }} style={styles.plusContainer}>
+            }}
+            style={styles.plusContainer}
+          >
             {({ pressed }) => (
               <FontAwesome
                 name="plus"
@@ -144,7 +163,12 @@ export default function PaginaPrincipalScreen() {
           ]}
         >
           <Text style={styles.title}>Temas</Text>
-          <ComponenteTemaFila comps={state} />
+          {state.length ? (
+            <ComponenteTemaFila comps={state} userId={user_id} />
+          ) : (
+            <Text>You are not subscribed to any topics!</Text>
+          )}
+          {isLoading ? <Text>Loading...</Text> : <></>}
         </View>
       </View>
     </SafeAreaView>
@@ -194,7 +218,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "black",
     paddingLeft: 10,
-    fontFamily: "PoppinsBold"
+    fontFamily: "PoppinsBold",
   },
   separator: {
     marginVertical: 30,

@@ -9,9 +9,10 @@ import { useNavigation } from "@react-navigation/native";
 import ngrok_url from "../constants/serverlink";
 import { useFonts } from "expo-font";
 
-export default function ComponenteTema({ tema }) {
+export default function ComponenteTema({ tema, userId }) {
   const [isLoading, setLoading] = useState(true);
   const [mensajes, setMensajes] = useState<MensajesScreen[]>([]);
+  console.log("TEMA:", tema, " de usuario", userId);
   const [fontsLoaded] = useFonts({
     PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
     PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
@@ -35,18 +36,16 @@ export default function ComponenteTema({ tema }) {
     DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
   });
 
-  console.log("TEMA:", tema);
   useEffect(() => {
     const api = async () => {
       try {
         const data = await fetch(ngrok_url + `/api/topic/${tema.id}/messages`, {
           method: "GET",
           headers: {
-            'x-user-id': '2',
-            'Content-Type': 'application/json'
-          }
-        }
-        );
+            "x-user-id": `${userId}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (!data.ok) {
           console.error(
             `API responded with status ${data.status}: ${data.json} in ComponenteTema`
@@ -65,9 +64,9 @@ export default function ComponenteTema({ tema }) {
 
   const navigation = useNavigation();
 
-  const handleConfig = (tema) => {
-    console.log("TMEAA INFo: ", tema);
-    navigation.navigate("themeConfig", { tema });
+  const handleConfig = (tema, userId) => {
+    console.log("THEME CONFIG: ", tema);
+    navigation.navigate("themeConfig", { tema, userId });
   };
 
   return isLoading ? (
@@ -85,15 +84,22 @@ export default function ComponenteTema({ tema }) {
           style={{ width: 30, height: 30, borderRadius: 30 / 2 }}
         />
         <View style={[styles.temaContainer, { flexDirection: "column" }]}>
-          
-          <Pressable onPress={() => handleConfig(tema)}>
-          {({ pressed }) => (
-            <Text style={styles.title}>{tema.titulo}</Text>
-          )}
-          
-          </Pressable>
+          <Text style={styles.title}>{tema.titulo}</Text>
           <Text style={styles.textoTema}>{tema.descripcion}</Text>
         </View>
+        <Pressable
+          style={styles.plusContainer}
+          onPress={() => handleConfig(tema, userId)}
+        >
+          {({ pressed }) => (
+            <FontAwesome
+              name="gear"
+              size={15}
+              color="#fdfdfd"
+              style={[{ opacity: pressed ? 0.5 : 1 }]}
+            />
+          )}
+        </Pressable>
       </View>
       <ScrollView style={[styles.scrollView, { backgroundColor: "white" }]}>
         <ComponenteMensaje comps={mensajes} />
@@ -141,7 +147,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     textAlign: "left",
     color: "black",
-    fontFamily: "DroidSans"
+    fontFamily: "DroidSans",
   },
   helpContainer: {
     marginTop: 15,
