@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { Text, View, StyleSheet, Button, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import ngrok_url from "../constants/serverlink";
 import { useNavigation } from "@react-navigation/native";
@@ -39,14 +39,14 @@ export default function Scanner2() {
         console.log(res.error)
         if (res.hasOwnProperty("error")){
           if (res["error"] === "User is already suscribed"){
-            alert(`Ya estabas suscrito al canal ${data}`);
+            Alert.alert('Aviso',`Ya estabas suscrito al canal ${data}`);
           }else {
-            alert(`Error suscribiendote al canal ${data}`);
+            Alert.alert('Error',`Error suscribiendote al canal ${data}. Este canal no existe.`);
           }
           setErrorMessage(true);
         }else{
           setErrorMessage(False);
-          alert(`Te suscribiste al canal ${data}`);
+          Alert.alert('Listo!',`Te suscribiste al canal ${data}`);
         }
         navigation.goBack()
         // error message if res is not success
@@ -68,9 +68,8 @@ export default function Scanner2() {
                 style={StyleSheet.absoluteFillObject}
             />
         </View>
-        {scanned ? <Text>Codigo invalido</Text> : null }
+        {scanned ? <Button title={'Click aqui para escanear de nuevo'} onPress={() => setScanned(false)} /> : null }
       
-      <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
     </View>
   );
 }
