@@ -55,14 +55,14 @@ export default function GenerateTopic({userId}) {
   const navigator = useNavigation();
   const [isEnabled, setIsEnabled] = useState(true);
   const [title, setTitle] = useState("");
-  const [descripcion, setDescripcion] = useState("");
+  const [description, setDescription] = useState("");
   const authContext = useContext(AuthContext);
 
   //Change toggle value
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   //API CALL
-  const handleThemeGeneration = async () => {
+  const handleThemeGeneration = async (e) => {
 
     //Generate cod "randomly"
     const character = title + userId
@@ -70,28 +70,53 @@ export default function GenerateTopic({userId}) {
     for(let i = 0; i < character.length; i++){
       cod += character.charAt(Math.floor(Math.random() * character.length))
     }
-    
-    try {
-      const response = await fetch(ngrok_url + "/api/topic", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ title, userId, descripcion, isEnabled, cod }),
-      });
-      // const userId = response.data.userId;
-      if (response.ok) {
-        const data = await response.json();
-        const userId = data.id.toString();
-        console.log("REGISTERED USER: ", userId);
-        await AsyncStorage.setItem("userId", userId);
-        authContext.register(userId);
-      } else {
-        throw new Error("Registration failed");
-      }
-    } catch (error) {
-      Alert.alert("Error", "Falló la generación del tema. Por favor intentalo de nuevo.");
-    }
+
+    e.preventDefault();
+    const userr = userId
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json")
+    headers.append("x-user-id", "1")
+    const data = { title: title, user_id: userId, description: description, accesoMensajesPrev: isEnabled, cod: cod};
+    const requestOptions = {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(data),
+    };
+    await fetch(
+      ngrok_url + `/api/topic`,
+      requestOptions
+    )
+      .then((response) => {
+        console.log(response.headers.get('x-user-id'))
+        return response.text()
+        // response.json()
+      })
+      .then((res) => console.log(res));
+
+    // try {
+    //   console.log("USUARIO ", userId)
+    //   const data = { title: title, user_id: userId, description: description, accesoMensajesPrev: isEnabled, cod: cod };
+    //   const response = await fetch(ngrok_url + "/api/topic", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(data)
+    //   });
+    //   // const userId = response.data.userId;
+    //   if (response.ok) {
+    //     const data = await response.json();
+    //     const userId = data.id.toString();
+    //     console.log("REGISTERED USER: ", userId);
+    //     await AsyncStorage.setItem("userId", userId);
+    //     authContext.register(userId);
+    //   } else {
+    //     throw new Error("Registration failed");
+    //   }
+    // } catch (error) {
+    //   console.log("REGISTERED USER: ", userId);
+    //   Alert.alert("Error", "Falló la generación del tema. Por favor intentalo de nuevo.");
+    // }
   };
   //Frontend
   return (
@@ -142,7 +167,7 @@ export default function GenerateTopic({userId}) {
               style={[styles.input]}
               placeholder="Descripcion"
               placeholderTextColor={"rgba(0,0,0,0.10)"}
-              value={descripcion} onChangeText={setDescripcion}
+              value={description} onChangeText={setDescription}
             />
           </View>
           <View
