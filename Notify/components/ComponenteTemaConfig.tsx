@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Button, Switch, Image,SafeAreaView, ScrollView, Pressable } from 'react-native';
+import { Alert, StyleSheet, Button, Switch, Image,SafeAreaView, ScrollView, Pressable } from 'react-native';
 
 import Colors from '../constants/Colors';
 import { ExternalLink } from './ExternalLink';
@@ -20,7 +20,7 @@ export default function ComponenteTema(tema: Tema) {
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch("https://11f1-2806-230-4026-bd3f-b1a4-b622-5385-5600.ngrok-free.app/api/pushnot/2", {
+        const data = await fetch("https://c97e-131-178-102-160.ngrok-free.app/api/pushnot/2", {
           method: "GET",
           headers: {
             "x-user-id": "2",
@@ -39,8 +39,45 @@ export default function ComponenteTema(tema: Tema) {
         console.error(e);
       }
     };
+    const api2 = async () => {
+      try {
+        const data = await fetch("https://c97e-131-178-102-160.ngrok-free.app/api/frecmsj/2", {
+          method: "GET",
+          headers: {
+            "x-user-id": "2",
+            "Content-Type": "application/json",
+          },
+        });
+        if (!data.ok) {
+          console.error(
+            `API responded with status ${data.status}: ${data.statusText}`
+          );
+        }
+        const jData = await data.json();
+        //console.log(jData * 2)
+       return setSelects(jData);
+      } catch (e) {
+        console.error(e);
+      }
+    };
     api();
+    api2();
   }, []);
+
+  const freccHandler = (itemValue: any) => {
+    setSelects(itemValue)
+    alert('Se recibiran mensajes cada ' + itemValue + ' min')
+
+    const requestOp = {
+      method: 'PUT',
+      headers: { 
+        "x-user-id": "2",
+        'Content-Type': 'application/json' },
+      body: JSON.stringify({ frecmsj : itemValue })
+    };
+    fetch('https://c97e-131-178-102-160.ngrok-free.app/api/editfrecmsj/2', requestOp)
+      .then(response => response.json())
+  };
 
   const [selects, setSelects]= useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,7 +91,7 @@ export default function ComponenteTema(tema: Tema) {
         'Content-Type': 'application/json' },
       body: JSON.stringify({ recibirpushnot : (!isEnabled).toString() })
     };
-    fetch('https://11f1-2806-230-4026-bd3f-b1a4-b622-5385-5600.ngrok-free.app/api/editPushNot/2', requestOptions)
+    fetch('https://c97e-131-178-102-160.ngrok-free.app/api/editPushNot/2', requestOptions)
       .then(response => response.json())
   }
   return (
@@ -97,14 +134,17 @@ export default function ComponenteTema(tema: Tema) {
               <Picker
                 selectedValue={selects}
                 style={{height: 200, width: 120}}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelects(itemValue)
+                onValueChange={
+                  (itemValue, itemIndex) => 
+                  freccHandler(itemValue)
+                
                 }>
-                <Picker.Item label="1min" value="1min" />
-                <Picker.Item label="5min" value="5min" />
-                <Picker.Item label="10min" value="10min" />
-                <Picker.Item label="30min" value="30min" />
+                <Picker.Item label="1min" value="1" />
+                <Picker.Item label="5min" value="5" />
+                <Picker.Item label="10min" value="10" />
+                <Picker.Item label="30min" value="30" />
               </Picker>
+              <Text style={styles.title}>lul: {selects}</Text>
             </View>
             <View style = {[{backgroundColor:'#fdfdfd', flexDirection: "column",alignItems: 'center'}]}>
               <Pressable style={styles.buttonContainer} onPress={() => setIsModalOpen(!isModalOpen)}><Text style={styles.textoButton}>Dejar de seguir</Text></Pressable>

@@ -56,6 +56,7 @@ CREATE TABLE tema_sus (
 	temas_id int,
 	suscriptor_id int,
 	recibirpushnot BOOLEAN NOT NULL,
+	frecmsj int NOT NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	PRIMARY KEY (temas_id, suscriptor_id),
   	CONSTRAINT fk_temas FOREIGN KEY(temas_id) REFERENCES temas(id) ON DELETE CASCADE,
