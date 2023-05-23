@@ -173,6 +173,33 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+//Register admin 
+app.post("/api/register/admin", async (req, res) => {
+  try {
+    const { email, name } = req.body;
+    const existingUser = await pool.query(
+      "SELECT * FROM usuario WHERE email = $1",
+      [email]
+    );
+    //Check if user email repeats
+    const users = existingUser.rows;
+    if (users.length) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    const id = await pool.query(
+      "INSERT INTO usuario (nombre, email, is_admin) VALUES ($1, $2, $3) RETURNING id",
+      [name, email, true]
+    );
+    //Return user ID for further authentication
+    console.log(id.rows[0]);
+    res.status(201).json(id.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.sendStatus(500);
+  }
+});
+
 //Create new topic route, admin only
 app.post("/api/topic", attachId, async (req, res) => {
   try {
@@ -289,6 +316,53 @@ app.put("/api/editPushNot/:id", attachId, async (req, res) => {
 
     // Return the updated topic as the response
     res.json(updatedFlag.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Error editing topic" });
+  }
+});
+
+//get frec msj
+app.get("/api/frecmsj/:id", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const topic_id = req.params.id;
+    const result = await pool.query("SELECT frecmsj FROM tema_sus where suscriptor_id = $1 AND temas_id = $2", 
+    [user_id, topic_id]);
+    //Check if data was found
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    // Extract the topic data and return
+    const val = result.rows[0].frecmsj;
+    res.json(val);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Error getting val" });
+  }
+});
+
+//Edit frec msj
+app.put("/api/editfrecmsj/:id", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const topic_id = req.params.id;
+    
+    //Get body and validate
+    const { frecmsj } = req.body;
+    if (!frecmsj ) {
+      return res
+        .status(400)
+        .json({ error: "Flag <frecmsj> is required" });
+    }
+    //update flag
+    const updatedFrecc = await pool.query(
+      "UPDATE tema_sus SET frecmsj = $1 WHERE suscriptor_id = $2 AND temas_id = $3 RETURNING *",
+      [frecmsj, user_id,topic_id]
+    );
+
+    // Return the updated topic as the response
+    res.json(updatedFrecc.rows[0]);
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ message: "Error editing topic" });
