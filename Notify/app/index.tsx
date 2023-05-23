@@ -42,6 +42,30 @@ export default function Home() {
     },
   };
   useEffect(() => {
+    const api = async () => {
+      try {
+        const data = await fetch("https://c97e-131-178-102-160.ngrok-free.app/api/subscriptions", {
+          method: "GET",
+          headers: {
+            "x-user-id": "2",
+            "Content-Type": "application/json",
+          },
+        });
+        if (!data.ok) {
+          console.error(
+            `API responded with status ${data.status}: ${data.statusText}`
+          );
+        }
+
+        const jsonData = await data.json();
+        const topics = jsonData.map(parseUserData);
+        return setState([...state, ...topics]);
+        // return setState(jsonData.results);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    api();
     //Check if user is logged in using asyncStorage
     async function getUserId() {
       const storedId = await AsyncStorage.getItem("userId");
