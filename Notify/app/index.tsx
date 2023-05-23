@@ -1,31 +1,46 @@
-import { StyleSheet, SafeAreaView, TextInput, Dimensions } from "react-native";
-
-import ComponenteTemaFila from "../components/ComponenteTemaFila";
-import ComponenteHeader from "../components/ComponenteHeader";
-import { Text, View } from "../components/Themed";
-import { Link, Tabs } from "expo-router";
-import { Pressable, useColorScheme } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import "react-native-gesture-handler";
+import {
+  StyleSheet,
+  SafeAreaView,
+  TextInput,
+  Dimensions,
+  Text,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Topic } from "../interface";
-import React, { useEffect, useState } from "react";
-import registerForPushNot from './registerForPushNot';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Feather } from "@expo/vector-icons";
+import React, { useEffect, useState, createContext } from "react";
+import registerForPushNot from "./registerForPushNot";
+import { NavigationContainer } from "@react-navigation/native";
+import PaginaPrincipalScreen from "../components/PaginaPrincipalScreen";
+import { createStackNavigator } from "@react-navigation/stack";
+import RegisterScreen from "./RegisterScreen";
+import TemaScreen from "./tema";
+import nuevoTema from "./modal_nuevo_tema";
+import ngrok_url from "../constants/serverlink";
+import ConfigTemaScreen from "./config_tema";
+import AuthContext from "../components/context";
+import LoginScreen from "./LoginScreen";
 
+const Stack = createStackNavigator();
 
-const parseUserData = (user: Topic) => {
-  const { titulo, descripcion, id } = user;
-  return {
-    titulo: titulo,
-    descripcion: descripcion,
-    id: id,
-  };
+const clearAsyncStorage = async () => {
+  try {
+    await AsyncStorage.clear();
+    console.log("AsyncStorage cleared successfully");
+  } catch (error) {
+    console.log("Error clearing AsyncStorage: ", error);
+  }
 };
 
-export default function PaginaPrincipalScreen() {
-  const [state, setState] = useState<Topic[]>([]);
-
+export default function Home() {
+  clearAsyncStorage();
+  const [userId, setUserId] = useState<String | null>(null);
+  const authContext = {
+    userId: userId,
+    register: (id) => {
+      setUserId(id);
+    },
+  };
   useEffect(() => {
     const api = async () => {
       try {
@@ -51,90 +66,34 @@ export default function PaginaPrincipalScreen() {
       }
     };
     api();
+    //Check if user is logged in using asyncStorage
+    async function getUserId() {
+      const storedId = await AsyncStorage.getItem("userId");
+      console.log(storedId + "storedId");
+      setUserId(storedId);
+    }
+    getUserId();
+    console.log(userId);
   }, []);
-
-console.log("ESTADPPP", state);
-
-  useEffect(() => {
-    registerForPushNot()
-  }, []);
-
   return (
-    <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
-      <ComponenteHeader></ComponenteHeader>
-      <View style={[{ flexDirection: "column", justifyContent: 'space-between', backgroundColor: '#E8F1F2' }]}>
-        <View style={[{ flexDirection: "row", backgroundColor: '#E8F1F2' }]}>
-          <View style={[{ flexDirection: "row", backgroundColor: '#fdfdfd' }, styles.input]}>
-            <Feather name="search" size={20} color="black" style={{ marginLeft: 1, marginRight: 4 }} />
-            <TextInput placeholder="Buscar"/>
-          </View>
-          <Link href="/config_tema" asChild >
-            <Pressable style={styles.plusContainer}>
-              {({ pressed }) => (<FontAwesome name="plus" size={15} color="#fdfdfd" style={[{ opacity: pressed ? 0.5 : 1 },]} />)}
-            </Pressable>
-          </Link>
-        </View>
-      </View>
-      <View style={[styles.temaContainer]}>
-        <View style={[{ marginLeft: 20, marginTop: 20, marginRight: 20, backgroundColor: '#fdfdfd'}]}>
-          <Text style={styles.title}>Temas</Text>
-          <ComponenteTemaFila comps={state}/>
-        </View>
-      </View>
-    </SafeAreaView>
+    <NavigationContainer independent={true}>
+      <AuthContext.Provider value={authContext}>
+        <Stack.Navigator>
+          {userId ? (
+            <>
+              <Stack.Screen name="home" component={PaginaPrincipalScreen} />
+              <Stack.Screen name="themeInfo" component={TemaScreen} />
+              <Stack.Screen name="themeConfig" component={ConfigTemaScreen} />
+              <Stack.Screen name="nuevoTema" component={nuevoTema} />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="register" component={RegisterScreen} />
+              <Stack.Screen name="zlogin" component={LoginScreen} />
+            </>
+          )}
+        </Stack.Navigator>
+      </AuthContext.Provider>
+    </NavigationContainer>
   );
 }
-const screen = Dimensions.get("screen");
-const styles = StyleSheet.create({
-  temaContainer: {
-    backgroundColor: "#fdfdfd",
-    borderRadius: 20,
-    marginRight: 20,
-    marginLeft: 20,
-    marginTop: 30,
-    marginBottom: 30,
-    // height: screen.width * 0.9,
-    width: screen.width * 0.9,
-  },
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  input: {
-    backgroundColor: 'rgba(69,119,187,0.15)',
-    padding: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(69,119,187,0.15)',
-    fontSize: 15,
-    color: 'black',
-    marginRight: 10,
-    marginLeft: 20,
-    marginTop: 30
-  },
-  plusContainer: {
-    backgroundColor: '#4577BB',
-    padding: 15,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#fdfdfd',
-    fontSize: 10,
-    color: '#fdfdfd',
-    marginTop: 30
-  },
-  title: {
-    fontSize: 40,
-    fontWeight: "bold",
-    color: "black",
-    paddingLeft: 10,
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-  white_background: {
-    backgroundColor: "white",
-  },
-});

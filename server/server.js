@@ -36,12 +36,12 @@ const handlePushTokens = ({ title, body }) => {
     }
 
     // Construct a message
-    notifications.push({  
+    notifications.push({
       to: pushToken,
       sound: "default",
       title: title,
       body: body,
-      data: { body }
+      data: { body },
     });
   }
 
@@ -60,14 +60,13 @@ const handlePushTokens = ({ title, body }) => {
   })();
 };
 
-const saveToken = token => {
+const saveToken = (token) => {
   console.log(token, savedTokens);
-  const exists = savedTokens.find(t => t === token);
+  const exists = savedTokens.find((t) => t === token);
   if (!exists) {
     savedTokens.push(token);
   }
 };
-
 
 // test hello route
 app.get("/hello", (req, res) => {
@@ -115,15 +114,13 @@ app.post("/sendNot/:user_id/:topic_id", attachId, async (req, res) => {
     [userId, topicId]
   );
   const flag = not_status.rows[0].recibirpushnot;
-  if(flag){
+  if (flag) {
     handlePushTokens(req.body);
     console.log(`Received message, with title: ${req.body.title}`);
     res.send(`Received message, with title: ${req.body.title}`);
-  }
-  else {
+  } else {
     res.status(200).json(flag);
   }
-  
 });
 
 // register route - to do verify email
@@ -145,7 +142,8 @@ app.post("/api/register", async (req, res) => {
       [name, email, false]
     );
     //Return user ID for further authentication
-    res.status(201).json(id.rows);
+    console.log(id.rows[0]);
+    res.status(201).json(id.rows[0]);
   } catch (err) {
     console.error(err.message);
     res.sendStatus(500);
@@ -252,9 +250,11 @@ app.get("/api/pushnot/:id", attachId, async (req, res) => {
   try {
     const user_id = req.user_id;
     const topic_id = req.params.id;
-    console.log(topic_id)
-    const result = await pool.query("SELECT recibirpushnot FROM tema_sus where suscriptor_id = $1 AND temas_id = $2", 
-    [user_id, topic_id]);
+    console.log(topic_id);
+    const result = await pool.query(
+      "SELECT recibirpushnot FROM tema_sus where suscriptor_id = $1 AND temas_id = $2",
+      [user_id, topic_id]
+    );
     //Check if data was found
     if (result.rowCount === 0) {
       return res.status(404).json({ error: "Not found" });
@@ -273,10 +273,10 @@ app.put("/api/editPushNot/:id", attachId, async (req, res) => {
   try {
     const user_id = req.user_id;
     const topic_id = req.params.id;
-    
+
     //Get body and validate
     const { recibirpushnot } = req.body;
-    if (!recibirpushnot ) {
+    if (!recibirpushnot) {
       return res
         .status(400)
         .json({ error: "Flag <recibirpushnot> is required" });
@@ -284,7 +284,7 @@ app.put("/api/editPushNot/:id", attachId, async (req, res) => {
     //update flag
     const updatedFlag = await pool.query(
       "UPDATE tema_sus SET recibirpushnot = $1 WHERE suscriptor_id = $2 AND temas_id = $3 RETURNING *",
-      [recibirpushnot, user_id,topic_id]
+      [recibirpushnot, user_id, topic_id]
     );
 
     // Return the updated topic as the response
@@ -345,23 +345,46 @@ app.put("/api/editfrecmsj/:id", attachId, async (req, res) => {
 //Route for subscribing to a topic
 app.post("/api/subscribe/:id", attachId, async (req, res) => {
   try {
-    const user_id = req.user_id;
+    console.log("debugging api call");
+    console.log(0);
+    console.log(req);
+    const user_id = 5;
     const topic_id = req.params.id;
+    console.log(1);
     //Check if topic exists
-    const result = await pool.query("SELECT * FROM temas WHERE id = $1", [
+    const result = await pool.query("SELECT * FROM temas WHERE cod = $1", [
       topic_id,
     ]);
     if (result.rows.length === 0) {
       // If ID does not exist in the database, send an error response
       return res.status(401).json({ error: "Topic not found" });
     }
+    const result_id = await pool.query("SELECT id FROM temas WHERE cod = $1", [
+      topic_id,
+    ]);
+    console.log(result_id);
+    const tema_id = result_id.rows[0].id;
+    console.log(3);
     //If topic exists, create new entry in tema_sus
-    await pool.query(
-      "INSERT INTO tema_sus (temas_id, suscriptor_id) VALUES ($1, $2)",
-      [topic_id, user_id]
+    const check_if_subscribed = await pool.query(
+      "select * from tema_sus where suscriptor_id = $1 and temas_id = $2",
+      [user_id, tema_id]
     );
+    console.log("check if subscribed");
+    console.log(check_if_subscribed);
+    if (check_if_subscribed.rows.length === 0) {
+      await pool.query(
+        "INSERT INTO tema_sus (temas_id, suscriptor_id) VALUES ($1, $2)",
+        [tema_id, user_id]
+      );
+    } else {
+      console.log("Duplicate entry");
+      return res.status(401).json({ error: "User is already suscribed" });
+    }
+    console.log(4);
     res.status(201).send({ message: "Success!" });
   } catch (err) {
+    console.log("hola");
     console.log(err.message);
     res.status(500).json({ message: "Error subscribing" });
   }
@@ -371,6 +394,7 @@ app.post("/api/subscribe/:id", attachId, async (req, res) => {
 app.get("/api/subscriptions", attachId, async (req, res) => {
   try {
     const user_id = req.user_id;
+    console.log("userid", user_id);
     //Get user topics, query for title and description
     const result = await pool.query(
       "SELECT temas.titulo, temas.descripcion, temas.id FROM temas JOIN tema_sus ON tema_sus.temas_id = temas.id WHERE suscriptor_id = $1",
@@ -382,7 +406,6 @@ app.get("/api/subscriptions", attachId, async (req, res) => {
         .status(401)
         .json({ error: "User is not subscribed to any topics" });
     }
-    console.log("SUSCRIPCIOPNES ", res)
     res.status(201).send(result.rows);
   } catch (err) {
     console.log(err.message);
