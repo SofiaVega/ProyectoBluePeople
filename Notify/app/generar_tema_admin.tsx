@@ -92,31 +92,9 @@ export default function GenerateTopic({userId}) {
         // response.json()
       })
       .then((res) => console.log(res));
-
-    // try {
-    //   console.log("USUARIO ", userId)
-    //   const data = { title: title, user_id: userId, description: description, accesoMensajesPrev: isEnabled, cod: cod };
-    //   const response = await fetch(ngrok_url + "/api/topic", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(data)
-    //   });
-    //   // const userId = response.data.userId;
-    //   if (response.ok) {
-    //     const data = await response.json();
-    //     const userId = data.id.toString();
-    //     console.log("REGISTERED USER: ", userId);
-    //     await AsyncStorage.setItem("userId", userId);
-    //     authContext.register(userId);
-    //   } else {
-    //     throw new Error("Registration failed");
-    //   }
-    // } catch (error) {
-    //   console.log("REGISTERED USER: ", userId);
-    //   Alert.alert("Error", "Falló la generación del tema. Por favor intentalo de nuevo.");
-    // }
+      Alert.alert('Éxito', 'Nuevo tema generado', [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ]);
   };
   //Frontend
   return (
