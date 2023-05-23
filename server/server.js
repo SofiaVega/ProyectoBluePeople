@@ -173,6 +173,33 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+//Register admin 
+app.post("/api/register/admin", async (req, res) => {
+  try {
+    const { email, name } = req.body;
+    const existingUser = await pool.query(
+      "SELECT * FROM usuario WHERE email = $1",
+      [email]
+    );
+    //Check if user email repeats
+    const users = existingUser.rows;
+    if (users.length) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    const id = await pool.query(
+      "INSERT INTO usuario (nombre, email, is_admin) VALUES ($1, $2, $3) RETURNING id",
+      [name, email, true]
+    );
+    //Return user ID for further authentication
+    console.log(id.rows[0]);
+    res.status(201).json(id.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.sendStatus(500);
+  }
+});
+
 //Create new topic route, admin only
 app.post("/api/topic", attachId, async (req, res) => {
   try {
