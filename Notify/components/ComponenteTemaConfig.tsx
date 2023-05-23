@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, StyleSheet, Button, Switch, Image,SafeAreaView, ScrollView, Pressable } from 'react-native';
-
+import { Alert, StyleSheet, Button, Switch, Image,SafeAreaView, ScrollView, Pressable, Modal } from 'react-native';
 import Colors from '../constants/Colors';
 import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
@@ -8,19 +7,8 @@ import { Text, View } from './Themed';
 import ComponenteTemaFila from './ComponenteTemaFila';
 import ModalDesuscribir from './ModalDesuscribir';
 import {Picker} from '@react-native-picker/picker';
-
-type Tema = {
-    titulo: string;
-    descripcion: string;
-};
-
-export default function ComponenteTema(tema: Tema) {
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Switch, Image, Pressable, Modal } from "react-native";
-import { Text, View } from "./Themed";
-import ModalDesuscribir from "./ModalDesuscribir";
-import ngrok_url from "../constants/serverlink";
 import { useFonts } from "expo-font";
+import ngrok_url from "../constants/serverlink";
 
 export default function ComponenteTemaConfig({ tema, userId }) {
   const [fontsLoaded] = useFonts({
@@ -45,6 +33,12 @@ export default function ComponenteTemaConfig({ tema, userId }) {
     DroidSans: require("../assets/fonts/DroidSans.ttf"),
     DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
   });
+
+  type Tema = {
+    titulo: string;
+    descripcion: string;
+};
+
   const [isEnabled, setState] = useState(true);
   console.log("CONFIG user is :", userId);
   useEffect(() => {
@@ -175,37 +169,8 @@ export default function ComponenteTemaConfig({ tema, userId }) {
                 <Picker.Item label="10min" value="10" />
                 <Picker.Item label="30min" value="30" />
               </Picker>
-              <Text style={styles.title}>lul: {selects}</Text>
             </View>
-            <View style = {[{backgroundColor:'#fdfdfd', flexDirection: "column",alignItems: 'center'}]}>
-              <Pressable style={styles.buttonContainer} onPress={() => setIsModalOpen(!isModalOpen)}><Text style={styles.textoButton}>Dejar de seguir</Text></Pressable>
-              <ModalDesuscribir isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
-            </View>
-            {/* <Button title="Dejar de seguir" onPress={() => setIsModalOpen(!isModalOpen)}></Button> */}
-          
-
-          <View style={[styles.bgColor, { flexDirection: "column" }]}>
-            <Text style={styles.title}>{tema.titulo}</Text>
-            <Text style={styles.textoTema}>{tema.descripcion}</Text>
-          </View>
-        </View>
-        <View
-          style={[
-            styles.temaContainer,
-            { flexDirection: "row", alignItems: "center" },
-          ]}
-        >
-          <Text style={styles.title}>Push notifications</Text>
-
-          <Switch
-            onValueChange={toggleSwitch}
-            value={isEnabled}
-            trackColor={{ true: "#DB8A74", false: "grey" }}
-            style={[{ margin: 20 }]}
-            ios_backgroundColor="black"
-          ></Switch>
-        </View>
-        <View
+          <View
           style={[
             {
               backgroundColor: "#fdfdfd",
