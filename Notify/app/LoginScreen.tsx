@@ -74,7 +74,7 @@ const LoginScreen = () => {
       <Text style={styles.notify}>Notify</Text>
 
       <Text style={styles.titleInput}>Ingresa tu correo electrónico:</Text>
-      <TextInput placeholder="Email" placeholderTextColor='grey' value={email} style={styles.input} onChangeText={setEmail} />
+      <TextInput placeholder="Email" placeholderTextColor='grey' value={email} style={styles.input} onChangeText={setEmail} autoCapitalize='none'/>
 
       <Pressable onPress={handleLogin} style={styles.buttonContainer}>
         <Text style={styles.textoButton}>Iniciar Sesión</Text>
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     margin: 12,
     borderColor: 'grey',
     fontFamily: 'PoppinsLight',
+    color: 'black',
   },
   logo: {
     width: 120, 
@@ -132,6 +133,7 @@ const styles = StyleSheet.create({
     fontFamily: "PoppinsRegular",
     paddingTop: 10,
     padding: 5,
+    paddingStart: 15,
   },
 });
 

@@ -21,6 +21,7 @@ import ConfigTemaScreen from "./config_tema";
 import AuthContext from "../components/context";
 import LoginScreen from "./LoginScreen";
 import AuthAdminScreen from "./AuthAdminScreen";
+import LoginAdminScreen from "./LoginAdminScreen";
 
 const Stack = createStackNavigator();
 
@@ -67,6 +68,7 @@ export default function Home() {
               <Stack.Screen name="register" component={RegisterScreen} />
               <Stack.Screen name="zlogin" component={LoginScreen} />
               <Stack.Screen name="zzauthAdmin" component={AuthAdminScreen} />
+              <Stack.Screen name="zzloginAdmin" component={LoginAdminScreen} />
             </>
           )}
         </Stack.Navigator>

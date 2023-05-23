@@ -6,35 +6,9 @@ import AuthContext from "../components/context";
 import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 
-const AuthAdminScreen = () => {
+const LoginAdminScreen = () => {
     const navigator = useNavigation();
     const [email, setEmail] = useState("");
-    const [name, setName] = useState("");
-
-    const authContext = useContext(AuthContext);
-    const handleRegisterAdmin = async () => {
-        try {
-        const response = await fetch(ngrok_url + "/api/register/admin", {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, name }),
-        });
-        // const userId = response.data.userId;
-        if (response.ok) {
-            const data = await response.json();
-            const userId = data.id.toString();
-            console.log("LOGGED IN ADMIN USER: ", userId);
-            await AsyncStorage.setItem("userId", userId);
-            authContext.register(userId);
-        } else {
-            throw new Error("Registration failed");
-        }
-        } catch (error) {
-        Alert.alert("Error", "Falló el registro. Por favor intenta de nuevo.");
-        }
-    };
 
 
     return(
@@ -56,29 +30,14 @@ const AuthAdminScreen = () => {
                 <Text style={styles.notify}>Notify </Text> <Text style={styles.admin}>admin</Text>
             </Text>
 
-            <Text style={styles.titleInput}>Nombre:</Text>
-            <TextInput placeholder="Nombre" placeholderTextColor='grey' style={styles.input} onChangeText={setName} value={name} autoCapitalize='none'/>
-
-
             <Text style={styles.titleInput}>Ingresa tu correo electrónico:</Text>
             <TextInput placeholder="Correo electrónico" placeholderTextColor='grey' style={styles.input} onChangeText={setEmail} value={email} autoCapitalize='none'/>
 
-
             <View style={{paddingTop: 25}}>
-                <Pressable style={styles.buttonContainer} onPress={handleRegisterAdmin}>
-                    <Text style={styles.textoButton}> Regístrate </Text>
+                <Pressable style={styles.buttonContainer} >
+                    <Text style={styles.textoButton}>Inicia Sesión</Text>
                 </Pressable>
             </View>
-
-            <Pressable
-                onPress={() => {
-                navigator.navigate("zzloginAdmin");
-                }}
-            >
-                <Text style={{flexDirection: 'row', paddingTop: 30,}}>
-                <Text style={styles.titleInput}>¿Ya tienes una cuenta? Inicia sesión</Text> <Text style={styles.linkSesion}>aquí</Text>
-                </Text>
-            </Pressable>
         </View>
     );
 };
@@ -143,11 +102,7 @@ const styles = StyleSheet.create({
         padding: 10,
         alignSelf: 'center',
       },
-      linkSesion: {
-        textDecorationLine: 'underline',
-        color: '#f27957'
-      }
 
 });
 
-export default AuthAdminScreen;
+export default LoginAdminScreen;
