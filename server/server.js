@@ -222,7 +222,7 @@ app.post("/api/topic", attachId, async (req, res) => {
     );
     res.status(201).json(tema_id.rows);
   } catch (err) {
-    console.log(err.message);
+    console.log("aaaaaaaaaaa ",err.message);
     res.sendStatus(500);
   }
 });

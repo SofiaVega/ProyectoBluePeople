@@ -20,6 +20,7 @@ import ngrok_url from "../constants/serverlink";
 import ConfigTemaScreen from "./config_tema";
 import AuthContext from "../components/context";
 import LoginScreen from "./LoginScreen";
+import GenerateTheme from "./generar_tema_admin"
 import AuthAdminScreen from "./AuthAdminScreen";
 import LoginAdminScreen from "./LoginAdminScreen";
 
@@ -62,6 +63,7 @@ export default function Home() {
               <Stack.Screen name="home" component={PaginaPrincipalScreen} />
               <Stack.Screen name="themeInfo" component={TemaScreen} />
               <Stack.Screen name="themeConfig" component={ConfigTemaScreen} />
+              <Stack.Screen name="themeGenerate" component={GenerateTheme}/>
               <Stack.Screen name="nuevoTema" component={nuevoTema} />
             </>
           ) : (
