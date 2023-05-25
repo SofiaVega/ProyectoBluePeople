@@ -3,8 +3,28 @@ import { Text, View, StyleSheet, Button, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import ngrok_url from "../constants/serverlink";
 import { useNavigation } from "@react-navigation/native";
+import AuthContext from "../components/context";
 
 export default function Scanner2() {
+  const [state, setState] = useState<Topic[]>([]);
+
+  const [userId, setUserId] = useState<String | null>(null);
+  const authContext = {
+    userId: userId,
+    register: (id) => {
+      setUserId(id);
+    },
+  };
+  useEffect(() => {
+    //Check if user is logged in using asyncStorage
+    async function getUserId() {
+      const storedId = await AsyncStorage.getItem("userId");
+      console.log(storedId + "storedId");
+      setUserId(storedId);
+    }
+    getUserId();
+    console.log(userId);
+  }, []);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
@@ -25,7 +45,7 @@ export default function Scanner2() {
     console.log(datos)
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-user-id": "5" },
+      headers: { "Content-Type": "application/json", "x-user-id": userId },
       body: JSON.stringify(datos),
     };
     await fetch(

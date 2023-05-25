@@ -36,7 +36,7 @@ export default function ComponenteTemaConfig({ tema, userId }) {
         const data = await fetch(ngrok_url + `/api/pushnot/${tema.id}`, {
           method: "GET",
           headers: {
-            "x-user-id": `${userId}`,
+            "x-user-id": userId,
             "Content-Type": "application/json",
           },
         });
@@ -62,7 +62,7 @@ export default function ComponenteTemaConfig({ tema, userId }) {
     const requestOptions = {
       method: "PUT",
       headers: {
-        "x-user-id": `${userId}`,
+        "x-user-id": userId,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ recibirpushnot: (!isEnabled).toString() }),

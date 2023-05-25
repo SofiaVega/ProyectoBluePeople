@@ -10,6 +10,7 @@ import { Topic } from "../interface";
 import React, { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import ngrok_url from "../constants/serverlink";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -25,13 +26,31 @@ const parseUserData = (user: Topic) => {
 export default function temas() {
   const [state, setState] = useState<Topic[]>([]);
 
+  const [userId, setUserId] = useState<String | null>(null);
+  const authContext = {
+    userId: userId,
+    register: (id) => {
+      setUserId(id);
+    },
+  };
+  useEffect(() => {
+    //Check if user is logged in using asyncStorage
+    async function getUserId() {
+      const storedId = await AsyncStorage.getItem("userId");
+      console.log(storedId + "storedId");
+      setUserId(storedId);
+    }
+    getUserId();
+    console.log(userId);
+  }, []);
+
   useEffect(() => {
     const api = async () => {
       try {
         const data = await fetch(ngrok_url + "/api/subscriptions", {
           method: "GET",
           headers: {
-            "x-user-id": "5",
+            "x-user-id": `${userId}`,
             "Content-Type": "application/json",
           },
         });
