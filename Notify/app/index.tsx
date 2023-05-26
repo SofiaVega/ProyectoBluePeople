@@ -67,6 +67,7 @@ export default function Home() {
             <>
               <Stack.Screen name="home" component={PaginaPrincipalScreen} />
               <Stack.Screen name="themeInfo" component={TemaScreen} />
+              <Stack.Screen name="nuevoTema" component={nuevoTema} />
               <Stack.Screen name="themeConfig" component={ConfigTemaScreen} />
             </>
           ) : (
@@ -82,7 +83,6 @@ export default function Home() {
                 component={ConfigTemaAdminScreen}
               />
               <Stack.Screen name="themeGenerate" component={GenerateTheme} />
-              <Stack.Screen name="nuevoTema" component={nuevoTema} />
               <Stack.Screen name="QRGenerate" component={QRGenerate} />
             </>
           ) : (
