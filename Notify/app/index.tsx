@@ -20,6 +20,10 @@ import ngrok_url from "../constants/serverlink";
 import ConfigTemaScreen from "./config_tema";
 import AuthContext from "../components/context";
 import LoginScreen from "./LoginScreen";
+import GenerateTheme from "./generar_tema_admin";
+import AuthAdminScreen from "./AuthAdminScreen";
+import LoginAdminScreen from "./LoginAdminScreen";
+import ConfigTemaAdminScreen from "./config_tema_admin";
 
 const Stack = createStackNavigator();
 
@@ -35,10 +39,15 @@ const clearAsyncStorage = async () => {
 export default function Home() {
   clearAsyncStorage();
   const [userId, setUserId] = useState<String | null>(null);
+  const [admin, setAdmin] = useState<Boolean>(false);
   const authContext = {
     userId: userId,
     register: (id) => {
       setUserId(id);
+    },
+    is_admin: admin,
+    register_admin: () => {
+      setAdmin(true);
     },
   };
   useEffect(() => {
@@ -60,6 +69,7 @@ export default function Home() {
               <Stack.Screen name="home" component={PaginaPrincipalScreen} />
               <Stack.Screen name="themeInfo" component={TemaScreen} />
               <Stack.Screen name="themeConfig" component={ConfigTemaScreen} />
+              <Stack.Screen name="themeGenerate" component={GenerateTheme} />
               <Stack.Screen name="nuevoTema" component={nuevoTema} />
             </>
           ) : (
@@ -67,6 +77,16 @@ export default function Home() {
               <Stack.Screen name="register" component={RegisterScreen} />
               <Stack.Screen name="zlogin" component={LoginScreen} />
             </>
+          )}
+          {userId && admin ? (
+            <>
+              <Stack.Screen
+                name="adminConfig"
+                component={ConfigTemaAdminScreen}
+              />
+            </>
+          ) : (
+            <></>
           )}
         </Stack.Navigator>
       </AuthContext.Provider>

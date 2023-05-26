@@ -156,7 +156,7 @@ app.post("/api/login", async (req, res) => {
     const { email } = req.body;
     //Return user ID using email
     const existingUser = await pool.query(
-      "SELECT id FROM usuario WHERE email = $1",
+      "SELECT id, is_admin FROM usuario WHERE email = $1",
       [email]
     );
     const users = existingUser.rows;
@@ -215,7 +215,10 @@ app.get("/api/topic", attachId, async (req, res) => {
       res.status(401).send("Unauthorized");
     }
     const client = await pool.connect();
-    const result = await client.query("SELECT * FROM temas");
+    const result = await client.query(
+      "SELECT * FROM temas where admin_id = $1",
+      [user_id]
+    );
     const topics = result.rows;
     client.release();
     res.json(topics);

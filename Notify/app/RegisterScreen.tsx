@@ -11,6 +11,7 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const authContext = useContext(AuthContext);
+  
   const handleRegister = async () => {
     try {
       const response = await fetch(ngrok_url + "/api/register", {
@@ -70,7 +71,7 @@ const RegisterScreen = () => {
       padding: 20,
     }}
     >
-      <Text style={{flexDirection: 'row'}}>
+      <Text style={{flexDirection: 'row', paddingBottom: 20,}}>
         <Text style={styles.title}>Bienvenido a</Text> <Text style={styles.notify}>Notify</Text>
       </Text>
 
@@ -80,23 +81,24 @@ const RegisterScreen = () => {
           />
 
       <Text style={styles.titleInput}>Ingresa tu correo electrónico:</Text>
-      <TextInput placeholder="Correo electrónico" placeholderTextColor='grey' style={styles.input} value={email} onChangeText={setEmail} />
+      <TextInput placeholder="Correo electrónico" placeholderTextColor='grey' style={styles.input} value={email} onChangeText={setEmail} autoCapitalize='none'/>
 
       <Text style={styles.titleInput}>Nombre:</Text>
-      <TextInput placeholder="Nombre" placeholderTextColor='grey' style={styles.input} value={name} onChangeText={setName} />
+      <TextInput placeholder="Nombre" placeholderTextColor='grey' style={styles.input2} value={name} onChangeText={setName} />
 
-      <Pressable onPress={handleRegister} style={styles.buttonContainer}>
-        <Text style={styles.textoButton}>Regístrate</Text>
-      </Pressable>
+      <View style={{paddingTop: 25}}>
+        <Pressable onPress={handleRegister} style={styles.buttonContainer}>
+          <Text style={styles.textoButton}>Regístrate</Text>
+        </Pressable>
+      </View>
       
       <Pressable
         onPress={() => {
           navigator.navigate("zlogin");
         }}
       >
-
-        <Text style={{flexDirection: 'row', paddingTop: 10,}}>
-          <Text style={styles.titleInput}>¿Ya tienes una cuenta? Haz sesión</Text> <Text style={styles.linkSesion}>aquí</Text>
+        <Text style={{flexDirection: 'row', paddingTop: 30,}}>
+          <Text style={styles.titleInput}>¿Ya tienes una cuenta? Inicia sesión</Text> <Text style={styles.linkSesion}>aquí</Text>
         </Text>
       </Pressable>
     </View>
@@ -133,6 +135,17 @@ const styles = StyleSheet.create({
     margin: 12,
     borderColor: 'grey',
     fontFamily: 'PoppinsLight',
+    color: 'black',
+  },
+  input2: {
+    borderRadius: 20,
+    borderWidth: 1,
+    padding:10,
+    paddingVertical: 20,
+    height: 40,
+    margin: 12,
+    borderColor: 'grey',
+    fontFamily: 'PoppinsLight',
   },
   logo: {
     width: 120, 
@@ -153,6 +166,8 @@ const styles = StyleSheet.create({
   titleInput: {
     fontFamily: "PoppinsRegular",
     padding: 5,
+    paddingStart: 15,
+    paddingTop: 40,
   },
   linkSesion: {
     textDecorationLine: 'underline',

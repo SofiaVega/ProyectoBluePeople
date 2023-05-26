@@ -39,44 +39,44 @@ INSERT INTO temas(
 -- tema-sus
 
 INSERT INTO tema_sus(
-	temas_id, suscriptor_id, recibirpushnot)
-	VALUES (3, 1, 'true');
+	temas_id, suscriptor_id, recibirpushnot, frecmsj)
+	VALUES (3, 1, 'true', 1);
 
 INSERT INTO tema_sus(
-	temas_id, suscriptor_id, recibirpushnot)
-	VALUES (1, 2, 'true');
+	temas_id, suscriptor_id, recibirpushnot, frecmsj)
+	VALUES (1, 2, 'true', 1);
 
 INSERT INTO tema_sus(
-	temas_id, suscriptor_id, recibirpushnot)
-	VALUES (2, 3,'true');
+	temas_id, suscriptor_id, recibirpushnot, frecmsj)
+	VALUES (2, 3,'true', 1);
 
 INSERT INTO tema_sus(
-	temas_id, suscriptor_id, recibirpushnot)
-	VALUES (3, 4, 'true');
+	temas_id, suscriptor_id, recibirpushnot, frecmsj)
+	VALUES (3, 4, 'true', 1);
 
 INSERT INTO tema_sus(
-	temas_id, suscriptor_id, recibirpushnot)
-	VALUES (4, 5, 'true');
+	temas_id, suscriptor_id, recibirpushnot, frecmsj)
+	VALUES (4, 5, 'true', 1);
 
 INSERT INTO tema_sus(
-	temas_id, suscriptor_id, recibirpushnot)
-	VALUES (2, 5, 'true');
+	temas_id, suscriptor_id, recibirpushnot, frecmsj)
+	VALUES (2, 5, 'true', 1);
 
 INSERT INTO tema_sus(
-	temas_id, suscriptor_id, recibirpushnot)
-	VALUES (2, 2, 'true');
+	temas_id, suscriptor_id, recibirpushnot, frecmsj)
+	VALUES (2, 2, 'true', 1);
 
 INSERT INTO tema_sus(
-	temas_id, suscriptor_id, recibirpushnot)
-	VALUES (3, 2, 'false');
+	temas_id, suscriptor_id, recibirpushnot, frecmsj)
+	VALUES (3, 2, 'false', 1);
 
 INSERT INTO tema_sus(
-	temas_id, suscriptor_id, recibirpushnot)
-	VALUES (4, 4, 'true');
+	temas_id, suscriptor_id, recibirpushnot, frecmsj)
+	VALUES (4, 4, 'true', 1);
 
 INSERT INTO tema_sus(
-	temas_id, suscriptor_id, recibirpushnot)
-	VALUES (4, 2, 'true');
+	temas_id, suscriptor_id, recibirpushnot, frecmsj)
+	VALUES (4, 2, 'true', 1);
 	
 -- mensajes
 INSERT INTO mensajes(
