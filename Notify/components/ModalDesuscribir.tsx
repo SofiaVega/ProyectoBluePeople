@@ -46,7 +46,7 @@ export default function ModalDesuscribir({ setModal, tema, userId }) {
 
     const requestOptions = {
       method: "DELETE",
-      headers: { "Content-Type": "application/json", "x-user-id": userId },
+      headers: { "Content-Type": "application/json", "x-user-id": `${userId}` },
     };
     await fetch(
       ngrok_url + `/api/subscriptions/${userId}/${tema.id}`,

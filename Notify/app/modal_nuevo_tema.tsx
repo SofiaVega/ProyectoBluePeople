@@ -1,36 +1,18 @@
 import { StatusBar } from "expo-status-bar";
 import { Platform, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native";
-
-import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
-import { useEffect, useState } from "react";
 
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Scanner from "../components/Scanner";
 import Scanner2 from "../components/Scanner2";
-import ScannerContainer from "../components/ScannerContainer";
-import ngrok_url from "../constants/serverlink";
-import { useNavigation } from "@react-navigation/native";
-import AuthContext from "../components/context";
 
-const Stack = createNativeStackNavigator();
-
-export default function ModalScreen() {
-  const [temasID, settemasID] = useState("");
-  const [subscriptorID, setsubscriptorID] = useState("");
-
-
-  const onTitleChange = (e) => settemasID(e.target.value);
-  const onBodyChange = (e) => setsubscriptorID(e.target.value);
+export default function ModalScreen({ route }) {
+  const { user_id } = route.params;
+  console.log("Modal nuevo tema usuario: ", user_id);
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>
-        Escanea el código QR para suscribirte
-      </Text>
-      <Scanner2></Scanner2>
+      <Text style={styles.title}>Escanea el código QR para suscribirte</Text>
+      <Scanner2 user_id={user_id}></Scanner2>
       <View
         style={styles.separator}
         lightColor="#eee"

@@ -1,28 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button, Alert } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import React, { useState, useEffect } from "react";
+import { Text, View, StyleSheet, Button, Alert } from "react-native";
+import { BarCodeScanner } from "expo-barcode-scanner";
 import ngrok_url from "../constants/serverlink";
 import { useNavigation } from "@react-navigation/native";
 import AuthContext from "../components/context";
 
-export default function Scanner2() {
-  const [userId, setUserId] = useState(null);
-  const authContext = {
-    userId: userId,
-    register: (id) => {
-      setUserId(id);
-    },
-  };
-  useEffect(() => {
-    //Check if user is logged in using asyncStorage
-    async function getUserId() {
-      const storedId = await AsyncStorage.getItem("userId");
-      console.log(storedId + "storedId");
-      setUserId(storedId);
-    }
-    getUserId();
-    console.log(userId);
-  }, []);
+export default function Scanner2({ user_id }) {
+  console.log("Scanner user id: ", user_id);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
@@ -31,7 +15,7 @@ export default function Scanner2() {
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
+      setHasPermission(status === "granted");
     };
 
     getBarCodeScannerPermissions();
@@ -39,36 +23,36 @@ export default function Scanner2() {
 
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
-    const datos = { temas_id: data, suscriptor_id: 5 };
-    console.log(datos)
+    const datos = { temas_id: data, suscriptor_id: user_id };
+    console.log(datos);
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-user-id": userId },
+      headers: { "Content-Type": "application/json", "x-user-id": user_id },
       body: JSON.stringify(datos),
     };
-    await fetch(
-      ngrok_url + `/api/subscribe/${data}`,
-      requestOptions
-    )
+    await fetch(ngrok_url + `/api/subscribe/${data}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         console.log("RESSSS");
         console.log(res);
-        console.log(res.error)
-        if (res.hasOwnProperty("error")){
-          if (res["error"] === "User is already suscribed"){
-            Alert.alert('Aviso',`Ya estabas suscrito al canal ${data}`);
-          }else {
-            Alert.alert('Error',`Error suscribiendote al canal ${data}. Este canal no existe.`);
+        console.log(res.error);
+        if (res.hasOwnProperty("error")) {
+          if (res["error"] === "User is already suscribed") {
+            Alert.alert("Aviso", `Ya estabas suscrito al canal ${data}`);
+          } else {
+            Alert.alert(
+              "Error",
+              `Error suscribiendote al canal ${data}. Este canal no existe.`
+            );
           }
           setErrorMessage(true);
-        }else{
+        } else {
           setErrorMessage(False);
-          Alert.alert('Listo!',`Te suscribiste al canal ${data}`);
+          Alert.alert("Listo!", `Te suscribiste al canal ${data}`);
         }
-        navigation.goBack()
+        navigation.goBack();
         // error message if res is not success
-    });
+      });
   };
 
   if (hasPermission === null) {
@@ -80,26 +64,30 @@ export default function Scanner2() {
 
   return (
     <View style={styles.container}>
-        <View style={styles.qrScanner}>
-            <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                style={StyleSheet.absoluteFillObject}
-            />
-        </View>
-        {scanned ? <Button title={'Click aqui para escanear de nuevo'} onPress={() => setScanned(false)} /> : null }
-      
+      <View style={styles.qrScanner}>
+        <BarCodeScanner
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={StyleSheet.absoluteFillObject}
+        />
+      </View>
+      {scanned ? (
+        <Button
+          title={"Click aqui para escanear de nuevo"}
+          onPress={() => setScanned(false)}
+        />
+      ) : null}
     </View>
   );
 }
-const styles = StyleSheet.create ({
-    container: {
-        flex:1,
-        flexDirection:'column',
-        justifyContent:'center'
-    },
-    qrScanner: {
-        flex: 1,
-        flexDirection:'column',
-        justifyContent:'center'
-    }
-})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  qrScanner: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+});
