@@ -33,9 +33,7 @@ const LoginScreen = () => {
         // check admin login
         try {
           const is_admin = data.is_admin;
-          if (is_admin) {
-            authContext.register_admin();
-          }
+          authContext.register_admin(is_admin);
           console.log("ADMIN LOGIN is : ", is_admin);
         } catch {
           console.log("Error checking Admin");
@@ -44,6 +42,7 @@ const LoginScreen = () => {
         await AsyncStorage.setItem("userId", userId);
         authContext.register(userId);
       } else {
+        console.error(response.json);
         throw new Error("Registration failed");
       }
     } catch (error) {

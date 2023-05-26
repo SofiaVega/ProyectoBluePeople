@@ -21,15 +21,14 @@ import ConfigTemaScreen from "./config_tema";
 import AuthContext from "../components/context";
 import LoginScreen from "./LoginScreen";
 import GenerateTheme from "./generar_tema_admin";
-import AuthAdminScreen from "./AuthAdminScreen";
-import LoginAdminScreen from "./LoginAdminScreen";
 import ConfigTemaAdminScreen from "./config_tema_admin";
+import QRGenerate from "./QRGenerate";
 
 const Stack = createStackNavigator();
 
 const clearAsyncStorage = async () => {
   try {
-    await AsyncStorage.clear();
+    AsyncStorage.getAllKeys().then(AsyncStorage.multiRemove);
     console.log("AsyncStorage cleared successfully");
   } catch (error) {
     console.log("Error clearing AsyncStorage: ", error);
@@ -46,8 +45,8 @@ export default function Home() {
       setUserId(id);
     },
     is_admin: admin,
-    register_admin: () => {
-      setAdmin(true);
+    register_admin: (is_admin) => {
+      setAdmin(is_admin);
     },
   };
   useEffect(() => {
@@ -69,8 +68,6 @@ export default function Home() {
               <Stack.Screen name="home" component={PaginaPrincipalScreen} />
               <Stack.Screen name="themeInfo" component={TemaScreen} />
               <Stack.Screen name="themeConfig" component={ConfigTemaScreen} />
-              <Stack.Screen name="themeGenerate" component={GenerateTheme} />
-              <Stack.Screen name="nuevoTema" component={nuevoTema} />
             </>
           ) : (
             <>
@@ -84,6 +81,9 @@ export default function Home() {
                 name="adminConfig"
                 component={ConfigTemaAdminScreen}
               />
+              <Stack.Screen name="themeGenerate" component={GenerateTheme} />
+              <Stack.Screen name="nuevoTema" component={nuevoTema} />
+              <Stack.Screen name="QRGenerate" component={QRGenerate} />
             </>
           ) : (
             <></>

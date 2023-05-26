@@ -7,7 +7,6 @@ import { Text, View } from "../components/Themed";
 
 export default function TemaScreen({ route }) {
   const { tema, userId } = route.params;
-  console.log("user id yuwu", userId);
   return (
     <SafeAreaView style={styles.container}>
       <ComponenteHeader />
