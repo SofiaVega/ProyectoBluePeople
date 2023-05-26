@@ -84,7 +84,7 @@ const RegisterScreen = () => {
       <TextInput placeholder="Correo electrónico" placeholderTextColor='grey' style={styles.input} value={email} onChangeText={setEmail} autoCapitalize='none'/>
 
       <Text style={styles.titleInput}>Nombre:</Text>
-      <TextInput placeholder="Nombre" placeholderTextColor='grey' style={styles.input2} value={name} onChangeText={setName} />
+      <TextInput placeholder="Nombre" placeholderTextColor='grey' style={styles.input} value={name} onChangeText={setName} />
 
       <View style={{paddingTop: 25}}>
         <Pressable onPress={handleRegister} style={styles.buttonContainer}>
@@ -136,16 +136,6 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     fontFamily: 'PoppinsLight',
     color: 'black',
-  },
-  input2: {
-    borderRadius: 20,
-    borderWidth: 1,
-    padding:10,
-    paddingVertical: 20,
-    height: 40,
-    margin: 12,
-    borderColor: 'grey',
-    fontFamily: 'PoppinsLight',
   },
   logo: {
     width: 120, 
