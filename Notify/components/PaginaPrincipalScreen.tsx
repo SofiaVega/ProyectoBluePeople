@@ -103,7 +103,12 @@ export default function PaginaPrincipalScreen() {
   const navigation = useNavigation();
 
   const goToScanner = () => {
-    navigation.navigate("themeGenerate", { user_id });
+    if (is_admin) {
+      console.log("going to create theme screen with", user_id);
+      navigation.navigate("themeGenerate", { user_id });
+    } else {
+      navigation.navigate("nuevoTema", { user_id });
+    }
   };
 
   return (

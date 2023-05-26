@@ -7,7 +7,7 @@ import {
   ScrollView,
   Pressable,
   TextInput,
-  Alert
+  Alert,
 } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import { Feather } from "@expo/vector-icons";
@@ -29,72 +29,53 @@ type Tema = {
   descripcion: string;
 };
 
-export default function GenerateTopic({userId}) {
-  const [fontsLoaded] = useFonts({
-    PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
-    PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
-    PoppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
-    PoppinsBoldItalic: require("../assets/fonts/Poppins-BoldItalic.ttf"),
-    PoppinsExtraBold: require("../assets/fonts/Poppins-ExtraBold.ttf"),
-    PoppinsExtraBoldItalic: require("../assets/fonts/Poppins-ExtraBoldItalic.ttf"),
-    PoppinsExtraLight: require("../assets/fonts/Poppins-ExtraLight.ttf"),
-    PoppinsExtraLightItalic: require("../assets/fonts/Poppins-ExtraLightItalic.ttf"),
-    PoppinsItalic: require("../assets/fonts/Poppins-Italic.ttf"),
-    PoppinsLight: require("../assets/fonts/Poppins-Light.ttf"),
-    PoppinsLightItalic: require("../assets/fonts/Poppins-LightItalic.ttf"),
-    PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
-    PoppinsMediumItalic: require("../assets/fonts/Poppins-MediumItalic.ttf"),
-    PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
-    PoppinsSemiBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
-    PoppinsSemiBoldItalic: require("../assets/fonts/Poppins-SemiBoldItalic.ttf"),
-    PoppinsThin: require("../assets/fonts/Poppins-Thin.ttf"),
-    PoppinsThinItalic: require("../assets/fonts/Poppins-ThinItalic.ttf"),
-    DroidSans: require("../assets/fonts/DroidSans.ttf"),
-    DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
-  });
+export default function GenerateTopic({ route }) {
+  const { user_id } = route.params;
+  console.log("CREATE THEME SCREEN user :", user_id);
   const navigator = useNavigation();
   const [isEnabled, setIsEnabled] = useState(true);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const authContext = useContext(AuthContext);
 
   //Change toggle value
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   //API CALL
   const handleThemeGeneration = async (e) => {
-
     //Generate cod "randomly"
-    const character = title + userId
-    let cod = ' '
-    for(let i = 0; i < character.length; i++){
-      cod += character.charAt(Math.floor(Math.random() * character.length))
+    const character = title + user_id;
+    let cod = " ";
+    for (let i = 0; i < character.length; i++) {
+      cod += character.charAt(Math.floor(Math.random() * character.length));
     }
 
     e.preventDefault();
-    const userr = userId
     const headers = new Headers();
-    headers.append("Content-Type", "application/json")
-    headers.append("x-user-id", "1")
-    const data = { title: title, user_id: userId, description: description, accesoMensajesPrev: isEnabled, cod: cod};
+    headers.append("Content-Type", "application/json");
+    headers.append("x-user-id", `${user_id}`);
+    const data = {
+      title: title,
+      user_id: user_id,
+      description: description,
+      accesoMensajesPrev: isEnabled,
+      cod: cod,
+    };
     const requestOptions = {
       method: "POST",
       headers: headers,
       body: JSON.stringify(data),
     };
-    await fetch(
-      ngrok_url + `/api/topic`,
-      requestOptions
-    )
+    await fetch(ngrok_url + `/api/topic`, requestOptions)
       .then((response) => {
-        console.log(response.headers.get('x-user-id'))
-        return response.text()
+        console.log(response.headers.get("x-user-id"));
+        return response.text();
         // response.json()
       })
       .then((res) => console.log(res));
-      Alert.alert('Éxito', 'Nuevo tema generado', [
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
+    Alert.alert("Éxito", "Nuevo tema generado", [
+      { text: "OK", onPress: () => console.log("OK Pressed") },
     ]);
+    navigator.goBack();
   };
   //Frontend
   return (
@@ -136,7 +117,8 @@ export default function GenerateTopic({userId}) {
               style={[styles.input]}
               placeholder="Titulo"
               placeholderTextColor={"rgba(0,0,0,0.10)"}
-              value={title} onChangeText={setTitle}
+              value={title}
+              onChangeText={setTitle}
             />
           </View>
           <View style={[styles.temaContainerInputs]}>
@@ -145,7 +127,8 @@ export default function GenerateTopic({userId}) {
               style={[styles.input]}
               placeholder="Descripcion"
               placeholderTextColor={"rgba(0,0,0,0.10)"}
-              value={description} onChangeText={setDescription}
+              value={description}
+              onChangeText={setDescription}
             />
           </View>
           <View
@@ -196,7 +179,10 @@ export default function GenerateTopic({userId}) {
                 ios_backgroundColor="black"
               ></Switch>
             </View>
-            <Pressable style={[styles.buttonContainer, {marginBottom: 20}]} onPress={handleThemeGeneration}>
+            <Pressable
+              style={[styles.buttonContainer, { marginBottom: 20 }]}
+              onPress={handleThemeGeneration}
+            >
               <Text style={styles.textoButton}>Generar Tema</Text>
             </Pressable>
           </View>
@@ -291,7 +277,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#272727",
     paddingLeft: 10,
-    fontFamily: "PoppinsMedium"
+    fontFamily: "PoppinsMedium",
   },
   textoButton: {
     fontSize: 15,

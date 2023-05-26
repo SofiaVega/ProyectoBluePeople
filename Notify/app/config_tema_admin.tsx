@@ -1,13 +1,10 @@
 import {
   StyleSheet,
-  Button,
-  Switch,
   Image,
   SafeAreaView,
-  ScrollView,
   Pressable,
+  Alert,
   TextInput,
-  Linking,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import EditScreenInfo from "../components/EditScreenInfo";
@@ -18,35 +15,52 @@ import ComponenteHeader from "../components/ComponenteHeader";
 import { Link, Tabs } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
+import { useState } from "react";
+import ngrok_url from "../constants/serverlink";
+import { useNavigation } from "@react-navigation/native";
 
 type Tema = {
   titulo: string;
   descripcion: string;
 };
 
-export default function ConfigTemaAdminScreen() {
-  const [fontsLoaded] = useFonts({
-    PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
-    PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
-    PoppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
-    PoppinsBoldItalic: require("../assets/fonts/Poppins-BoldItalic.ttf"),
-    PoppinsExtraBold: require("../assets/fonts/Poppins-ExtraBold.ttf"),
-    PoppinsExtraBoldItalic: require("../assets/fonts/Poppins-ExtraBoldItalic.ttf"),
-    PoppinsExtraLight: require("../assets/fonts/Poppins-ExtraLight.ttf"),
-    PoppinsExtraLightItalic: require("../assets/fonts/Poppins-ExtraLightItalic.ttf"),
-    PoppinsItalic: require("../assets/fonts/Poppins-Italic.ttf"),
-    PoppinsLight: require("../assets/fonts/Poppins-Light.ttf"),
-    PoppinsLightItalic: require("../assets/fonts/Poppins-LightItalic.ttf"),
-    PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
-    PoppinsMediumItalic: require("../assets/fonts/Poppins-MediumItalic.ttf"),
-    PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
-    PoppinsSemiBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
-    PoppinsSemiBoldItalic: require("../assets/fonts/Poppins-SemiBoldItalic.ttf"),
-    PoppinsThin: require("../assets/fonts/Poppins-Thin.ttf"),
-    PoppinsThinItalic: require("../assets/fonts/Poppins-ThinItalic.ttf"),
-    DroidSans: require("../assets/fonts/DroidSans.ttf"),
-    DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
-  });
+export default function ConfigTemaAdminScreen({ route }) {
+  const { tema, userId } = route.params;
+  const [titulo, setTitulo] = useState(tema.titulo);
+  const [descripcion, setDescripcion] = useState(tema.descripcion);
+  const navigation = useNavigation();
+
+  const handleConfig = async () => {
+    try {
+      const data = await fetch(ngrok_url + "/api/topic/" + tema.id, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": `${userId}`,
+        },
+        body: JSON.stringify({ titulo, descripcion }),
+      });
+
+      if (!data.ok) {
+        const message = await data.json();
+        console.error(
+          `API responded with status ${data.status} in ConfigTemaAdmin ${message.error}`
+        );
+        Alert.alert(message.error);
+        return;
+      }
+      console.log("Tema editado!");
+      navigation.goBack();
+    } catch (error) {
+      console.log("unu");
+      console.error(error);
+    }
+  };
+
+  const handleQR = () => {
+    navigation.navigate("QRGenerate");
+  };
+
   return (
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
       <ComponenteHeader></ComponenteHeader>
@@ -81,19 +95,23 @@ export default function ConfigTemaAdminScreen() {
             />
           </View>
           <View style={[styles.temaContainerInputs]}>
-            <Text style={[styles.titleInput]}>Titulo</Text>
+            <Text style={[styles.titleInput]}>Título</Text>
             <TextInput
               style={[styles.input]}
-              placeholder="Titulo"
+              placeholder={tema.titulo}
               placeholderTextColor={"rgba(0,0,0,0.10)"}
+              value={titulo}
+              onChangeText={setTitulo}
             />
           </View>
           <View style={[styles.temaContainerInputs]}>
-            <Text style={[styles.titleInput]}>Descripcion</Text>
+            <Text style={[styles.titleInput]}>Descripción</Text>
             <TextInput
               style={[styles.input]}
-              placeholder="Descripcion"
+              placeholder={tema.descripcion}
               placeholderTextColor={"rgba(0,0,0,0.10)"}
+              value={descripcion}
+              onChangeText={setDescripcion}
             />
           </View>
           <View
@@ -105,30 +123,16 @@ export default function ConfigTemaAdminScreen() {
               },
             ]}
           >
-            {/* <Link href="/QRGenerate" asChild > */}
             <Pressable
               style={[
                 styles.buttonContainer,
                 { backgroundColor: "#DB8A74", marginBottom: 30 },
               ]}
-            >
-              <Text style={styles.textoButton}>Genrar QR</Text>
-            </Pressable>
-            {/* </Link> */}
-            {/* <Link href="/QRGenerate" asChild>
-                <Pressable style={[styles.button, {backgroundColor: "#DB8A74", marginBottom: 30}]}>
-                  {({ pressed }) => (<Text style={styles.textoButton}>Genrar QR</Text>)}
-                </Pressable>
-              </Link> */}
-            <Pressable
-              style={[
-                styles.buttonContainer,
-                { backgroundColor: "#DB8A74", marginBottom: 30 },
-              ]}
+              onPress={handleQR}
             >
               <Text style={styles.textoButton}>Generar QR</Text>
             </Pressable>
-            <Pressable style={styles.buttonContainer}>
+            <Pressable style={styles.buttonContainer} onPress={handleConfig}>
               <Text style={styles.textoButton}>Guardar</Text>
             </Pressable>
           </View>

@@ -406,15 +406,15 @@ app.put("/api/topic/:id", attachId, async (req, res) => {
     const user_admin = user_status.rows[0].is_admin;
     //If flag is false, user is not admin
     if (!user_admin) {
-      res.status(401).send("Unauthorized");
+      res.status(401).send("No autorizado");
     }
     //Get body and validate
-    const { title, description } = req.body;
+    const { titulo, descripcion } = req.body;
     const topic_id = req.params.id;
-    if (!title || !description) {
+    if (!titulo || !descripcion) {
       return res
         .status(400)
-        .json({ error: "Title and description are required" });
+        .json({ error: "El título y la descripción son requeridos" });
     }
     //check if topic exists
     const existingTopic = await pool.query(
@@ -422,19 +422,19 @@ app.put("/api/topic/:id", attachId, async (req, res) => {
       [topic_id]
     );
     if (existingTopic.rowCount === 0) {
-      return res.status(404).json({ error: "Topic not found" });
+      return res.status(404).json({ error: "Tema no encontrado" });
     }
     //update topic
     const updatedTopic = await pool.query(
       "UPDATE temas SET titulo = $1, descripcion = $2 WHERE id = $3 RETURNING *",
-      [title, description, topic_id]
+      [titulo, descripcion, topic_id]
     );
 
     // Return the updated topic as the response
     res.json(updatedTopic.rows[0]);
   } catch (err) {
     console.log(err.message);
-    res.status(500).json({ message: "Error editing topic" });
+    res.status(500).json({ error: "Error editando tema" });
   }
 });
 
