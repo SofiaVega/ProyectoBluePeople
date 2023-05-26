@@ -6,9 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import AuthContext from "../components/context";
 
 export default function Scanner2() {
-  const [state, setState] = useState<Topic[]>([]);
-
-  const [userId, setUserId] = useState<String | null>(null);
+  const [userId, setUserId] = useState(null);
   const authContext = {
     userId: userId,
     register: (id) => {
