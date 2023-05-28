@@ -23,6 +23,8 @@ import LoginScreen from "./LoginScreen";
 import GenerateTheme from "./generar_tema_admin";
 import ConfigTemaAdminScreen from "./config_tema_admin";
 import QRGenerate from "./QRGenerate";
+import AuthAdminScreen from "./AuthAdminScreen";
+import ComponenteCrearNotif from "../components/ComponenteCrearNotif";
 
 const Stack = createStackNavigator();
 
@@ -72,6 +74,7 @@ export default function Home() {
             </>
           ) : (
             <>
+              <Stack.Screen name="crearNotificacion" component={ComponenteCrearNotif} />
               <Stack.Screen name="register" component={RegisterScreen} />
               <Stack.Screen name="zlogin" component={LoginScreen} />
             </>
