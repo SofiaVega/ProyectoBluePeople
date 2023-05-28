@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, SafeAreaView , Text, StyleSheet, Pressable } from "react-native";
+import { View, TextInput, SafeAreaView , Text, StyleSheet, Pressable, Switch } from "react-native";
 import ComponenteHeader from "./ComponenteHeader";
 import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
@@ -52,6 +52,21 @@ const ComponenteCrearNotif = () => {
 
                     <Text style={styles.titleInput}>Notificación:</Text>
                     <TextInput placeholder="Texto notificación" placeholderTextColor='grey' style={styles.input} onChangeText={setTextoNotificacion} value={textoNotificacion} autoCapitalize='none'/>
+
+                    <View style={{flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', paddingEnd: 30,}}>
+                        <Text style={styles.titleSwitch}> Push notifications </Text>
+                        <View style={{paddingTop: 20,}}>
+                            <Switch
+                                // onValueChange={toggleSwitch}
+                                // value = {isEnabled}
+                                trackColor= {{true: "#DB8A74", false: "grey",}} 
+                                style= {styles.switch}
+                                ios_backgroundColor="black">
+                            </Switch>
+
+                        </View>
+                        
+                    </View>
 
                     <View style={{paddingTop: 25, paddingBottom: 25}}>
                         <Pressable style={styles.buttonContainer} >
@@ -109,6 +124,18 @@ const styles = StyleSheet.create({
         paddingStart: 15,
         paddingTop: 40,
         color: "black",
+    },
+    titleSwitch: {
+        fontFamily: "PoppinsRegular",
+        padding: 5,
+        paddingStart: 15,
+        paddingTop: 40,
+        fontSize: 15,
+        color: "black",
+    },
+    switch: {
+        margin: 20,
+        alignSelf: 'flex-end',
     },
     title: {
         fontFamily: "PoppinsBold",
