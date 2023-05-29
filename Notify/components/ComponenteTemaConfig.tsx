@@ -63,7 +63,7 @@ export default function ComponenteTemaConfig({ tema, userId }) {
     };
     const api2 = async () => {
       try {
-        const data = await fetch("https://c97e-131-178-102-160.ngrok-free.app/api/frecmsj/2", {
+        const data = await fetch("https://30ea-2806-230-4026-bd3f-18ac-dfd6-a4a0-c278.ngrok-free.app/api/frecmsj/2", {
           method: "GET",
           headers: {
             "x-user-id": "2",
@@ -76,7 +76,7 @@ export default function ComponenteTemaConfig({ tema, userId }) {
           );
         }
         const jData = await data.json();
-        //console.log(jData * 2)
+        console.log(jData)
        return setSelects(jData);
       } catch (e) {
         console.error(e);
@@ -88,16 +88,16 @@ export default function ComponenteTemaConfig({ tema, userId }) {
 
   const freccHandler = (itemValue: any) => {
     setSelects(itemValue)
-    alert('Se recibiran mensajes cada ' + itemValue + ' min')
+    Alert.alert('Alerta','Se recibiran mensajes cada ' + itemValue + ' min')
 
     const requestOp = {
       method: 'PUT',
       headers: { 
-        "x-user-id": "2",
+        "x-user-id": `${userId}`,
         'Content-Type': 'application/json' },
-      body: JSON.stringify({ frecmsj : itemValue })
+      body: JSON.stringify({ frecmsj: itemValue })
     };
-    fetch('https://c97e-131-178-102-160.ngrok-free.app/api/editfrecmsj/2', requestOp)
+    fetch('https://30ea-2806-230-4026-bd3f-18ac-dfd6-a4a0-c278.ngrok-free.app/api/editfrecmsj/2', requestOp)
       .then(response => response.json())
   };
 
@@ -116,7 +116,7 @@ export default function ComponenteTemaConfig({ tema, userId }) {
       },
       body: JSON.stringify({ recibirpushnot: (!isEnabled).toString() }),
     };
-    fetch('https://c97e-131-178-102-160.ngrok-free.app/api/editPushNot/2', requestOptions)
+    fetch('https://30ea-2806-230-4026-bd3f-18ac-dfd6-a4a0-c278.ngrok-free.app/api/editPushNot/2', requestOptions)
       .then(response => response.json())
   }
   return (
@@ -152,18 +152,23 @@ export default function ComponenteTemaConfig({ tema, userId }) {
               </Switch>
             </View>
             <View style= {[styles.temaContainer,{flexDirection: "column", alignItems: 'center',}]}>
+            <Text
+                style={styles.frecTxt}>
+                Mensajes cada: {selects} min
+              </Text>
               <Text
                 style={styles.title}>
-                Frecuencia de mensajes, cada:
+                Cambiar frecuencia de mensajes, a cada:
               </Text>
               <Picker
                 selectedValue={selects}
-                style={{height: 200, width: 120}}
+                style={{height: 180, width: 120}}
                 onValueChange={
                   (itemValue, itemIndex) => 
                   freccHandler(itemValue)
                 
                 }>
+                <Picker.Item label="-" value="0" />
                 <Picker.Item label="1min" value="1" />
                 <Picker.Item label="5min" value="5" />
                 <Picker.Item label="10min" value="10" />
@@ -239,6 +244,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingLeft: 10,
     color: "black",
+    fontFamily: "PoppinsBold",
+  },
+  frecTxt: {
+    fontSize: 14,
+    paddingLeft: 10,
+    paddingVertical: 15,
+    color: "blue",
     fontFamily: "PoppinsBold",
   },
   getStartedContainer: {
