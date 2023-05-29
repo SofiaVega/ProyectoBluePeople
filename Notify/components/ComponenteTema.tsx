@@ -36,7 +36,9 @@ export default function ComponenteTema({ tema, userId }) {
     DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
   });
 
-  useEffect(() => {
+  var frec: any;
+  var inter = 60000;
+  useEffect(() =>  {
     const api = async () => {
       try {
         const data = await fetch(ngrok_url + `/api/topic/${tema.id}/messages`, {
@@ -59,7 +61,39 @@ export default function ComponenteTema({ tema, userId }) {
         console.error("ERROR", e);
       }
     };
+    const gfrec = async () => {
+      try {
+        const data = await fetch(ngrok_url + `/api/frecmsj/${tema.id}`, {
+          method: "GET",
+          headers: {
+            "x-user-id": `${userId}`,
+            "Content-Type": "application/json",
+          },
+        });
+        if (!data.ok) {
+          console.error(`API responded with status ${data.status}`);
+        }
+        const jsonData = await data.json();
+        return Number(jsonData);
+      } catch (e) {
+        console.error(e);
+      }
+    };
     api();
+    const setInter = async () => {
+      frec = await gfrec();
+      console.log('frec ' + frec)
+      inter = (Number(frec) * 60 * 1000)
+      console.log('inter de ' + inter)
+    };
+    setInter();
+    const frecInterval = setInterval(() => {
+      console.log('intervalo ' + inter);
+      api();
+      console.log('refreshed');
+    }, inter);
+    return () => clearInterval(frecInterval); 
+    
   }, []);
 
   const navigation = useNavigation();
