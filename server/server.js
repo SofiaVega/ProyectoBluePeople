@@ -299,13 +299,15 @@ app.put("/api/editPushNot/:id", attachId, async (req, res) => {
 });
 
 //Route for subscribing to a topic
-app.post("/api/subscribe/:id", attachId, async (req, res) => {
+app.post("/api/subscribe/:userId/:id", attachId, async (req, res) => {
   try {
     console.log("debugging api call");
     console.log(0);
     console.log(req);
-    const user_id = 5;
+    const user_id = req.params.userId;
     const topic_id = req.params.id;
+    console.log("this is the user id")
+    console.log(user_id)
     console.log(1);
     //Check if topic exists
     const result = await pool.query("SELECT * FROM temas WHERE cod = $1", [
@@ -328,9 +330,9 @@ app.post("/api/subscribe/:id", attachId, async (req, res) => {
     );
     console.log("check if subscribed");
     console.log(check_if_subscribed);
-    if (check_if_subscribed.rows.length === 0) {
+    if (check_if_subscribed.rowCount === 0) {
       await pool.query(
-        "INSERT INTO tema_sus (temas_id, suscriptor_id) VALUES ($1, $2)",
+        "INSERT INTO tema_sus (temas_id, suscriptor_id, recibirpushnot, frecmsj) VALUES ($1, $2, true, 1)",
         [tema_id, user_id]
       );
     } else {
