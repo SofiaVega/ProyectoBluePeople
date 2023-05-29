@@ -30,6 +30,7 @@ export default function PaginaPrincipalScreen() {
   const [isLoading, setLoading] = useState(true);
   const authContext = useContext(AuthContext);
   const user_id = authContext.userId;
+  const is_admin = authContext.is_admin;
   const isFocused = useIsFocused();
   console.log("USEISFOCUSED", isFocused);
   const [fontsLoaded] = useFonts({
@@ -56,10 +57,12 @@ export default function PaginaPrincipalScreen() {
   });
 
   console.log("USER LOGGED IN: ", user_id);
+  console.log("USER IS ADMIN: ", is_admin);
+  const topics_request = is_admin ? "/api/topic" : "/api/subscriptions";
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch(ngrok_url + "/api/subscriptions", {
+        const data = await fetch(ngrok_url + topics_request, {
           method: "GET",
           headers: {
             "x-user-id": user_id,
@@ -69,6 +72,7 @@ export default function PaginaPrincipalScreen() {
         if (!data.ok) {
           if (data.status === 401) {
             console.log("No topics found!");
+            setLoading(false);
             return setState([]);
           }
           console.error(
@@ -99,7 +103,12 @@ export default function PaginaPrincipalScreen() {
   const navigation = useNavigation();
 
   const goToScanner = () => {
-    navigation.navigate("nuevoTema");
+    if (is_admin) {
+      console.log("going to create theme screen with", user_id);
+      navigation.navigate("themeGenerate", { user_id });
+    } else {
+      navigation.navigate("nuevoTema", { user_id });
+    }
   };
 
   return (
@@ -162,11 +171,19 @@ export default function PaginaPrincipalScreen() {
             },
           ]}
         >
-          <Text style={styles.title}>Temas</Text>
-          {state.length ? (
-            <ComponenteTemaFila comps={state} userId={user_id} />
+          {is_admin ? (
+            <Text style={styles.title}>Admin</Text>
           ) : (
-            <Text>You are not subscribed to any topics!</Text>
+            <Text style={styles.title}>Temas</Text>
+          )}
+          {state.length ? (
+            <ComponenteTemaFila
+              comps={state}
+              userId={user_id}
+              isAdmin={is_admin}
+            />
+          ) : (
+            <Text>No estás suscrito a ningún tema</Text>
           )}
           {isLoading ? <Text>Loading...</Text> : <></>}
         </View>

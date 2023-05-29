@@ -20,13 +20,18 @@ type TemaFila = {
   sinLeer: number;
 };
 
-export default function ComponenteTemaFila({ comps, userId }) {
+export default function ComponenteTemaFila({ comps, userId, isAdmin }) {
   const navigation = useNavigation();
   console.log("COMPS: ", comps, " from user", userId);
 
   const handleThemePress = (tema, userId) => {
-    console.log("THEME: ", tema, " from user", userId);
-    navigation.navigate("themeInfo", { tema, userId });
+    if (isAdmin) {
+      console.log("THEME CONFIG: ", tema, " from user", userId);
+      navigation.navigate("adminConfig", { tema, userId });
+    } else {
+      console.log("THEME: ", tema, " from user", userId);
+      navigation.navigate("themeInfo", { tema, userId });
+    }
   };
 
   const [fontsLoaded] = useFonts({

@@ -1,11 +1,15 @@
 import {
   StyleSheet,
+  Button,
+  Switch,
   Image,
   SafeAreaView,
+  ScrollView,
   Pressable,
-  Alert,
   TextInput,
+  Alert,
 } from "react-native";
+import React, { useEffect, useState, useContext } from "react";
 import { Feather } from "@expo/vector-icons";
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
@@ -15,52 +19,65 @@ import ComponenteHeader from "../components/ComponenteHeader";
 import { Link, Tabs } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
-import { useState } from "react";
-import ngrok_url from "../constants/serverlink";
 import { useNavigation } from "@react-navigation/native";
+import ngrok_url from "../constants/serverlink";
+import AuthContext from "../components/context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Tema = {
   titulo: string;
   descripcion: string;
 };
 
-export default function ConfigTemaAdminScreen({ route }) {
-  const { tema, userId } = route.params;
-  const [titulo, setTitulo] = useState(tema.titulo);
-  const [descripcion, setDescripcion] = useState(tema.descripcion);
-  const navigation = useNavigation();
+export default function GenerateTopic({ route }) {
+  const { user_id } = route.params;
+  console.log("CREATE THEME SCREEN user :", user_id);
+  const navigator = useNavigation();
+  const [isEnabled, setIsEnabled] = useState(true);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
-  const handleConfig = async () => {
-    try {
-      const data = await fetch(ngrok_url + "/api/topic/" + tema.id, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "x-user-id": `${userId}`,
-        },
-        body: JSON.stringify({ titulo, descripcion }),
-      });
+  //Change toggle value
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
-      if (!data.ok) {
-        const message = await data.json();
-        console.error(
-          `API responded with status ${data.status} in ConfigTemaAdmin ${message.error}`
-        );
-        Alert.alert(message.error);
-        return;
-      }
-      console.log("Tema editado!");
-      navigation.goBack();
-    } catch (error) {
-      console.log("unu");
-      console.error(error);
+  //API CALL
+  const handleThemeGeneration = async (e) => {
+    //Generate cod "randomly"
+    const character = title + user_id;
+    let cod = " ";
+    for (let i = 0; i < character.length; i++) {
+      cod += character.charAt(Math.floor(Math.random() * character.length));
     }
-  };
 
-  const handleQR = () => {
-    navigation.navigate("QRGenerate");
+    e.preventDefault();
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("x-user-id", `${user_id}`);
+    const data = {
+      title: title,
+      user_id: user_id,
+      description: description,
+      accesoMensajesPrev: isEnabled,
+      cod: cod,
+    };
+    const requestOptions = {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(data),
+    };
+    await fetch(ngrok_url + `/api/topic`, requestOptions)
+      .then((response) => {
+        console.log(response.headers.get("x-user-id"));
+        return response.text();
+        // response.json()
+      })
+      .then((res) => console.log(res));
+    Alert.alert("Éxito", "Nuevo tema generado", [
+      { text: "OK", onPress: () => console.log("OK Pressed") },
+    ]);
+    navigator.goBack();
   };
-
+  //Frontend
   return (
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
       <ComponenteHeader></ComponenteHeader>
@@ -95,23 +112,23 @@ export default function ConfigTemaAdminScreen({ route }) {
             />
           </View>
           <View style={[styles.temaContainerInputs]}>
-            <Text style={[styles.titleInput]}>Título</Text>
+            <Text style={[styles.titleInput]}>Titulo</Text>
             <TextInput
               style={[styles.input]}
-              placeholder={tema.titulo}
+              placeholder="Titulo"
               placeholderTextColor={"rgba(0,0,0,0.10)"}
-              value={titulo}
-              onChangeText={setTitulo}
+              value={title}
+              onChangeText={setTitle}
             />
           </View>
           <View style={[styles.temaContainerInputs]}>
-            <Text style={[styles.titleInput]}>Descripción</Text>
+            <Text style={[styles.titleInput]}>Descripcion</Text>
             <TextInput
               style={[styles.input]}
-              placeholder={tema.descripcion}
+              placeholder="Descripcion"
               placeholderTextColor={"rgba(0,0,0,0.10)"}
-              value={descripcion}
-              onChangeText={setDescripcion}
+              value={description}
+              onChangeText={setDescription}
             />
           </View>
           <View
@@ -123,17 +140,50 @@ export default function ConfigTemaAdminScreen({ route }) {
               },
             ]}
           >
-            <Pressable
+            {/* <Link href="/QRGenerate" asChild > */}
+            {/* <Pressable
               style={[
                 styles.buttonContainer,
                 { backgroundColor: "#DB8A74", marginBottom: 30 },
               ]}
-              onPress={handleQR}
             >
-              <Text style={styles.textoButton}>Generar QR</Text>
-            </Pressable>
-            <Pressable style={styles.buttonContainer} onPress={handleConfig}>
-              <Text style={styles.textoButton}>Guardar</Text>
+              <Text style={styles.textoButton}>Genrar QR</Text>
+            </Pressable> */}
+            {/* </Link> */}
+            {/* <Link href="/QRGenerate" asChild>
+                <Pressable style={[styles.button, {backgroundColor: "#DB8A74", marginBottom: 30}]}>
+                  {({ pressed }) => (<Text style={styles.textoButton}>Genrar QR</Text>)}
+                </Pressable>
+              </Link> */}
+            {/* <Pressable
+              style={[
+                styles.buttonContainer,
+                { backgroundColor: "#DB8A74", marginBottom: 30 },
+              ]}
+            >
+              <Text style={styles.textoButton}>Generar Tema</Text>
+            </Pressable> */}
+            <View
+              style={[
+                styles.temaContainer,
+                { flexDirection: "row", alignItems: "center" },
+              ]}
+            >
+              <Text style={styles.textoTema}>Mensajes Previos</Text>
+
+              <Switch
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+                trackColor={{ true: "#DB8A74", false: "grey" }}
+                style={[{ margin: 20 }]}
+                ios_backgroundColor="black"
+              ></Switch>
+            </View>
+            <Pressable
+              style={[styles.buttonContainer, { marginBottom: 20 }]}
+              onPress={handleThemeGeneration}
+            >
+              <Text style={styles.textoButton}>Generar Tema</Text>
             </Pressable>
           </View>
         </View>
@@ -222,11 +272,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   textoTema: {
-    fontSize: 15,
+    fontSize: 16,
     lineHeight: 24,
     textAlign: "center",
     color: "#272727",
     paddingLeft: 10,
+    fontFamily: "PoppinsMedium",
   },
   textoButton: {
     fontSize: 15,
