@@ -6,9 +6,15 @@ import { Text, View } from "./Themed";
 import { Pressable, useColorScheme } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Topic } from "../interface";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import registerForPushNot from "../app/registerForPushNot";
 import { Feather } from "@expo/vector-icons";
+import AuthContext from "./context";
+import { useIsFocused } from "@react-navigation/native";
+import ngrok_url from "../constants/serverlink";
+import { Link, Tabs } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
+import { useFonts } from "expo-font";
 
 const parseUserData = (user: Topic) => {
   const { titulo, descripcion, id } = user;
@@ -21,18 +27,54 @@ const parseUserData = (user: Topic) => {
 
 export default function PaginaPrincipalScreen() {
   const [state, setState] = useState<Topic[]>([]);
+  const [isLoading, setLoading] = useState(true);
+  const authContext = useContext(AuthContext);
+  const user_id = authContext.userId;
+  const is_admin = authContext.is_admin;
+  const isFocused = useIsFocused();
+  console.log("USEISFOCUSED", isFocused);
+  const [fontsLoaded] = useFonts({
+    PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
+    PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
+    PoppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
+    PoppinsBoldItalic: require("../assets/fonts/Poppins-BoldItalic.ttf"),
+    PoppinsExtraBold: require("../assets/fonts/Poppins-ExtraBold.ttf"),
+    PoppinsExtraBoldItalic: require("../assets/fonts/Poppins-ExtraBoldItalic.ttf"),
+    PoppinsExtraLight: require("../assets/fonts/Poppins-ExtraLight.ttf"),
+    PoppinsExtraLightItalic: require("../assets/fonts/Poppins-ExtraLightItalic.ttf"),
+    PoppinsItalic: require("../assets/fonts/Poppins-Italic.ttf"),
+    PoppinsLight: require("../assets/fonts/Poppins-Light.ttf"),
+    PoppinsLightItalic: require("../assets/fonts/Poppins-LightItalic.ttf"),
+    PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
+    PoppinsMediumItalic: require("../assets/fonts/Poppins-MediumItalic.ttf"),
+    PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
+    PoppinsSemiBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
+    PoppinsSemiBoldItalic: require("../assets/fonts/Poppins-SemiBoldItalic.ttf"),
+    PoppinsThin: require("../assets/fonts/Poppins-Thin.ttf"),
+    PoppinsThinItalic: require("../assets/fonts/Poppins-ThinItalic.ttf"),
+    DroidSans: require("../assets/fonts/DroidSans.ttf"),
+    DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
+  });
 
+  console.log("USER LOGGED IN: ", user_id);
+  console.log("USER IS ADMIN: ", is_admin);
+  const topics_request = is_admin ? "/api/topic" : "/api/subscriptions";
   useEffect(() => {
     const api = async () => {
       try {
-        const data = await fetch("http:/localhost:3000/api/subscriptions", {
+        const data = await fetch(ngrok_url + topics_request, {
           method: "GET",
           headers: {
-            "x-user-id": "2",
+            "x-user-id": user_id,
             "Content-Type": "application/json",
           },
         });
         if (!data.ok) {
+          if (data.status === 401) {
+            console.log("No topics found!");
+            setLoading(false);
+            return setState([]);
+          }
           console.error(
             `API responded with status ${data.status}: ${data.statusText}`
           );
@@ -40,20 +82,34 @@ export default function PaginaPrincipalScreen() {
 
         const jsonData = await data.json();
         const topics = jsonData.map(parseUserData);
+        setLoading(false);
         return setState([...topics]);
         // return setState(jsonData.results);
       } catch (e) {
         console.error(e);
       }
     };
-    api();
-  }, []);
+    if (isFocused) {
+      console.log("rendering homescreen...");
+      api();
+    }
+  }, [isFocused]);
 
   console.log("ESTADPPP", state);
 
   useEffect(() => {
     registerForPushNot();
   }, []);
+  const navigation = useNavigation();
+
+  const goToScanner = () => {
+    if (is_admin) {
+      console.log("going to create theme screen with", user_id);
+      navigation.navigate("themeGenerate", { user_id });
+    } else {
+      navigation.navigate("nuevoTema", { user_id });
+    }
+  };
 
   return (
     <SafeAreaView
@@ -87,8 +143,12 @@ export default function PaginaPrincipalScreen() {
             />
             <TextInput placeholder="Buscar" />
           </View>
-          {/* <Link href="/modal_nuevo_tema" asChild> */}
-          <Pressable style={styles.plusContainer}>
+          <Pressable
+            onPress={() => {
+              goToScanner();
+            }}
+            style={styles.plusContainer}
+          >
             {({ pressed }) => (
               <FontAwesome
                 name="plus"
@@ -98,7 +158,6 @@ export default function PaginaPrincipalScreen() {
               />
             )}
           </Pressable>
-          {/* </Link> */}
         </View>
       </View>
       <View style={[styles.temaContainer]}>
@@ -112,8 +171,21 @@ export default function PaginaPrincipalScreen() {
             },
           ]}
         >
-          <Text style={styles.title}>Temas</Text>
-          <ComponenteTemaFila comps={state} />
+          {is_admin ? (
+            <Text style={styles.title}>Admin</Text>
+          ) : (
+            <Text style={styles.title}>Temas</Text>
+          )}
+          {state.length ? (
+            <ComponenteTemaFila
+              comps={state}
+              userId={user_id}
+              isAdmin={is_admin}
+            />
+          ) : (
+            <Text>No estás suscrito a ningún tema</Text>
+          )}
+          {isLoading ? <Text>Loading...</Text> : <></>}
         </View>
       </View>
     </SafeAreaView>
@@ -163,6 +235,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "black",
     paddingLeft: 10,
+    fontFamily: "PoppinsBold",
   },
   separator: {
     marginVertical: 30,

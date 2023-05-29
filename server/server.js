@@ -142,7 +142,8 @@ app.post("/api/register", async (req, res) => {
       [name, email, false]
     );
     //Return user ID for further authentication
-    res.status(201).json(id.rows);
+    console.log(id.rows[0]);
+    res.status(201).json(id.rows[0]);
   } catch (err) {
     console.error(err.message);
     res.sendStatus(500);
@@ -155,7 +156,7 @@ app.post("/api/login", async (req, res) => {
     const { email } = req.body;
     //Return user ID using email
     const existingUser = await pool.query(
-      "SELECT id FROM usuario WHERE email = $1",
+      "SELECT id, is_admin FROM usuario WHERE email = $1",
       [email]
     );
     const users = existingUser.rows;
@@ -214,7 +215,10 @@ app.get("/api/topic", attachId, async (req, res) => {
       res.status(401).send("Unauthorized");
     }
     const client = await pool.connect();
-    const result = await client.query("SELECT * FROM temas");
+    const result = await client.query(
+      "SELECT * FROM temas where admin_id = $1",
+      [user_id]
+    );
     const topics = result.rows;
     client.release();
     res.json(topics);
@@ -297,6 +301,7 @@ app.put("/api/editPushNot/:id", attachId, async (req, res) => {
 //Route for subscribing to a topic
 app.post("/api/subscribe/:id", attachId, async (req, res) => {
   try {
+    console.log("debugging api call");
     console.log(0);
     console.log(req);
     const user_id = 5;
@@ -306,7 +311,6 @@ app.post("/api/subscribe/:id", attachId, async (req, res) => {
     const result = await pool.query("SELECT * FROM temas WHERE cod = $1", [
       topic_id,
     ]);
-    console.log(2);
     if (result.rows.length === 0) {
       // If ID does not exist in the database, send an error response
       return res.status(401).json({ error: "Topic not found" });
@@ -322,6 +326,8 @@ app.post("/api/subscribe/:id", attachId, async (req, res) => {
       "select * from tema_sus where suscriptor_id = $1 and temas_id = $2",
       [user_id, tema_id]
     );
+    console.log("check if subscribed");
+    console.log(check_if_subscribed);
     if (check_if_subscribed.rows.length === 0) {
       await pool.query(
         "INSERT INTO tema_sus (temas_id, suscriptor_id) VALUES ($1, $2)",
@@ -344,6 +350,7 @@ app.post("/api/subscribe/:id", attachId, async (req, res) => {
 app.get("/api/subscriptions", attachId, async (req, res) => {
   try {
     const user_id = req.user_id;
+    console.log("userid", user_id);
     //Get user topics, query for title and description
     const result = await pool.query(
       "SELECT temas.titulo, temas.descripcion, temas.id FROM temas JOIN tema_sus ON tema_sus.temas_id = temas.id WHERE suscriptor_id = $1",
@@ -399,15 +406,15 @@ app.put("/api/topic/:id", attachId, async (req, res) => {
     const user_admin = user_status.rows[0].is_admin;
     //If flag is false, user is not admin
     if (!user_admin) {
-      res.status(401).send("Unauthorized");
+      res.status(401).send("No autorizado");
     }
     //Get body and validate
-    const { title, description } = req.body;
+    const { titulo, descripcion } = req.body;
     const topic_id = req.params.id;
-    if (!title || !description) {
+    if (!titulo || !descripcion) {
       return res
         .status(400)
-        .json({ error: "Title and description are required" });
+        .json({ error: "El título y la descripción son requeridos" });
     }
     //check if topic exists
     const existingTopic = await pool.query(
@@ -415,19 +422,19 @@ app.put("/api/topic/:id", attachId, async (req, res) => {
       [topic_id]
     );
     if (existingTopic.rowCount === 0) {
-      return res.status(404).json({ error: "Topic not found" });
+      return res.status(404).json({ error: "Tema no encontrado" });
     }
     //update topic
     const updatedTopic = await pool.query(
       "UPDATE temas SET titulo = $1, descripcion = $2 WHERE id = $3 RETURNING *",
-      [title, description, topic_id]
+      [titulo, descripcion, topic_id]
     );
 
     // Return the updated topic as the response
     res.json(updatedTopic.rows[0]);
   } catch (err) {
     console.log(err.message);
-    res.status(500).json({ message: "Error editing topic" });
+    res.status(500).json({ error: "Error editando tema" });
   }
 });
 

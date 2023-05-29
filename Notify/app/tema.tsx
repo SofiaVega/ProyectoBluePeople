@@ -6,12 +6,12 @@ import EditScreenInfo from "../components/ComponenteTema";
 import { Text, View } from "../components/Themed";
 
 export default function TemaScreen({ route }) {
-  const { tema } = route.params;
+  const { tema, userId } = route.params;
   return (
     <SafeAreaView style={styles.container}>
       <ComponenteHeader />
       <View style={[styles.temaContainer]}>
-        <ComponenteTema tema={tema} />
+        <ComponenteTema tema={tema} userId={userId} />
       </View>
     </SafeAreaView>
   );
