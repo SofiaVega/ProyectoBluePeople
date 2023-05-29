@@ -1,2 +1,2 @@
-const ngrok_url = 'https://36a4-2806-2f0-4001-c96e-9845-653e-401e-4152.ngrok.io';
+const ngrok_url = 'https://394e-131-178-102-136.ngrok.io';
 export default ngrok_url;
