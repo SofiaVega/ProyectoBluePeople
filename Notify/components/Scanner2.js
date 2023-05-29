@@ -21,6 +21,27 @@ export default function Scanner2({ user_id }) {
     getBarCodeScannerPermissions();
   }, []);
 
+  const getName = async (tema_id) => {
+    try {
+      const data = await fetch(ngrok_url + `/api/getName/${tema_id}`, {
+        method: "GET",
+        headers: {
+          "x-user-id": user_id,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!data.ok) {
+        console.error(`API responded with status ${data.status}`);
+      }
+      const jsonData = await data.json();
+      console.log("new api call")
+      console.log(jsonData)
+      return jsonData;
+    } catch (e) {
+      console.log("owo");
+      console.error(e);
+    }
+  };
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     const datos = { temas_id: data, suscriptor_id: user_id };
@@ -30,14 +51,12 @@ export default function Scanner2({ user_id }) {
       headers: { "Content-Type": "application/json", "x-user-id": user_id },
       body: JSON.stringify(datos),
     };
-    await fetch(ngrok_url + `/api/subscribe/${data}`, requestOptions)
+    await fetch(ngrok_url + `/api/subscribe/${user_id}/${data}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
-        console.log("RESSSS");
-        console.log(res);
-        console.log(res.error);
         if (res.hasOwnProperty("error")) {
           if (res["error"] === "User is already suscribed") {
+            getName(data);
             Alert.alert("Aviso", `Ya estabas suscrito al canal ${data}`);
           } else {
             Alert.alert(
@@ -47,7 +66,7 @@ export default function Scanner2({ user_id }) {
           }
           setErrorMessage(true);
         } else {
-          setErrorMessage(False);
+          setErrorMessage(false);
           Alert.alert("Listo!", `Te suscribiste al canal ${data}`);
         }
         navigation.goBack();
