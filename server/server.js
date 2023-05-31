@@ -248,6 +248,27 @@ app.get("/api/topic/:id", attachId, async (req, res) => {
   }
 });
 
+//get name from code
+app.get("/api/getname/:id", attachId, async(req, res) => {
+  try {
+    console.log("trying to get name")
+    const topic_id = req.params.id;
+    const result = await pool.query("SELECT titulo FROM temas WHERE cod = $1", [topic_id]);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    console.log("result get name")
+    console.log(result)
+    const title = result.rows[0].titulo;
+    console.log("getting name")
+    console.log(title)
+    res.json(title);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Error getting flag" });
+  }
+});
+
 //get push notification flag
 app.get("/api/pushnot/:id", attachId, async (req, res) => {
   try {
@@ -271,24 +292,7 @@ app.get("/api/pushnot/:id", attachId, async (req, res) => {
   }
 });
 
-//get name from code
-app.get("api/getName/:id", attachId, async(req, res) => {
-  try {
-    console.log("trying to get name")
-    const topic_id = req.params.id;
-    const result = await pool.query("select titulo from temas where cod = $1", [topic_id]);
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: "Not found" });
-    }
-    const title = result.rows[0].titulo;
-    console.log("getting name")
-    console.log(title)
-    res.json(title);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ message: "Error getting flag" });
-  }
-});
+
 
 //Edit flag push not
 app.put("/api/editPushNot/:id", attachId, async (req, res) => {
