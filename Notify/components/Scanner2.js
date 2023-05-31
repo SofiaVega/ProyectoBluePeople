@@ -11,6 +11,7 @@ export default function Scanner2({ user_id }) {
   const [scanned, setScanned] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
   const navigation = useNavigation();
+  const [tema, setTema] = useState("")
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -20,7 +21,7 @@ export default function Scanner2({ user_id }) {
 
     getBarCodeScannerPermissions();
   }, []);
-
+  /*
   const getName = async (tema_id) => {
     try {
       const data = await fetch(ngrok_url + `/api/getName/${tema_id}`, {
@@ -42,6 +43,29 @@ export default function Scanner2({ user_id }) {
       console.error(e);
     }
   };
+  */
+  const getName = async (tema_id) => {
+    try {
+      const data = await fetch(ngrok_url + `/api/getname/${tema_id}`, {
+        method: "GET",
+        headers: {
+          "x-user-id": `${user_id}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!data.ok) {
+        console.error(
+          `API responded with status ${data.status}: ${data.json} in ComponenteTema`
+        );
+      }
+      const jsonData = await data.json();
+      console.log("Nombre del tema: ", jsonData);
+      setTema(JSON.stringify(jsonData));
+      return JSON.stringify(jsonData);
+    } catch (e) {
+      console.error("ERROR", e);
+    }
+  };
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     const datos = { temas_id: data, suscriptor_id: user_id };
@@ -53,11 +77,11 @@ export default function Scanner2({ user_id }) {
     };
     await fetch(ngrok_url + `/api/subscribe/${user_id}/${data}`, requestOptions)
       .then((response) => response.json())
-      .then((res) => {
+      .then(async (res) => {
         if (res.hasOwnProperty("error")) {
           if (res["error"] === "User is already suscribed") {
-            getName(data);
-            Alert.alert("Aviso", `Ya estabas suscrito al canal ${data}`);
+            const titulo = await getName(data);
+            Alert.alert("Aviso", `Ya estabas suscrito al canal ${titulo}`);
           } else {
             Alert.alert(
               "Error",
@@ -67,7 +91,8 @@ export default function Scanner2({ user_id }) {
           setErrorMessage(true);
         } else {
           setErrorMessage(false);
-          Alert.alert("Listo!", `Te suscribiste al canal ${data}`);
+          const titulo = await getName(data);
+          Alert.alert("Listo!", `Te suscribiste al canal ${titulo}`);
         }
         navigation.goBack();
         // error message if res is not success
