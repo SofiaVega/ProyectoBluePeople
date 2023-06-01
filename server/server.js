@@ -298,17 +298,32 @@ app.put("/api/editPushNot/:id", attachId, async (req, res) => {
   }
 });
 
+//Route for posting a notification
+app.post("/api/postnotif/:id", attachId, async (req, res) => {
+  // INSERT INTO mensajes(tema_id, mensaje) VALUES (2, 'Bienvenido al tema');
+  try {
+    const tema_id = req.params.id;
+    const mensaje = req.params.mensaje;
+    // check if topic exists
+    const result = await pool.query("select * from temas where id = $1", [tema_id]);
+    if (result.rowCount === 0){
+      // If ID does not exist in the database, send an error response
+      return res.status(401).json({ error: "Topic not found" });
+    }
+    await pool.query("insert into mensajes(tema_id, mensaje) values($1, $2)", [tema_id, mensaje]);
+    res.status(201).send({ message: "Success!" });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Error subscribing" });
+  }
+
+});
+
 //Route for subscribing to a topic
 app.post("/api/subscribe/:userId/:id", attachId, async (req, res) => {
   try {
-    console.log("debugging api call");
-    console.log(0);
-    console.log(req);
     const user_id = req.params.userId;
     const topic_id = req.params.id;
-    console.log("this is the user id")
-    console.log(user_id)
-    console.log(1);
     //Check if topic exists
     const result = await pool.query("SELECT * FROM temas WHERE cod = $1", [
       topic_id,
@@ -320,16 +335,12 @@ app.post("/api/subscribe/:userId/:id", attachId, async (req, res) => {
     const result_id = await pool.query("SELECT id FROM temas WHERE cod = $1", [
       topic_id,
     ]);
-    console.log(result_id);
     const tema_id = result_id.rows[0].id;
-    console.log(3);
     //If topic exists, create new entry in tema_sus
     const check_if_subscribed = await pool.query(
       "select * from tema_sus where suscriptor_id = $1 and temas_id = $2",
       [user_id, tema_id]
     );
-    console.log("check if subscribed");
-    console.log(check_if_subscribed);
     if (check_if_subscribed.rowCount === 0) {
       await pool.query(
         "INSERT INTO tema_sus (temas_id, suscriptor_id, recibirpushnot, frecmsj) VALUES ($1, $2, true, 1)",
