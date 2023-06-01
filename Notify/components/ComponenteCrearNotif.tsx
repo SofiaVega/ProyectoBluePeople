@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, SafeAreaView , Text, StyleSheet, Pressable, Switch, Alert } from "react-native";
+import { View, TextInput, SafeAreaView , Text, StyleSheet, Pressable, Switch, Alert, ScrollView } from "react-native";
 import ComponenteHeader from "./ComponenteHeader";
 import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";

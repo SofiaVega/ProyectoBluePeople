@@ -5,6 +5,7 @@ import {
   Pressable,
   Alert,
   TextInput,
+  ScrollView
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import EditScreenInfo from "../components/EditScreenInfo";
@@ -71,6 +72,7 @@ export default function ConfigTemaAdminScreen({ route }) {
   return (
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
       <ComponenteHeader></ComponenteHeader>
+      <ScrollView>
       <View
         style={{
           marginLeft: 20,
@@ -154,6 +156,7 @@ export default function ConfigTemaAdminScreen({ route }) {
           </View>
         </View>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
