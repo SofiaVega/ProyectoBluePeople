@@ -321,6 +321,32 @@ app.put("/api/editPushNot/:id", attachId, async (req, res) => {
   }
 });
 
+//Route for posting a notification
+app.post("/api/postnotif", attachId, async (req, res) => {
+  // INSERT INTO mensajes(tema_id, mensaje) VALUES (2, 'Bienvenido al tema');
+  //
+  console.log("post notif route")
+  try {
+    const user_id = req.user_id;
+    const { tema_id, mensaje } = req.body;
+    console.log(tema_id)
+    console.log(mensaje)
+    // check if topic exists
+    const result = await pool.query("select * from temas where id = $1", [tema_id]);
+    if (result.rowCount === 0){
+      // If ID does not exist in the database, send an error response
+      console.log("could not find tema")
+      return res.status(401).json({ error: "Topic not found" });
+    }
+    await pool.query("insert into mensajes(tema_id, mensaje) values($1, $2)", [tema_id, mensaje]);
+    res.status(201).send({ message: "Success!" });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Error subscribing" });
+  }
+
+});
+
 //Route for subscribing to a topic
 app.post("/api/subscribe/:userId/:id", attachId, async (req, res) => {
   try {

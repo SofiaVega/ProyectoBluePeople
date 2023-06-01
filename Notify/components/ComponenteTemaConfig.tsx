@@ -63,7 +63,7 @@ export default function ComponenteTemaConfig({ tema, userId }) {
     };
     const api2 = async () => {
       try {
-        const data = await fetch("https://30ea-2806-230-4026-bd3f-18ac-dfd6-a4a0-c278.ngrok-free.app/api/frecmsj/2", {
+        const data = await fetch(ngrok_url +"/api/frecmsj/2", {
           method: "GET",
           headers: {
             "x-user-id": "2",
@@ -97,7 +97,7 @@ export default function ComponenteTemaConfig({ tema, userId }) {
         'Content-Type': 'application/json' },
       body: JSON.stringify({ frecmsj: itemValue })
     };
-    fetch('https://30ea-2806-230-4026-bd3f-18ac-dfd6-a4a0-c278.ngrok-free.app/api/editfrecmsj/2', requestOp)
+    fetch(ngrok_url + '/api/editfrecmsj/2', requestOp)
       .then(response => response.json())
   };
 
@@ -116,7 +116,7 @@ export default function ComponenteTemaConfig({ tema, userId }) {
       },
       body: JSON.stringify({ recibirpushnot: (!isEnabled).toString() }),
     };
-    fetch('https://30ea-2806-230-4026-bd3f-18ac-dfd6-a4a0-c278.ngrok-free.app/api/editPushNot/2', requestOptions)
+    fetch(ngrok_url +'/api/editPushNot/2', requestOptions)
       .then(response => response.json())
   }
   return (
