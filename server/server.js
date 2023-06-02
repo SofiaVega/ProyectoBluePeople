@@ -107,19 +107,25 @@ app.post("/token", (req, res) => {
 
 //send push notification
 app.post("/sendNot/:user_id/:topic_id", attachId, async (req, res) => {
-  const userId = req.params.user_id;
-  const topicId = req.params.topic_id;
-  const not_status = await pool.query(
-    "SELECT recibirpushnot FROM tema_sus where suscriptor_id = $1 AND temas_id = $2",
-    [userId, topicId]
-  );
-  const flag = not_status.rows[0].recibirpushnot;
-  if (flag) {
-    handlePushTokens(req.body);
-    console.log(`Received message, with title: ${req.body.title}`);
-    res.send(`Received message, with title: ${req.body.title}`);
-  } else {
-    res.status(200).json(flag);
+  try {
+    const userId = req.params.user_id;
+    const topicId = req.params.topic_id;
+    const not_status = await pool.query(
+      "SELECT recibirpushnot FROM tema_sus where suscriptor_id = $1 AND temas_id = $2",
+      [userId, topicId]
+    );
+    const flag = not_status.rows[0].recibirpushnot;
+    if (flag) {
+      handlePushTokens(req.body);
+      console.log(`Received message, with title: ${req.body.title}`);
+      res.send(`Received message, with title: ${req.body.title}`);
+    } else {
+      res.status(200).json(flag);
+    }
+  } catch (err) {
+    console.error("error on push not");
+    console.error(err.message);
+    res.sendStatus(500).json({ error: err.message });
   }
 });
 

@@ -27,10 +27,12 @@ export default function ComponenteCrearNotif({ route }) {
     console.log(pushNotif);
   };
   const sendPushNotif = async () => {
+    console.log("hola send push notif");
     const datos = {
       title: tituloNotificacion,
       body: textoNotificacion,
     };
+    console.log("MENSAJE!!! : ", datos);
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-user-id": userId },
@@ -38,7 +40,8 @@ export default function ComponenteCrearNotif({ route }) {
     };
     await fetch(ngrok_url + `/api/sendNot/${userId}/${tema.id}`, requestOptions)
       .then((response) => response.json())
-      .then((res) => console.log(res));
+      .catch((error) => console.log("ERROR PUSH NOTIF", error))
+      .then((res) => console.log("PUSH STATUS:", res));
   };
   const handlePostNotif = async () => {
     console.log(pushNotif);
@@ -57,34 +60,12 @@ export default function ComponenteCrearNotif({ route }) {
       .then((res) => console.log(res));
     if (pushNotif == true) {
       sendPushNotif();
+      Alert.alert("Éxito", `Nuevo notificación en tema ${tema.titulo}`, [
+        { text: "OK", onPress: () => console.log("OK Pressed") },
+      ]);
     }
-    Alert.alert("Éxito", `Nuevo notificación en tema ${tema.titulo}`, [
-      { text: "OK", onPress: () => console.log("OK Pressed") },
-    ]);
     navigation.goBack();
   };
-  const [fontsLoaded] = useFonts({
-    PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
-    PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
-    PoppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
-    PoppinsBoldItalic: require("../assets/fonts/Poppins-BoldItalic.ttf"),
-    PoppinsExtraBold: require("../assets/fonts/Poppins-ExtraBold.ttf"),
-    PoppinsExtraBoldItalic: require("../assets/fonts/Poppins-ExtraBoldItalic.ttf"),
-    PoppinsExtraLight: require("../assets/fonts/Poppins-ExtraLight.ttf"),
-    PoppinsExtraLightItalic: require("../assets/fonts/Poppins-ExtraLightItalic.ttf"),
-    PoppinsItalic: require("../assets/fonts/Poppins-Italic.ttf"),
-    PoppinsLight: require("../assets/fonts/Poppins-Light.ttf"),
-    PoppinsLightItalic: require("../assets/fonts/Poppins-LightItalic.ttf"),
-    PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
-    PoppinsMediumItalic: require("../assets/fonts/Poppins-MediumItalic.ttf"),
-    PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
-    PoppinsSemiBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
-    PoppinsSemiBoldItalic: require("../assets/fonts/Poppins-SemiBoldItalic.ttf"),
-    PoppinsThin: require("../assets/fonts/Poppins-Thin.ttf"),
-    PoppinsThinItalic: require("../assets/fonts/Poppins-ThinItalic.ttf"),
-    DroidSans: require("../assets/fonts/DroidSans.ttf"),
-    DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
-  });
 
   return (
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
