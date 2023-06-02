@@ -45,7 +45,7 @@ export default function ComponenteCrearNotif({ route }) {
     const datos = {
       tema_id: tema.id,
       mensaje: tituloNotificacion,
-      pushNotifEnabled: true,
+      pushNotifEnabled: pushNotif,
     };
     const requestOptions = {
       method: "POST",
