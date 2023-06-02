@@ -322,6 +322,53 @@ app.put("/api/editPushNot/:id", attachId, async (req, res) => {
   }
 });
 
+//get frec msj
+app.get("/api/frecmsj/:id", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const topic_id = req.params.id;
+    const result = await pool.query("SELECT frecmsj FROM tema_sus where suscriptor_id = $1 AND temas_id = $2", 
+    [user_id, topic_id]);
+    //Check if data was found
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    // Extract the topic data and return
+    const val = result.rows[0].frecmsj;
+    res.json(val);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Error getting val" });
+  }
+});
+
+//Edit frec msj
+app.put("/api/editfrecmsj/:id", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const topic_id = req.params.id;
+
+    //Get body and validate
+    const { frecmsj } = req.body;
+    if (!frecmsj ) {
+      return res
+        .status(400)
+        .json({ error: "Flag <frecmsj> is required" });
+    }
+    //update flag
+    const updatedFrecc = await pool.query(
+      "UPDATE tema_sus SET frecmsj = $1 WHERE suscriptor_id = $2 AND temas_id = $3 RETURNING *",
+      [frecmsj, user_id,topic_id]
+    );
+
+    // Return the updated topic as the response
+    res.json(updatedFrecc.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Error editing topic" });
+  }
+});
+
 //Route for posting a notification
 app.post("/api/postnotif", attachId, async (req, res) => {
   // INSERT INTO mensajes(tema_id, mensaje) VALUES (2, 'Bienvenido al tema');

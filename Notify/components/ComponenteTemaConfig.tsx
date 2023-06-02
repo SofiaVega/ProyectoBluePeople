@@ -63,10 +63,10 @@ export default function ComponenteTemaConfig({ tema, userId }) {
     };
     const api2 = async () => {
       try {
-        const data = await fetch(ngrok_url +"/api/frecmsj/2", {
+        const data = await fetch(ngrok_url +`/api/frecmsj/${tema.id}`, {
           method: "GET",
           headers: {
-            "x-user-id": "2",
+            "x-user-id": userId,
             "Content-Type": "application/json",
           },
         });
@@ -98,7 +98,7 @@ export default function ComponenteTemaConfig({ tema, userId }) {
       },
       body: JSON.stringify({ frecmsj: itemValue })
     };
-    fetch(ngrok_url + '/api/editfrecmsj/2', requestOp)
+    fetch(ngrok_url + `/api/editfrecmsj/${tema.id}`, requestOp)
       .then(response => response.json())
   };
 
@@ -117,7 +117,7 @@ export default function ComponenteTemaConfig({ tema, userId }) {
       },
       body: JSON.stringify({ recibirpushnot: (!isEnabled).toString() }),
     };
-    fetch(ngrok_url +'/api/editPushNot/2', requestOptions)
+    fetch(ngrok_url + `/api/editPushNot/${tema.id}`, requestOptions)
       .then(response => response.json())
   }
   return (
