@@ -1,10 +1,30 @@
 import React, { useState } from "react";
-import { View, TextInput, SafeAreaView , Text, StyleSheet, Pressable, Switch } from "react-native";
+import { View, TextInput, SafeAreaView , Text, StyleSheet, Pressable, Switch, Alert, ScrollView } from "react-native";
 import ComponenteHeader from "./ComponenteHeader";
 import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import ngrok_url from "../constants/serverlink";
 
-const ComponenteCrearNotif = () => {
+export default function ComponenteCrearNotif({route}){
+    const { tema, userId } = route.params;
+    const [tituloNotificacion, setTituloNotificacion] = useState("");
+    const [textoNotificacion, setTextoNotificacion] = useState("");
+    const navigation = useNavigation();
+    const handlePostNotif = async () => {
+        const datos = { tema_id: tema.id, mensaje: tituloNotificacion };
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "x-user-id": userId },
+            body: JSON.stringify(datos),
+        };
+        await fetch(ngrok_url + `/api/postnotif`, requestOptions)
+            .then((response) => response.json())
+            .then((res) => console.log(res));
+            Alert.alert("Éxito", `Nuevo notificación en tema ${tema.titulo}`, [
+                { text: "OK", onPress: () => console.log("OK Pressed") },
+            ]);
+            navigation.goBack();
+    };
     const [fontsLoaded] = useFonts({
         PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
         PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
@@ -28,8 +48,6 @@ const ComponenteCrearNotif = () => {
         DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
     });
 
-    const [tituloNotificacion, setTituloNotificacion] = useState("");
-    const [textoNotificacion, setTextoNotificacion] = useState("");
 
 
     return(
@@ -69,7 +87,10 @@ const ComponenteCrearNotif = () => {
                     </View>
 
                     <View style={{paddingTop: 25, paddingBottom: 25}}>
-                        <Pressable style={styles.buttonContainer} >
+                        <Pressable 
+                            style={styles.buttonContainer} 
+                            onPress={handlePostNotif} 
+                        >
                             <Text style={styles.textoButton}>Enviar notificación</Text>
                         </Pressable>
                     </View>
@@ -146,5 +167,3 @@ const styles = StyleSheet.create({
         color: "black",
     },
 });
-
-export default ComponenteCrearNotif;
