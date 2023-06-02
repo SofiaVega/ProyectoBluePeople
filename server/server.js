@@ -328,7 +328,7 @@ app.post("/api/postnotif", attachId, async (req, res) => {
   console.log("post notif route")
   try {
     const user_id = req.user_id;
-    const { tema_id, mensaje } = req.body;
+    const { tema_id, mensaje, descripcion } = req.body;
     console.log(tema_id)
     console.log(mensaje)
     // check if topic exists
@@ -338,7 +338,7 @@ app.post("/api/postnotif", attachId, async (req, res) => {
       console.log("could not find tema")
       return res.status(401).json({ error: "Topic not found" });
     }
-    await pool.query("insert into mensajes(tema_id, mensaje) values($1, $2)", [tema_id, mensaje]);
+    await pool.query("insert into mensajes(tema_id, mensaje, descripcion) values($1, $2, $3)", [tema_id, mensaje, descripcion]);
     res.status(201).send({ message: "Success!" });
   } catch (err) {
     console.log(err.message);

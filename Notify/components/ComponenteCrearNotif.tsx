@@ -11,7 +11,7 @@ export default function ComponenteCrearNotif({route}){
     const [textoNotificacion, setTextoNotificacion] = useState("");
     const navigation = useNavigation();
     const handlePostNotif = async () => {
-        const datos = { tema_id: tema.id, mensaje: tituloNotificacion };
+        const datos = { tema_id: tema.id, mensaje: tituloNotificacion, descripcion: textoNotificacion };
         const requestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json", "x-user-id": userId },
