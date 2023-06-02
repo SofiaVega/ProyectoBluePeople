@@ -74,8 +74,21 @@ export default function Home() {
             </>
           ) : (
             <>
-              <Stack.Screen name="register" component={RegisterScreen} />
-              <Stack.Screen name="zlogin" component={LoginScreen} />
+              <Stack.Screen
+                name="register"
+                component={RegisterScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="login"
+                component={LoginScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="admin_register"
+                component={AuthAdminScreen}
+                options={{ headerShown: false }}
+              />
             </>
           )}
           {userId && admin ? (
@@ -86,7 +99,10 @@ export default function Home() {
               />
               <Stack.Screen name="themeGenerate" component={GenerateTheme} />
               <Stack.Screen name="QRGenerate" component={QRGenerate} />
-              <Stack.Screen name="crearNotificacion" component={ComponenteCrearNotif} />
+              <Stack.Screen
+                name="crearNotificacion"
+                component={ComponenteCrearNotif}
+              />
             </>
           ) : (
             <></>
