@@ -327,8 +327,10 @@ app.get("/api/frecmsj/:id", attachId, async (req, res) => {
   try {
     const user_id = req.user_id;
     const topic_id = req.params.id;
-    const result = await pool.query("SELECT frecmsj FROM tema_sus where suscriptor_id = $1 AND temas_id = $2", 
-    [user_id, topic_id]);
+    const result = await pool.query(
+      "SELECT frecmsj FROM tema_sus where suscriptor_id = $1 AND temas_id = $2",
+      [user_id, topic_id]
+    );
     //Check if data was found
     if (result.rowCount === 0) {
       return res.status(404).json({ error: "Not found" });
@@ -350,15 +352,13 @@ app.put("/api/editfrecmsj/:id", attachId, async (req, res) => {
 
     //Get body and validate
     const { frecmsj } = req.body;
-    if (!frecmsj ) {
-      return res
-        .status(400)
-        .json({ error: "Flag <frecmsj> is required" });
+    if (!frecmsj) {
+      return res.status(400).json({ error: "Flag <frecmsj> is required" });
     }
     //update flag
     const updatedFrecc = await pool.query(
       "UPDATE tema_sus SET frecmsj = $1 WHERE suscriptor_id = $2 AND temas_id = $3 RETURNING *",
-      [frecmsj, user_id,topic_id]
+      [frecmsj, user_id, topic_id]
     );
 
     // Return the updated topic as the response
@@ -376,7 +376,7 @@ app.post("/api/postnotif", attachId, async (req, res) => {
   console.log("post notif route");
   try {
     const user_id = req.user_id;
-    const { tema_id, mensaje } = req.body;
+    const { tema_id, mensaje, pushNotifEnabled } = req.body;
     console.log(tema_id);
     console.log(mensaje);
     // check if topic exists
@@ -388,10 +388,10 @@ app.post("/api/postnotif", attachId, async (req, res) => {
       console.log("could not find tema");
       return res.status(401).json({ error: "Topic not found" });
     }
-    await pool.query("insert into mensajes(tema_id, mensaje) values($1, $2)", [
-      tema_id,
-      mensaje,
-    ]);
+    await pool.query(
+      "insert into mensajes(tema_id, mensaje, push_enabled) values($1, $2, $3)",
+      [tema_id, mensaje, pushNotifEnabled]
+    );
     res.status(201).send({ message: "Success!" });
   } catch (err) {
     console.log(err.message);
