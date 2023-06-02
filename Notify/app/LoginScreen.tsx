@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Pressable,
   Image,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ngrok_url from "../constants/serverlink";
@@ -48,7 +48,10 @@ const LoginScreen = () => {
         throw new Error("Registration failed");
       }
     } catch (error) {
-      Alert.alert("Error", "Falló el inicio de sesión. Por favor intenta de nuevo.");
+      Alert.alert(
+        "Error",
+        "Falló el inicio de sesión. Por favor intenta de nuevo."
+      );
     }
   };
 
@@ -77,39 +80,37 @@ const LoginScreen = () => {
 
   return (
     <SafeAreaView>
-    <ComponenteHeader></ComponenteHeader>
+      <View
+        style={{
+          marginLeft: 20,
+          marginTop: "20%",
+          marginRight: 20,
+          borderRadius: 20,
+          backgroundColor: "#fdfdfd",
+          padding: 20,
+        }}
+      >
+        <Image
+          source={require("./../assets/images/logoAzul.png")}
+          style={styles.logo}
+        />
 
-    <View
-      style={{
-        marginLeft: 20,
-        marginTop: 20,
-        marginRight: 20,
-        borderRadius: 20,
-        backgroundColor: "#fdfdfd",
-        padding: 20,
-      }}
-    >
-      <Image
-        source={require("./../assets/images/logoAzul.png")}
-        style={styles.logo}
-      />
+        <Text style={styles.notify}>Notify</Text>
 
-      <Text style={styles.notify}>Notify</Text>
+        <Text style={styles.titleInput}>Ingresa tu correo electrónico:</Text>
+        <TextInput
+          placeholder="Email"
+          placeholderTextColor="grey"
+          value={email}
+          style={styles.input}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+        />
 
-      <Text style={styles.titleInput}>Ingresa tu correo electrónico:</Text>
-      <TextInput
-        placeholder="Email"
-        placeholderTextColor="grey"
-        value={email}
-        style={styles.input}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-      />
-
-      <Pressable onPress={handleLogin} style={styles.buttonContainer}>
-        <Text style={styles.textoButton}>Iniciar Sesión</Text>
-      </Pressable>
-    </View>
+        <Pressable onPress={handleLogin} style={styles.buttonContainer}>
+          <Text style={styles.textoButton}>Iniciar Sesión</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 };
