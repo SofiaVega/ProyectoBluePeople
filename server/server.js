@@ -123,9 +123,9 @@ app.post("/sendNot/:user_id/:topic_id", attachId, async (req, res) => {
       res.status(200).json(flag);
     }
   } catch (err) {
-    console.error("error on push not");
+    console.error("User is not subbed to the theme");
     console.error(err.message);
-    res.sendStatus(500).json({ error: err.message });
+    res.sendStatus(500).json({ error: "User is not subbed to the theme" });
   }
 });
 
