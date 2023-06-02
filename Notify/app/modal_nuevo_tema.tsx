@@ -10,7 +10,11 @@ export default function ModalScreen({ route }) {
   console.log("Modal nuevo tema usuario: ", user_id);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{
+      backgroundColor: "#E8F1F2",
+      flex: 1,
+    }}>
+      <View style={styles.temaContainer}>
       <Text style={styles.title}>Escanea el código QR para suscribirte</Text>
       <Scanner2 user_id={user_id}></Scanner2>
       <View
@@ -21,6 +25,7 @@ export default function ModalScreen({ route }) {
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -33,13 +38,24 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: "500",
+    textAlign: "center",
     color: "black",
-    padding: "5%",
+    // padding: "5%",
+    marginVertical: 20
   },
   separator: {
     marginVertical: 30,
-    height: 1,
-    width: "80%",
+    height: 20,
+    width: "60%",
+    marginHorizontal: 10
+  },
+  temaContainer: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#fdfdfd",
+    borderRadius: 10,
+    marginTop: 30,
+    padding: 10,
   },
 });

@@ -11,7 +11,7 @@ type Tema = {
 
 export default function ComponenteHeader() {
   const authContext = useContext(AuthContext);
-
+  const user_id = authContext.userId;
   const logout = () => {
     try {
       AsyncStorage.getAllKeys().then(AsyncStorage.multiRemove);
@@ -23,26 +23,21 @@ export default function ComponenteHeader() {
     }
   };
   return (
-    <SafeAreaView style={styles.temaContainer}>
-      <View
-        style={[
-          styles.header,
-          {
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        ]}
-      >
+    // <SafeAreaView style={styles.temaContainer}>
+      <SafeAreaView
+        style={[styles.header]}>
         <Image
           source={require("./../assets/images/Union.png")}
-          style={{ width: 50, height: 50, borderRadius: 30 / 2 }}
+          style={{ width: 50, height: 40, marginRight: 10 }}
         />
         <Text style={[styles.headerText]}>Notify</Text>
-        <Pressable style={styles.buttonContainer} onPress={logout}>
-          <Text style={styles.textoButton}>Salir</Text>
-        </Pressable>
-      </View>
+        {user_id ?(
+          <Pressable style={styles.headerButtonContainer} onPress={logout}>
+            <Text style={styles.textoButton}>Salir</Text>
+          </Pressable>
+        ) : (
+          <></>
+        )}
     </SafeAreaView>
   );
 }
@@ -52,17 +47,33 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
   },
-  header: {
+  header:
+  {
+    width: "100%",
+    // height: "60",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#4577BB",
+    paddingVertical: 15,
+  },
 
-    paddingVertical: 10,
+  headerButtonContainer:{
+    position: "absolute",
+    right: 16,
+    padding: 5,
+    borderRadius: 20,
+    fontSize: 10,
+    width: "20%",
+    color: "#fdfdfd",
   },
   headerText: {
     fontSize: 30,
     fontWeight: "600",
     color: "white",
-    marginLeft: 10,
+    // marginLeft: 10,
     fontFamily: "poppins",
+    // letterSpacing: 1
   },
   scrollView: {
     backgroundColor: "pink",
@@ -112,7 +123,7 @@ const styles = StyleSheet.create({
     marginLeft: 100,
   },
   textoButton: {
-    fontSize: 15,
+    fontSize: 18,
     lineHeight: 24,
     textAlign: "center",
     color: "#fdfdfd",
