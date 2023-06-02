@@ -1,18 +1,18 @@
 -- Database: NotifyDB
 
-DROP DATABASE IF EXISTS notifyDB;
+-- DROP DATABASE IF EXISTS notifyDB;
 
-CREATE DATABASE notifyDB
-    WITH
-    OWNER = postgres
-    ENCODING = 'UTF8'
-    LC_COLLATE = 'C'
-    LC_CTYPE = 'C'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1
-    TEMPLATE = template0;
+-- CREATE DATABASE notifyDB
+--     WITH
+--     OWNER = postgres
+--     ENCODING = 'UTF8'
+--     LC_COLLATE = 'C'
+--     LC_CTYPE = 'C'
+--     TABLESPACE = pg_default
+--     CONNECTION LIMIT = -1
+--     TEMPLATE = template0;
 
-\c notifydb
+-- \c notifydb
 
 DROP TABLE IF EXISTS usuario CASCADE;
 DROP SEQUENCE IF EXISTS usuario;
