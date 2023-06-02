@@ -38,10 +38,28 @@ export default function ComponenteCrearNotif({ route }) {
       headers: { "Content-Type": "application/json", "x-user-id": userId },
       body: JSON.stringify(datos),
     };
-    await fetch(ngrok_url + `/api/sendNot/${userId}/${tema.id}`, requestOptions)
+    //get all users
+    let users = [];
+    await fetch(ngrok_url + `/api/users`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json", "x-user-id": userId },
+    })
       .then((response) => response.json())
-      .catch((error) => console.log("ERROR PUSH NOTIF", error))
-      .then((res) => console.log("PUSH STATUS:", res));
+      .catch((error) => console.log("ERROR GETTING ALL USERS", error))
+      .then((res) => sendNotToUsers(res));
+    //send push nots
+    async function sendNotToUsers(users) {
+      users.forEach(async function (user) {
+        console.log("trying sending notification to ... ", user.id);
+        await fetch(
+          ngrok_url + `/sendNot/${user.id}/${tema.id}`,
+          requestOptions
+        )
+          .then((response) => response.json())
+          .catch((error) => console.log("ERROR PUSH NOTIF", error))
+          .then((res) => console.log("PUSH STATUS:", res));
+      });
+    }
   };
   const handlePostNotif = async () => {
     console.log(pushNotif);
