@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, StyleSheet, Button, Switch, Image,SafeAreaView, ScrollView, Pressable, Modal } from 'react-native';
+import { Alert, StyleSheet, Button, Switch, Image, SafeAreaView, ScrollView, Pressable, Modal } from 'react-native';
 import Colors from '../constants/Colors';
 import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import ComponenteTemaFila from './ComponenteTemaFila';
 import ModalDesuscribir from './ModalDesuscribir';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import { useFonts } from "expo-font";
 import ngrok_url from "../constants/serverlink";
 
@@ -37,7 +37,7 @@ export default function ComponenteTemaConfig({ tema, userId }) {
   type Tema = {
     titulo: string;
     descripcion: string;
-};
+  };
 
   const [isEnabled, setState] = useState(true);
   console.log("CONFIG user is :", userId);
@@ -77,7 +77,7 @@ export default function ComponenteTemaConfig({ tema, userId }) {
         }
         const jData = await data.json();
         console.log(jData)
-       return setSelects(jData);
+        return setSelects(jData);
       } catch (e) {
         console.error(e);
       }
@@ -88,20 +88,21 @@ export default function ComponenteTemaConfig({ tema, userId }) {
 
   const freccHandler = (itemValue: any) => {
     setSelects(itemValue)
-    Alert.alert('Alerta','Se recibiran mensajes cada ' + itemValue + ' min')
+    Alert.alert('Alerta', 'Se recibiran mensajes cada ' + itemValue + ' min')
 
     const requestOp = {
       method: 'PUT',
-      headers: { 
+      headers: {
         "x-user-id": `${userId}`,
-        'Content-Type': 'application/json' },
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({ frecmsj: itemValue })
     };
     fetch(ngrok_url + '/api/editfrecmsj/2', requestOp)
       .then(response => response.json())
   };
 
-  const [selects, setSelects]= useState();
+  const [selects, setSelects] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const setModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -120,74 +121,63 @@ export default function ComponenteTemaConfig({ tema, userId }) {
       .then(response => response.json())
   }
   return (
-        <View style={{ marginLeft: 20, marginTop: 20, marginRight: 20, borderRadius: 20, backgroundColor: "#fdfdfd" }}>
-          <View style = {[styles.temaContainer, { flexDirection: "column"}]}> 
-            <View style= {[styles.temaContainer, {flexDirection: "row", alignItems: 'center',}]}>
-                <Image source={require('./../assets/images/favicon.png')} style={{width: 30, height: 30, borderRadius: 30/ 2}}/>
+    <View style={{ marginLeft: 20, marginTop: 20, marginRight: 20, borderRadius: 20, backgroundColor: "#fdfdfd" }}>
+      <View style={[styles.temaContainer, { flexDirection: "column" }]}>
+        <View style={[styles.temaContainer, { flexDirection: "row", alignItems: 'center', }]}>
+          <Image source={require('./../assets/images/favicon.png')} style={{ width: 30, height: 30, borderRadius: 30 / 2 }} />
 
-                <View style= {[styles.bgColor, {flexDirection: "column",}]}>
-                    <Text
-                    style={styles.title}>
-                    {tema.titulo}
-                    </Text>
-                    <Text
-                    style={styles.textoTema}>
-                    {tema.descripcion}
-                    </Text>
-                </View>
-
-            </View>
-            <View style= {[styles.temaContainer,{flexDirection: "row", alignItems: 'center',}]}>
-              <Text
-                    style={styles.title}>
-                Push notifications
-              </Text>
-              
-              <Switch
-                onValueChange={toggleSwitch}
-                value = {isEnabled}
-                trackColor= {{true: "#DB8A74", false: "grey" }} 
-                style= {[{margin: 20}]}
-                ios_backgroundColor="black">
-              </Switch>
-            </View>
-            <View style= {[styles.temaContainer,{flexDirection: "column", alignItems: 'center',}]}>
+          <View style={[styles.bgColor, { flexDirection: "column", }]}>
             <Text
-                style={styles.frecTxt}>
-                Mensajes cada: {selects} min
-              </Text>
-              <Text
-                style={styles.title}>
-                Cambiar frecuencia de mensajes, a cada:
-              </Text>
-              <Picker
-                selectedValue={selects}
-                style={{height: 180, width: 120}}
-                onValueChange={
-                  (itemValue, itemIndex) => 
-                  freccHandler(itemValue)
-                
-                }>
-                <Picker.Item label="-" value="0" />
-                <Picker.Item label="1min" value="1" />
-                <Picker.Item label="5min" value="5" />
-                <Picker.Item label="10min" value="10" />
-                <Picker.Item label="30min" value="30" />
-              </Picker>
-            </View>
-          <View
-          style={[
-            {
-              backgroundColor: "#fdfdfd",
-              flexDirection: "column",
-              alignItems: "center",
-            },
-          ]}
-        >
-          <Pressable
-            style={styles.buttonContainer}
-            onPress={() => setIsModalOpen(!isModalOpen)}
-          >
+              style={styles.title}>
+              {tema.titulo}
+            </Text>
+            <Text
+              style={styles.textoTema}>
+              {tema.descripcion}
+            </Text>
+          </View>
+
+        </View>
+        <View style={[styles.temaContainer, { flexDirection: "row", alignItems: 'center', }]}>
+          <Text
+            style={styles.title}>
+            Push notifications
+          </Text>
+
+          <Switch
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+            trackColor={{ true: "#DB8A74", false: "grey" }}
+            style={[{ margin: 20 }]}
+            ios_backgroundColor="black">
+          </Switch>
+        </View>
+        <View style={[styles.temaContainer, { flexDirection: "column", alignItems: 'center', }]}>
+          <Text style={styles.frecTxt}>
+            Mensajes cada: {selects} min
+          </Text>
+          
+          <Text style={styles.title}>
+            Cambiar frecuencia de mensajes, a cada:
+          </Text>
+          
+          <Picker
+            selectedValue={selects}
+            style={{ height: 180, width: 120 }}
+            onValueChange={
+              (itemValue, itemIndex) =>
+                freccHandler(itemValue)
+
+            }>
+            <Picker.Item label="-" value="0" />
+            <Picker.Item label="1min" value="1" />
+            <Picker.Item label="5min" value="5" />
+            <Picker.Item label="10min" value="10" />
+            <Picker.Item label="30min" value="30" />
+          </Picker>
+        </View>
+        <View style={[{ backgroundColor: "#fdfdfd", flexDirection: "column", alignItems: "center" }]}>
+          <Pressable style={[styles.buttonContainer, { marginTop: 10 }]} onPress={() => setIsModalOpen(!isModalOpen)} >
             <Text style={styles.textoButton}>Dejar de seguir</Text>
           </Pressable>
           {isModalOpen ? (

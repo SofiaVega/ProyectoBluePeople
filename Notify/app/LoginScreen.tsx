@@ -8,11 +8,13 @@ import {
   StyleSheet,
   Pressable,
   Image,
+  SafeAreaView
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ngrok_url from "../constants/serverlink";
 import AuthContext from "../components/context";
 import { useFonts } from "expo-font";
+import ComponenteHeader from "../components/ComponenteHeader";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -46,7 +48,7 @@ const LoginScreen = () => {
         throw new Error("Registration failed");
       }
     } catch (error) {
-      Alert.alert("Error", "Falló el registro. Por favor intenta de nuevo.");
+      Alert.alert("Error", "Falló el inicio de sesión. Por favor intenta de nuevo.");
     }
   };
 
@@ -74,6 +76,9 @@ const LoginScreen = () => {
   });
 
   return (
+    <SafeAreaView>
+    <ComponenteHeader></ComponenteHeader>
+
     <View
       style={{
         marginLeft: 20,
@@ -105,6 +110,7 @@ const LoginScreen = () => {
         <Text style={styles.textoButton}>Iniciar Sesión</Text>
       </Pressable>
     </View>
+    </SafeAreaView>
   );
 };
 
