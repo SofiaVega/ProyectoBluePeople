@@ -6,9 +6,10 @@ import ComponenteTemaConfig from '../components/ComponenteTemaConfig';
 import { color } from '@rneui/themed/dist/config';
 import ComponenteHeader from "../components/ComponenteHeader";
 import { Link, Tabs } from "expo-router";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import { StatusBar } from 'expo-status-bar';
+import ngrok_url from "../constants/serverlink";
 
 type Tema = {
   titulo: string;
@@ -21,31 +22,10 @@ export default function QRGenerate({route}) {
   const [QRvalue, setQRValue] = React.useState('');
   const [QRLogo, setQRLogo] = React.useState('');
   const [QRImage, setQRImage] = React.useState('');
+  const [ temaJson, setTema] = React.useState('');
+  const [isLoading, setLoading] = useState(true);
   const ref = React.useRef();
-
-  // const handleConfig = async () => {
-  //   try {
-  //     const data = await fetch(ngrok_url + "/api/topic/" + tema.id, {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "x-user-id": `${userId}`,
-  //       },
-  //     });
-
-  //     if (!data.ok) {
-  //       const message = await data.json();
-  //       console.error(
-  //         `API responded with status ${data.status} in ConfigTemaAdmin ${message.error}`
-  //       );
-  //     }
-  //     console.log("Tema editado!");
-  //     navigation.goBack();
-  //   } catch (error) {
-  //     console.log("unu");
-  //     console.error(error);
-  //   }
-  // };
+  console.log("TEMAAA ", tema)
 
   return (
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
@@ -70,7 +50,7 @@ export default function QRGenerate({route}) {
           </View>
       <QRCode
       size={200}
-      value="554"
+      value={tema.cod}
     />
     </View>
   </SafeAreaView>
