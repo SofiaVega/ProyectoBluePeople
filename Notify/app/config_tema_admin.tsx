@@ -58,7 +58,7 @@ export default function ConfigTemaAdminScreen({ route }) {
   };
 
   const handleQR = () => {
-    navigation.navigate("QRGenerate");
+    navigation.navigate("QRGenerate", { tema, userId });
   };
 
   return (

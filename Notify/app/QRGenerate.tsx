@@ -16,11 +16,37 @@ type Tema = {
 };
 
 
-export default function QRGenerate() {
+export default function QRGenerate({route}) {
+  const { tema, userId } = route.params;
   const [QRvalue, setQRValue] = React.useState('');
   const [QRLogo, setQRLogo] = React.useState('');
   const [QRImage, setQRImage] = React.useState('');
   const ref = React.useRef();
+
+  // const handleConfig = async () => {
+  //   try {
+  //     const data = await fetch(ngrok_url + "/api/topic/" + tema.id, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "x-user-id": `${userId}`,
+  //       },
+  //     });
+
+  //     if (!data.ok) {
+  //       const message = await data.json();
+  //       console.error(
+  //         `API responded with status ${data.status} in ConfigTemaAdmin ${message.error}`
+  //       );
+  //     }
+  //     console.log("Tema editado!");
+  //     navigation.goBack();
+  //   } catch (error) {
+  //     console.log("unu");
+  //     console.error(error);
+  //   }
+  // };
+
   return (
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
       <ComponenteHeader></ComponenteHeader>
@@ -44,7 +70,7 @@ export default function QRGenerate() {
           </View>
       <QRCode
       size={200}
-      value="cod1"
+      value="554"
     />
     </View>
   </SafeAreaView>
