@@ -1,5 +1,5 @@
 	-- usuarios
-INSERT INTO public.usuario(
+INSERT INTO usuario(
 	 nombre, email, is_admin)
 	VALUES ('us1', 'test1@test.com', true);
 	
