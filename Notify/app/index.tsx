@@ -20,12 +20,15 @@ import ngrok_url from "../constants/serverlink";
 import ConfigTemaScreen from "./config_tema";
 import AuthContext from "../components/context";
 import LoginScreen from "./LoginScreen";
+import GenerateTheme from "./generar_tema_admin";
+import ConfigTemaAdminScreen from "./config_tema_admin";
+import QRGenerate from "./QRGenerate";
 
 const Stack = createStackNavigator();
 
 const clearAsyncStorage = async () => {
   try {
-    await AsyncStorage.clear();
+    AsyncStorage.getAllKeys().then(AsyncStorage.multiRemove);
     console.log("AsyncStorage cleared successfully");
   } catch (error) {
     console.log("Error clearing AsyncStorage: ", error);
@@ -35,10 +38,15 @@ const clearAsyncStorage = async () => {
 export default function Home() {
   clearAsyncStorage();
   const [userId, setUserId] = useState<String | null>(null);
+  const [admin, setAdmin] = useState<Boolean>(false);
   const authContext = {
     userId: userId,
     register: (id) => {
       setUserId(id);
+    },
+    is_admin: admin,
+    register_admin: (is_admin) => {
+      setAdmin(is_admin);
     },
   };
   useEffect(() => {
@@ -59,14 +67,26 @@ export default function Home() {
             <>
               <Stack.Screen name="home" component={PaginaPrincipalScreen} />
               <Stack.Screen name="themeInfo" component={TemaScreen} />
-              <Stack.Screen name="themeConfig" component={ConfigTemaScreen} />
               <Stack.Screen name="nuevoTema" component={nuevoTema} />
+              <Stack.Screen name="themeConfig" component={ConfigTemaScreen} />
             </>
           ) : (
             <>
               <Stack.Screen name="register" component={RegisterScreen} />
               <Stack.Screen name="zlogin" component={LoginScreen} />
             </>
+          )}
+          {userId && admin ? (
+            <>
+              <Stack.Screen
+                name="adminConfig"
+                component={ConfigTemaAdminScreen}
+              />
+              <Stack.Screen name="themeGenerate" component={GenerateTheme} />
+              <Stack.Screen name="QRGenerate" component={QRGenerate} />
+            </>
+          ) : (
+            <></>
           )}
         </Stack.Navigator>
       </AuthContext.Provider>
