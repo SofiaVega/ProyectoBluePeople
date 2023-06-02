@@ -126,7 +126,8 @@ app.post("/sendNot/:user_id/:topic_id", attachId, async (req, res) => {
 // register route - to do verify email
 app.post("/api/register", async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { name, email, isAdmin } = req.body;
+    console.log("ISADMIN??? ", isAdmin);
     const existingUser = await pool.query(
       "SELECT * FROM usuario WHERE email = $1",
       [email]
@@ -138,8 +139,8 @@ app.post("/api/register", async (req, res) => {
     }
     //Admins need to be created directly, not from API
     const id = await pool.query(
-      "INSERT INTO usuario (nombre, email, is_admin) VALUES ($1, $2, $3) RETURNING id",
-      [name, email, false]
+      "INSERT INTO usuario (nombre, email, is_admin) VALUES ($1, $2, $3) RETURNING id, is_admin",
+      [name, email, isAdmin ? true : false]
     );
     //Return user ID for further authentication
     console.log(id.rows[0]);
@@ -161,7 +162,7 @@ app.post("/api/login", async (req, res) => {
     );
     const users = existingUser.rows;
     if (users.length) {
-      //On success return ID
+      //On success return ID and admin
       res.status(201).json(users[0]);
     } else {
       //User doesn't exist
@@ -249,19 +250,21 @@ app.get("/api/topic/:id", attachId, async (req, res) => {
 });
 
 //get name from code
-app.get("/api/getname/:id", attachId, async(req, res) => {
+app.get("/api/getname/:id", attachId, async (req, res) => {
   try {
-    console.log("trying to get name")
+    console.log("trying to get name");
     const topic_id = req.params.id;
-    const result = await pool.query("SELECT titulo FROM temas WHERE cod = $1", [topic_id]);
+    const result = await pool.query("SELECT titulo FROM temas WHERE cod = $1", [
+      topic_id,
+    ]);
     if (result.rowCount === 0) {
       return res.status(404).json({ error: "Not found" });
     }
-    console.log("result get name")
-    console.log(result)
+    console.log("result get name");
+    console.log(result);
     const title = result.rows[0].titulo;
-    console.log("getting name")
-    console.log(title)
+    console.log("getting name");
+    console.log(title);
     res.json(title);
   } catch (err) {
     console.error(err.message);
@@ -291,8 +294,6 @@ app.get("/api/pushnot/:id", attachId, async (req, res) => {
     res.status(500).json({ message: "Error getting flag" });
   }
 });
-
-
 
 //Edit flag push not
 app.put("/api/editPushNot/:id", attachId, async (req, res) => {
@@ -372,26 +373,30 @@ app.put("/api/editfrecmsj/:id", attachId, async (req, res) => {
 app.post("/api/postnotif", attachId, async (req, res) => {
   // INSERT INTO mensajes(tema_id, mensaje) VALUES (2, 'Bienvenido al tema');
   //
-  console.log("post notif route")
+  console.log("post notif route");
   try {
     const user_id = req.user_id;
     const { tema_id, mensaje } = req.body;
-    console.log(tema_id)
-    console.log(mensaje)
+    console.log(tema_id);
+    console.log(mensaje);
     // check if topic exists
-    const result = await pool.query("select * from temas where id = $1", [tema_id]);
-    if (result.rowCount === 0){
+    const result = await pool.query("select * from temas where id = $1", [
+      tema_id,
+    ]);
+    if (result.rowCount === 0) {
       // If ID does not exist in the database, send an error response
-      console.log("could not find tema")
+      console.log("could not find tema");
       return res.status(401).json({ error: "Topic not found" });
     }
-    await pool.query("insert into mensajes(tema_id, mensaje) values($1, $2)", [tema_id, mensaje]);
+    await pool.query("insert into mensajes(tema_id, mensaje) values($1, $2)", [
+      tema_id,
+      mensaje,
+    ]);
     res.status(201).send({ message: "Success!" });
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ message: "Error subscribing" });
   }
-
 });
 
 //Route for subscribing to a topic
