@@ -45,6 +45,7 @@ CREATE TABLE mensajes (
 	id SERIAL PRIMARY KEY,
 	tema_id int NOT NULL,
 	mensaje text NOT NULL,
+	push_enabled BOOLEAN DEFAULT false,
 	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	CONSTRAINT fk_tema FOREIGN KEY(tema_id) REFERENCES temas(id) ON DELETE CASCADE
 );
