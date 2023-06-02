@@ -17,11 +17,12 @@ import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 
 const parseUserData = (user: Topic) => {
-  const { titulo, descripcion, id } = user;
+  const { titulo, descripcion, id, cod } = user;
   return {
     titulo: titulo,
     descripcion: descripcion,
     id: id,
+    cod : cod
   };
 };
 

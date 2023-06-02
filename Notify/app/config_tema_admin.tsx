@@ -5,6 +5,7 @@ import {
   Pressable,
   Alert,
   TextInput,
+  ScrollView
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import EditScreenInfo from "../components/EditScreenInfo";
@@ -58,12 +59,20 @@ export default function ConfigTemaAdminScreen({ route }) {
   };
 
   const handleQR = () => {
-    navigation.navigate("QRGenerate");
+    navigation.navigate("QRGenerate", { tema, userId });
+  };
+  const handleCreateNotif = () => {
+    console.log("handle create notif")
+    console.log(tema)
+    console.log(tema.id)
+    console.log(userId)
+    navigation.navigate("crearNotificacion", {tema, userId});
   };
 
   return (
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
       <ComponenteHeader></ComponenteHeader>
+      <ScrollView>
       <View
         style={{
           marginLeft: 20,
@@ -132,12 +141,22 @@ export default function ConfigTemaAdminScreen({ route }) {
             >
               <Text style={styles.textoButton}>Generar QR</Text>
             </Pressable>
+            <Pressable
+              style={[
+                styles.buttonContainer,
+                { backgroundColor: "#DB8A74", marginBottom: 30 },
+              ]}
+              onPress={handleCreateNotif}
+            >
+              <Text style={styles.textoButton}>Nueva notificación</Text>
+            </Pressable>
             <Pressable style={styles.buttonContainer} onPress={handleConfig}>
               <Text style={styles.textoButton}>Guardar</Text>
             </Pressable>
           </View>
         </View>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

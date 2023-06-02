@@ -72,7 +72,7 @@ const AuthAdminScreen = () => {
 
             <Pressable
                 onPress={() => {
-                navigator.navigate("zzloginAdmin");
+                navigator.navigate("zlogin");
                 }}
             >
                 <Text style={{flexDirection: 'row', paddingTop: 30,}}>

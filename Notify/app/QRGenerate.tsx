@@ -6,9 +6,10 @@ import ComponenteTemaConfig from '../components/ComponenteTemaConfig';
 import { color } from '@rneui/themed/dist/config';
 import ComponenteHeader from "../components/ComponenteHeader";
 import { Link, Tabs } from "expo-router";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import { StatusBar } from 'expo-status-bar';
+import ngrok_url from "../constants/serverlink";
 
 type Tema = {
   titulo: string;
@@ -16,11 +17,16 @@ type Tema = {
 };
 
 
-export default function QRGenerate() {
+export default function QRGenerate({route}) {
+  const { tema, userId } = route.params;
   const [QRvalue, setQRValue] = React.useState('');
   const [QRLogo, setQRLogo] = React.useState('');
   const [QRImage, setQRImage] = React.useState('');
+  const [ temaJson, setTema] = React.useState('');
+  const [isLoading, setLoading] = useState(true);
   const ref = React.useRef();
+  console.log("TEMAAA ", tema)
+
   return (
     <SafeAreaView style={{ backgroundColor: "#E8F1F2" }}>
       <ComponenteHeader></ComponenteHeader>
@@ -44,7 +50,7 @@ export default function QRGenerate() {
           </View>
       <QRCode
       size={200}
-      value="cod1"
+      value={tema.cod}
     />
     </View>
   </SafeAreaView>
