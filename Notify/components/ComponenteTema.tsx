@@ -8,11 +8,15 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import ngrok_url from "../constants/serverlink";
 import { useFonts } from "expo-font";
+import { useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from "@react-navigation/native";
 
 export default function ComponenteTema({ tema, userId }) {
   const [isLoading, setLoading] = useState(true);
   const [mensajes, setMensajes] = useState<MensajesScreen[]>([]);
   console.log("TEMA:", tema, " de usuario", userId);
+  const isFocused = useIsFocused();
+  console.log("USEISFOCUSED", isFocused);
   const [fontsLoaded] = useFonts({
     PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
     PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
@@ -37,7 +41,8 @@ export default function ComponenteTema({ tema, userId }) {
   });
 
   var frec: any;
-  var inter = 60000;
+  var inter = 5000;
+  var flagA = false;
   useEffect(() =>  {
     const api = async () => {
       try {
@@ -87,14 +92,27 @@ export default function ComponenteTema({ tema, userId }) {
       console.log('inter de ' + inter)
     };
     setInter();
-    const frecInterval = setInterval(() => {
-      console.log('intervalo ' + inter);
-      api();
-      console.log('refreshed');
-    }, inter);
-    return () => clearInterval(frecInterval); 
-    
-  }, []);
+    function invoke(){
+      const frecInterval = setInterval(() => {
+        if(flagA == false){
+          flagA = true;
+          window.clearInterval(frecInterval);
+          invoke();
+        }
+        else{
+          console.log('intervalo ' + inter);
+          api();
+          console.log('refreshed');
+        }
+      }, inter);
+    }
+    if (isFocused) {
+      console.log("rendering ...");
+      flagA = false;
+      setInter();
+      invoke();
+    }
+  }, [isFocused]);
 
   const navigation = useNavigation();
 
