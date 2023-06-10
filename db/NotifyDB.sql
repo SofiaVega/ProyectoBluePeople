@@ -1,18 +1,18 @@
 -- Database: NotifyDB
 
-DROP DATABASE IF EXISTS notifyDB;
+-- DROP DATABASE IF EXISTS notifyDB;
 
-CREATE DATABASE notifyDB
-    WITH
-    OWNER = postgres
-    ENCODING = 'UTF8'
-    LC_COLLATE = 'C'
-    LC_CTYPE = 'C'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1
-    TEMPLATE = template0;
+-- CREATE DATABASE notifyDB
+--     WITH
+--     OWNER = postgres
+--     ENCODING = 'UTF8'
+--     LC_COLLATE = 'C'
+--     LC_CTYPE = 'C'
+--     TABLESPACE = pg_default
+--     CONNECTION LIMIT = -1
+--     TEMPLATE = template0;
 
-\c notifydb
+-- \c notifydb
 
 DROP TABLE IF EXISTS usuario CASCADE;
 DROP SEQUENCE IF EXISTS usuario;
@@ -45,6 +45,7 @@ CREATE TABLE mensajes (
 	id SERIAL PRIMARY KEY,
 	tema_id int NOT NULL,
 	mensaje text NOT NULL,
+	push_enabled BOOLEAN DEFAULT false,
 	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	CONSTRAINT fk_tema FOREIGN KEY(tema_id) REFERENCES temas(id) ON DELETE CASCADE
 );

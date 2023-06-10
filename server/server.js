@@ -107,26 +107,33 @@ app.post("/token", (req, res) => {
 
 //send push notification
 app.post("/sendNot/:user_id/:topic_id", attachId, async (req, res) => {
-  const userId = req.params.user_id;
-  const topicId = req.params.topic_id;
-  const not_status = await pool.query(
-    "SELECT recibirpushnot FROM tema_sus where suscriptor_id = $1 AND temas_id = $2",
-    [userId, topicId]
-  );
-  const flag = not_status.rows[0].recibirpushnot;
-  if (flag) {
-    handlePushTokens(req.body);
-    console.log(`Received message, with title: ${req.body.title}`);
-    res.send(`Received message, with title: ${req.body.title}`);
-  } else {
-    res.status(200).json(flag);
+  try {
+    const userId = req.params.user_id;
+    const topicId = req.params.topic_id;
+    const not_status = await pool.query(
+      "SELECT recibirpushnot FROM tema_sus where suscriptor_id = $1 AND temas_id = $2",
+      [userId, topicId]
+    );
+    const flag = not_status.rows[0].recibirpushnot;
+    if (flag) {
+      handlePushTokens(req.body);
+      console.log(`Received message, with title: ${req.body.title}`);
+      res.send(`Received message, with title: ${req.body.title}`);
+    } else {
+      res.status(200).json(flag);
+    }
+  } catch (err) {
+    console.error("User is not subbed to the theme");
+    console.error(err.message);
+    res.sendStatus(500).json({ error: "User is not subbed to the theme" });
   }
 });
 
 // register route - to do verify email
 app.post("/api/register", async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { name, email, isAdmin } = req.body;
+    console.log("ISADMIN??? ", isAdmin);
     const existingUser = await pool.query(
       "SELECT * FROM usuario WHERE email = $1",
       [email]
@@ -138,8 +145,8 @@ app.post("/api/register", async (req, res) => {
     }
     //Admins need to be created directly, not from API
     const id = await pool.query(
-      "INSERT INTO usuario (nombre, email, is_admin) VALUES ($1, $2, $3) RETURNING id",
-      [name, email, false]
+      "INSERT INTO usuario (nombre, email, is_admin) VALUES ($1, $2, $3) RETURNING id, is_admin",
+      [name, email, isAdmin ? true : false]
     );
     //Return user ID for further authentication
     console.log(id.rows[0]);
@@ -161,7 +168,7 @@ app.post("/api/login", async (req, res) => {
     );
     const users = existingUser.rows;
     if (users.length) {
-      //On success return ID
+      //On success return ID and admin
       res.status(201).json(users[0]);
     } else {
       //User doesn't exist
@@ -249,19 +256,21 @@ app.get("/api/topic/:id", attachId, async (req, res) => {
 });
 
 //get name from code
-app.get("/api/getname/:id", attachId, async(req, res) => {
+app.get("/api/getname/:id", attachId, async (req, res) => {
   try {
-    console.log("trying to get name")
+    console.log("trying to get name");
     const topic_id = req.params.id;
-    const result = await pool.query("SELECT titulo FROM temas WHERE cod = $1", [topic_id]);
+    const result = await pool.query("SELECT titulo FROM temas WHERE cod = $1", [
+      topic_id,
+    ]);
     if (result.rowCount === 0) {
       return res.status(404).json({ error: "Not found" });
     }
-    console.log("result get name")
-    console.log(result)
+    console.log("result get name");
+    console.log(result);
     const title = result.rows[0].titulo;
-    console.log("getting name")
-    console.log(title)
+    console.log("getting name");
+    console.log(title);
     res.json(title);
   } catch (err) {
     console.error(err.message);
@@ -292,8 +301,6 @@ app.get("/api/pushnot/:id", attachId, async (req, res) => {
   }
 });
 
-
-
 //Edit flag push not
 app.put("/api/editPushNot/:id", attachId, async (req, res) => {
   try {
@@ -321,30 +328,81 @@ app.put("/api/editPushNot/:id", attachId, async (req, res) => {
   }
 });
 
+//get frec msj
+app.get("/api/frecmsj/:id", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const topic_id = req.params.id;
+    const result = await pool.query(
+      "SELECT frecmsj FROM tema_sus where suscriptor_id = $1 AND temas_id = $2",
+      [user_id, topic_id]
+    );
+    //Check if data was found
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    // Extract the topic data and return
+    const val = result.rows[0].frecmsj;
+    res.json(val);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Error getting val" });
+  }
+});
+
+//Edit frec msj
+app.put("/api/editfrecmsj/:id", attachId, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const topic_id = req.params.id;
+
+    //Get body and validate
+    const { frecmsj } = req.body;
+    if (!frecmsj) {
+      return res.status(400).json({ error: "Flag <frecmsj> is required" });
+    }
+    //update flag
+    const updatedFrecc = await pool.query(
+      "UPDATE tema_sus SET frecmsj = $1 WHERE suscriptor_id = $2 AND temas_id = $3 RETURNING *",
+      [frecmsj, user_id, topic_id]
+    );
+
+    // Return the updated topic as the response
+    res.json(updatedFrecc.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Error editing topic" });
+  }
+});
+
 //Route for posting a notification
 app.post("/api/postnotif", attachId, async (req, res) => {
   // INSERT INTO mensajes(tema_id, mensaje) VALUES (2, 'Bienvenido al tema');
   //
-  console.log("post notif route")
+  console.log("post notif route");
   try {
     const user_id = req.user_id;
-    const { tema_id, mensaje } = req.body;
-    console.log(tema_id)
-    console.log(mensaje)
+    const { tema_id, mensaje, pushNotifEnabled } = req.body;
+    console.log(tema_id);
+    console.log(mensaje);
     // check if topic exists
-    const result = await pool.query("select * from temas where id = $1", [tema_id]);
-    if (result.rowCount === 0){
+    const result = await pool.query("select * from temas where id = $1", [
+      tema_id,
+    ]);
+    if (result.rowCount === 0) {
       // If ID does not exist in the database, send an error response
-      console.log("could not find tema")
+      console.log("could not find tema");
       return res.status(401).json({ error: "Topic not found" });
     }
-    await pool.query("insert into mensajes(tema_id, mensaje) values($1, $2)", [tema_id, mensaje]);
+    await pool.query(
+      "insert into mensajes(tema_id, mensaje, push_enabled) values($1, $2, $3)",
+      [tema_id, mensaje, pushNotifEnabled]
+    );
     res.status(201).send({ message: "Success!" });
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ message: "Error subscribing" });
   }
-
 });
 
 //Route for subscribing to a topic

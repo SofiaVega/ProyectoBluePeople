@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Pressable,
   Image,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ngrok_url from "../constants/serverlink";
@@ -48,68 +48,46 @@ const LoginScreen = () => {
         throw new Error("Registration failed");
       }
     } catch (error) {
-      Alert.alert("Error", "Falló el inicio de sesión. Por favor intenta de nuevo.");
+      Alert.alert(
+        "Error",
+        "Falló el inicio de sesión. Por favor intenta de nuevo."
+      );
     }
   };
 
-  const [fontsLoaded] = useFonts({
-    PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
-    PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
-    PoppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
-    PoppinsBoldItalic: require("../assets/fonts/Poppins-BoldItalic.ttf"),
-    PoppinsExtraBold: require("../assets/fonts/Poppins-ExtraBold.ttf"),
-    PoppinsExtraBoldItalic: require("../assets/fonts/Poppins-ExtraBoldItalic.ttf"),
-    PoppinsExtraLight: require("../assets/fonts/Poppins-ExtraLight.ttf"),
-    PoppinsExtraLightItalic: require("../assets/fonts/Poppins-ExtraLightItalic.ttf"),
-    PoppinsItalic: require("../assets/fonts/Poppins-Italic.ttf"),
-    PoppinsLight: require("../assets/fonts/Poppins-Light.ttf"),
-    PoppinsLightItalic: require("../assets/fonts/Poppins-LightItalic.ttf"),
-    PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
-    PoppinsMediumItalic: require("../assets/fonts/Poppins-MediumItalic.ttf"),
-    PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
-    PoppinsSemiBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
-    PoppinsSemiBoldItalic: require("../assets/fonts/Poppins-SemiBoldItalic.ttf"),
-    PoppinsThin: require("../assets/fonts/Poppins-Thin.ttf"),
-    PoppinsThinItalic: require("../assets/fonts/Poppins-ThinItalic.ttf"),
-    DroidSans: require("../assets/fonts/DroidSans.ttf"),
-    DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
-  });
-
   return (
     <SafeAreaView>
-    <ComponenteHeader></ComponenteHeader>
+      <View
+        style={{
+          marginLeft: 20,
+          marginTop: "20%",
+          marginRight: 20,
+          borderRadius: 20,
+          backgroundColor: "#fdfdfd",
+          padding: 20,
+        }}
+      >
+        <Image
+          source={require("./../assets/images/logoAzul.png")}
+          style={styles.logo}
+        />
 
-    <View
-      style={{
-        marginLeft: 20,
-        marginTop: 20,
-        marginRight: 20,
-        borderRadius: 20,
-        backgroundColor: "#fdfdfd",
-        padding: 20,
-      }}
-    >
-      <Image
-        source={require("./../assets/images/logoAzul.png")}
-        style={styles.logo}
-      />
+        <Text style={styles.notify}>Notify</Text>
 
-      <Text style={styles.notify}>Notify</Text>
+        <Text style={styles.titleInput}>Ingresa tu correo electrónico:</Text>
+        <TextInput
+          placeholder="Email"
+          placeholderTextColor="grey"
+          value={email}
+          style={styles.input}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+        />
 
-      <Text style={styles.titleInput}>Ingresa tu correo electrónico:</Text>
-      <TextInput
-        placeholder="Email"
-        placeholderTextColor="grey"
-        value={email}
-        style={styles.input}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-      />
-
-      <Pressable onPress={handleLogin} style={styles.buttonContainer}>
-        <Text style={styles.textoButton}>Iniciar Sesión</Text>
-      </Pressable>
-    </View>
+        <Pressable onPress={handleLogin} style={styles.buttonContainer}>
+          <Text style={styles.textoButton}>Iniciar Sesión</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 };
@@ -134,7 +112,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#fdfdfd",
     fontWeight: "bold",
-    fontFamily: "PoppinsSemiBold",
   },
   input: {
     borderRadius: 20,
@@ -143,7 +120,6 @@ const styles = StyleSheet.create({
     height: 40,
     margin: 12,
     borderColor: "grey",
-    fontFamily: "PoppinsLight",
     color: "black",
   },
   logo: {
@@ -155,12 +131,10 @@ const styles = StyleSheet.create({
     color: "#4577BB",
     fontWeight: "bold",
     fontSize: 30,
-    fontFamily: "PoppinsBold",
     padding: 10,
     alignSelf: "center",
   },
   titleInput: {
-    fontFamily: "PoppinsRegular",
     paddingTop: 10,
     padding: 5,
     paddingStart: 15,
