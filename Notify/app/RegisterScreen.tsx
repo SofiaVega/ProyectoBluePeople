@@ -149,7 +149,6 @@ const styles = StyleSheet.create({
     height: 40,
     margin: 12,
     borderColor: "grey",
-    // fontFamily: "PoppinsLight",
     color: "black",
   },
   logo: {
