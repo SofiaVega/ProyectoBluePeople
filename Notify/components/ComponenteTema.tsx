@@ -143,6 +143,7 @@ export default function ComponenteTema({ tema, userId }) {
         </View>
       </View>
       <ScrollView style={[styles.scrollView, { backgroundColor: "white" }]}>
+        {console.log("AVERRR: ",mensajes)}
         <ComponenteMensaje comps={mensajes} />
       </ScrollView>
     </SafeAreaView>
