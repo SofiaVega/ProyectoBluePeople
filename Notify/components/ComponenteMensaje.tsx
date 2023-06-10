@@ -20,9 +20,6 @@ export default function ComponenteMensaje({ comps }) {
     <View style={styles.temaContainer}>
       {comps.map((topic) => (
         <View style={[styles.temaContainer, styles.lineStyle, { flexDirection: "row", alignItems: 'center', }]}>
-          <View style={[styles.temaMensaje, { flexDirection: "column", flex: 1 }]}>
-            <Text style={styles.textoTema} key={topic.id}>{topic.mensaje}</Text>
-          </View>
           {topic.push_enabled ? (
             <View style={[styles.temaMensaje, { flexDirection: "column", flex: 1 }]}>
               <Text style={styles.textoTema} key={topic.id}>{topic.mensaje}</Text>
