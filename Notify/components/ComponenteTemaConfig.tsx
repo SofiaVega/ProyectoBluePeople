@@ -11,28 +11,6 @@ import { useFonts } from "expo-font";
 import ngrok_url from "../constants/serverlink";
 
 export default function ComponenteTemaConfig({ tema, userId }) {
-  const [fontsLoaded] = useFonts({
-    PoppinsBlack: require("../assets/fonts/Poppins-Black.ttf"),
-    PoppinsBlackItalic: require("../assets/fonts/Poppins-BlackItalic.ttf"),
-    PoppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
-    PoppinsBoldItalic: require("../assets/fonts/Poppins-BoldItalic.ttf"),
-    PoppinsExtraBold: require("../assets/fonts/Poppins-ExtraBold.ttf"),
-    PoppinsExtraBoldItalic: require("../assets/fonts/Poppins-ExtraBoldItalic.ttf"),
-    PoppinsExtraLight: require("../assets/fonts/Poppins-ExtraLight.ttf"),
-    PoppinsExtraLightItalic: require("../assets/fonts/Poppins-ExtraLightItalic.ttf"),
-    PoppinsItalic: require("../assets/fonts/Poppins-Italic.ttf"),
-    PoppinsLight: require("../assets/fonts/Poppins-Light.ttf"),
-    PoppinsLightItalic: require("../assets/fonts/Poppins-LightItalic.ttf"),
-    PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
-    PoppinsMediumItalic: require("../assets/fonts/Poppins-MediumItalic.ttf"),
-    PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
-    PoppinsSemiBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
-    PoppinsSemiBoldItalic: require("../assets/fonts/Poppins-SemiBoldItalic.ttf"),
-    PoppinsThin: require("../assets/fonts/Poppins-Thin.ttf"),
-    PoppinsThinItalic: require("../assets/fonts/Poppins-ThinItalic.ttf"),
-    DroidSans: require("../assets/fonts/DroidSans.ttf"),
-    DroidSansBold: require("../assets/fonts/DroidSans-Bold.ttf"),
-  });
 
   type Tema = {
     titulo: string;
@@ -234,14 +212,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingLeft: 10,
     color: "black",
-    fontFamily: "PoppinsBold",
   },
   frecTxt: {
     fontSize: 14,
     paddingLeft: 10,
     paddingVertical: 15,
     color: "blue",
-    fontFamily: "PoppinsBold",
   },
   getStartedContainer: {
     alignItems: "center",
@@ -268,7 +244,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#fdfdfd",
     fontWeight: "bold",
-    fontFamily: "PoppinsSemiBold",
   },
   helpContainer: {
     marginTop: 15,
