@@ -211,7 +211,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     paddingLeft: 10,
     color: "black",
-    fontFamily: "PoppinsMedium",
   },
   input: {
     backgroundColor: "#fdfdfd",
@@ -277,7 +276,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#272727",
     paddingLeft: 10,
-    fontFamily: "PoppinsMedium",
   },
   textoButton: {
     fontSize: 15,
@@ -285,7 +283,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#fdfdfd",
     fontWeight: "bold",
-    fontFamily: "PoppinsSemiBold",
   },
   helpContainer: {
     marginTop: 15,

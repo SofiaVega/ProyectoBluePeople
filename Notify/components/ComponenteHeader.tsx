@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "white",
     // marginLeft: 10,
-    fontFamily: "poppins",
     // letterSpacing: 1
   },
   scrollView: {
@@ -128,6 +127,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#fdfdfd",
     fontWeight: "bold",
-    fontFamily: "PoppinsSemiBold",
   },
 });

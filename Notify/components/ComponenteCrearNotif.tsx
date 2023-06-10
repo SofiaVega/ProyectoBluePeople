@@ -170,7 +170,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#fdfdfd",
     fontWeight: "bold",
-    fontFamily: "PoppinsSemiBold",
   },
   temaContainer: {
     backgroundColor: "#fdfdfd",
@@ -185,18 +184,15 @@ const styles = StyleSheet.create({
     margin: 12,
     borderColor: "lightgrey",
     backgroundColor: "#fdfdfd",
-    fontFamily: "PoppinsRegular",
     color: "black",
   },
   titleInput: {
-    fontFamily: "PoppinsRegular",
     padding: 5,
     paddingStart: 15,
     paddingTop: 40,
     color: "black",
   },
   titleSwitch: {
-    fontFamily: "PoppinsRegular",
     padding: 5,
     paddingStart: 15,
     paddingTop: 40,
@@ -208,7 +204,6 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
   },
   title: {
-    fontFamily: "PoppinsBold",
     padding: 5,
     paddingStart: 15,
     paddingTop: 30,
